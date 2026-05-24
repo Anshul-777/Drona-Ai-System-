@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DRONA.AI - Intelligence, Synthesized.</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#5d5c74",
+                        "on-primary-container": "#efefff",
+                        "surface-container-high": "#e7e8e9",
+                        "tertiary-container": "#c34100",
+                        "on-tertiary-container": "#ffede8",
+                        "background": "#ffffff", /* Forced white for premium feel */
+                        "on-secondary-fixed-variant": "#45455b",
+                        "surface-container": "#f8f9fa",
+                        "on-primary-fixed": "#001454",
+                        "surface-bright": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#b8c4ff",
+                        "on-surface-variant": "#434656",
+                        "surface-variant": "#e1e3e4",
+                        "secondary-fixed": "#e2e0fc",
+                        "secondary-container": "#e2e0fc",
+                        "surface": "#ffffff",
+                        "surface-dim": "#d9dadb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary": "#0042dc",
+                        "on-background": "#191c1d",
+                        "inverse-surface": "#2e3132",
+                        "outline": "#747688",
+                        "primary-container": "#2a5cff",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#0037ba",
+                        "on-secondary-container": "#63627a",
+                        "on-secondary-fixed": "#1a1a2e",
+                        "tertiary-fixed": "#ffdbcf",
+                        "tertiary-fixed-dim": "#ffb59b",
+                        "on-tertiary-fixed-variant": "#812800",
+                        "secondary-fixed-dim": "#c6c4df",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#b8c4ff",
+                        "on-surface": "#191c1d",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#380d00",
+                        "surface-container-low": "#f8f9fa",
+                        "outline-variant": "#e2e8f0", /* Lighter for premium look */
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#dde1ff",
+                        "tertiary": "#9a3200",
+                        "surface-tint": "#074af0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1.5rem",
+                        "3xl": "2.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Playfair Display"],
+                        "display": ["Playfair Display"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    "boxShadow": {
+                        'premium': '0 10px 40px -10px rgba(0,0,0,0.05)',
+                        'premium-hover': '0 20px 40px -10px rgba(0,0,0,0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col antialiased selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+<!-- TopNavBar (Shared Component) -->
+<nav class="bg-surface/90 backdrop-blur-xl border-b border-outline-variant shadow-sm docked full-width top-0 sticky z-50 transition-all duration-300">
+<div class="flex justify-between items-center w-full px-8 h-20 max-w-7xl mx-auto">
+<div class="flex items-center gap-12">
+<a class="font-display font-black text-2xl tracking-tighter text-primary" href="#">
+                    DRONA.AI
+                </a>
+<div class="hidden md:flex gap-8 items-center mt-1">
+<a class="font-body text-sm tracking-wide text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer" href="#">Learning</a>
+<a class="font-body text-sm tracking-wide text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer" href="#">Test</a>
+<a class="font-body text-sm tracking-wide text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer" href="#">Game</a>
+<a class="font-body text-sm tracking-wide text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer" href="#">Workspace</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high/50">
+<span class="material-symbols-outlined" data-icon="military_tech">military_tech</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant cursor-pointer ml-2">
+<img alt="Student Profile Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuLGpr_0hUtgWu39gJsovs4h3PG-USuxdpipwepA8UiZX-Qul1n-epKxpoZNyIFqosZm3UFo6oRZX7IWHlSAp5EmTVQ5MGO8fj5qjzJzWLK4BqG3GN7Rt6ItRvG5YkAYSVrRFV3rT1QvN4HgjtKf4xmgAY0ppAYjloRoU7wVKCfS2wIYdvaeNuDRtFp2w820r-44ofu67g-2rq2Nw_H9-Qzqk8szKM2ShtK_MgHYRO00VU4fPDZMVa_WEEINl6MUfn5fjx2rw7QfI"/>
+</div>
+<button class="md:hidden text-on-surface ml-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="flex-grow flex flex-col">
+<!-- 1. Hero Section -->
+<section class="relative pt-32 pb-40 px-6 lg:px-8 w-full flex flex-col items-center text-center overflow-hidden min-h-[90vh] justify-center bg-surface">
+<div class="absolute inset-0 z-0 opacity-40">
+<!-- Placeholder for cinematic 3D abstract visual -->
+<img alt="Abstract Background" class="w-full h-full object-cover blur-3xl opacity-30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAc2PvX2KVAKVU_vW3Y9NWVhPL511SkqFPw6XlaS326h7BOLeDQeXFOPUMFFjE9SaADW9NqLSh7ra-culNFi-it0w17sMW00oP9plxtcNgRNRPmcU_qbSDQDiZhgwkOUWwB-c9LLKcdF4K9-Y8Ygl9r9YjllJz5ixvQx8p-aDDrR-VXI8TiIGY9JWYBl4XBg8YtjwQuf3-9vCY5TnjUMdZY34EmR-XUN2auOiNenNPns7XZe3k-38VrN2zCaWi8D71GOT9ks7uiNcQ"/>
+<div class="absolute inset-0 bg-gradient-to-b from-surface/80 via-surface/50 to-surface"></div>
+</div>
+<div class="relative z-10 max-w-5xl mx-auto flex flex-col items-center">
+<span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface glass-panel text-on-surface text-xs font-semibold uppercase tracking-widest mb-10 border border-outline-variant shadow-sm">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                    DRONA OS v2.0 Live
+                </span>
+<h1 class="font-display font-black text-6xl md:text-8xl lg:text-9xl tracking-tighter text-on-background leading-[1.05] mb-8">
+                    Intelligence,<br/>
+<span class="text-primary italic font-medium bg-gradient-to-r from-primary to-primary-container text-gradient">Synthesized.</span>
+</h1>
+<p class="font-body text-xl md:text-2xl text-on-surface-variant max-w-3xl mb-14 leading-relaxed font-light">
+                    India's premier multi-agent cognitive architecture. Experience a learning ecosystem dynamically engineered to your exact neural signature.
+                </p>
+<div class="flex flex-col sm:flex-row gap-6 w-full sm:w-auto">
+<button class="bg-primary hover:bg-primary/90 text-on-primary font-medium py-4 px-10 rounded-full shadow-premium hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 text-lg">
+                        Start Learning Free
+                        <span class="material-symbols-outlined text-xl">arrow_forward</span>
+</button>
+<button class="bg-surface glass-panel hover:bg-surface-container border border-outline-variant text-on-surface font-medium py-4 px-10 rounded-full transition-all duration-300 hover:-translate-y-1 text-lg">
+                        View Architecture
+                    </button>
+</div>
+</div>
+</section>
+<!-- 2. The Drona Methodology -->
+<section class="py-32 bg-surface-container-lowest px-6 lg:px-8 border-y border-outline-variant/50 relative z-10">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-24">
+<span class="text-primary font-bold tracking-widest text-sm uppercase mb-4 block">Core Protocol</span>
+<h2 class="font-display text-4xl md:text-5xl font-bold text-on-background mb-6">The Methodology</h2>
+<p class="text-on-surface-variant max-w-2xl mx-auto text-lg">A systematic, deterministic approach to absolute conceptual mastery.</p>
+</div>
+<div class="relative">
+<!-- Connecting line -->
+<div class="hidden md:block absolute top-12 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-transparent via-outline-variant to-transparent -z-10"></div>
+<div class="grid md:grid-cols-3 gap-16">
+<!-- Step 1 -->
+<div class="flex flex-col items-center text-center group">
+<div class="w-24 h-24 rounded-2xl bg-surface shadow-premium flex items-center justify-center mb-8 border border-outline-variant/50 group-hover:-translate-y-2 transition-transform duration-500">
+<img alt="AI Assessment Icon" class="w-16 h-16 object-cover rounded-xl opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARUu6u-tnB8hCePkaYQxfqnm-Z2e8jJ_i3X-unXtvtawyHWyB0u13YUxX_EliJzyzy02meZvN2lN-0YNVmNjzlAQ5jd9N2mYTEMIM0cTpGHaREKOTmBpVzGJKUCH2Ljy-DAodBmjQ80raVqY1qwb8ZTikpE4680DY0U6_Y_cznnM3yaihCwP0nmDakXiBwVtITu99PfIYXTOV-Alb6qk-Jl_yJ9WDFtjs7pMgKAU2e9cYSuwqHuYIW3AGcWUWCMdjz_3HOpX2g4TI"/>
+</div>
+<h3 class="font-display font-bold text-2xl mb-4 text-on-background">1. AI Assessment</h3>
+<p class="text-on-surface-variant leading-relaxed">Continuous neural evaluation maps your cognitive profile, isolating exact knowledge lacunae before engagement.</p>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col items-center text-center group">
+<div class="w-24 h-24 rounded-2xl bg-primary shadow-premium flex items-center justify-center mb-8 border border-primary-container group-hover:-translate-y-2 transition-transform duration-500">
+<span class="material-symbols-outlined text-on-primary text-4xl">hub</span>
+</div>
+<h3 class="font-display font-bold text-2xl mb-4 text-on-background">2. Agent Initialization</h3>
+<p class="text-on-surface-variant leading-relaxed">Specialized AI tutors are dynamically deployed to your workspace, structurally adapting to your semantic models.</p>
+</div>
+<!-- Step 3 -->
+<div class="flex flex-col items-center text-center group">
+<div class="w-24 h-24 rounded-2xl bg-surface shadow-premium flex items-center justify-center mb-8 border border-outline-variant/50 group-hover:-translate-y-2 transition-transform duration-500">
+<img alt="Mastery Icon" class="w-16 h-16 object-cover rounded-xl opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAg7Wfb8qeL7q06wWYfvgE-gTaPrlqYMJYonICO7JIazQv57uB-mcutxEeL3S21OHA68rdYPu2Otv0iN04mjbTjdzhO22A0qe7Z4-JGAFKjns3z5bLyOrUx3hT9z6e0L2ODgRvdZLLyDWxcgWW9tHLCCB4Mnv7yMOGr-7PQw4ee7rwcg9v6oRrKP9ztpzp9OLRAzvK7dpieWPKUA-6Qxq4FZKFzQCdllgwpnL1Ri_IFjt6_3ooERpmk5cDfho7PrfIzjEr91DNNQ4s"/>
+</div>
+<h3 class="font-display font-bold text-2xl mb-4 text-on-background">3. Personalized Mastery</h3>
+<p class="text-on-surface-variant leading-relaxed">Engage in highly iterative, adaptive learning loops until absolute conceptual clarity is mathematically verified.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. The Master Orchestrator -->
+<section class="py-32 px-6 lg:px-8 max-w-7xl mx-auto w-full">
+<div class="bg-surface-container-low rounded-3xl p-12 border border-outline-variant flex flex-col lg:flex-row items-center gap-16 shadow-premium overflow-hidden relative">
+<div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl -z-10"></div>
+<div class="lg:w-1/2">
+<span class="inline-block px-3 py-1 bg-surface border border-outline-variant rounded-full text-xs font-bold tracking-widest text-primary uppercase mb-6">Orchestration Layer</span>
+<h2 class="font-display text-4xl md:text-5xl font-bold text-on-background mb-6 leading-tight">The Master <br/>Orchestrator</h2>
+<p class="text-on-surface-variant text-lg leading-relaxed mb-8">
+                        At the core of the ecosystem sits DRONA—the supreme meta-agent. It doesn't just teach; it coordinates a highly specialized faculty of sub-agents. From abstract physics visualization engines to precise organic chemistry formulation nodes, Drona routes your queries to the optimal intelligence module in real-time.
+                    </p>
+<a class="text-primary font-semibold text-lg inline-flex items-center gap-2 hover:gap-3 transition-all border-b border-primary pb-1" href="#">
+                        View Architecture Diagram <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="lg:w-1/2 w-full">
+<div class="relative w-full aspect-square max-w-md mx-auto bg-surface rounded-2xl shadow-premium border border-outline-variant p-6 flex flex-col">
+<div class="flex items-center justify-between border-b border-outline-variant pb-4 mb-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">smart_toy</span>
+</div>
+<div>
+<h4 class="font-bold text-on-background">Drona Main</h4>
+<p class="text-xs text-on-surface-variant">Active Orchestration</p>
+</div>
+</div>
+<span class="px-2 py-1 bg-secondary-container/50 text-secondary rounded text-xs font-medium">System Nominal</span>
+</div>
+<div class="flex-grow flex flex-col gap-4">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">science</span>
+</div>
+<div>
+<h5 class="font-medium text-sm">Physics Engine Alpha</h5>
+<p class="text-xs text-on-surface-variant">Visualizing Quantum Mechanics</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex items-center gap-4 ml-8">
+<div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">biotech</span>
+</div>
+<div>
+<h5 class="font-medium text-sm">Bio-Node Sigma</h5>
+<p class="text-xs text-on-surface-variant">Synthesizing Cellular Data</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex items-center gap-4 ml-4">
+<div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">functions</span>
+</div>
+<div>
+<h5 class="font-medium text-sm">Math Logic Core</h5>
+<p class="text-xs text-on-surface-variant">Resolving Integrals</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. The Six Environments -->
+<section class="py-32 bg-surface px-6 lg:px-8 border-t border-outline-variant/30">
+<div class="max-w-7xl mx-auto">
+<div class="mb-20 text-center max-w-3xl mx-auto">
+<h2 class="font-display text-4xl md:text-5xl font-bold text-on-background mb-6">The Six Environments</h2>
+<p class="text-on-surface-variant text-lg">A comprehensive suite of interconnected modules designed for holstic academic dominance.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Environment 1 -->
+<div class="bg-surface-container-lowest rounded-2xl p-8 border border-outline-variant shadow-sm hover:shadow-premium transition-all duration-300 group">
+<div class="w-14 h-14 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-2xl">menu_book</span>
+</div>
+<h3 class="font-display font-bold text-2xl mb-3 text-on-background">Learning</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Dynamic textbook generation and interactive lectures adapted to your pace.</p>
+</div>
+<!-- Environment 2 -->
+<div class="bg-surface-container-lowest rounded-2xl p-8 border border-outline-variant shadow-sm hover:shadow-premium transition-all duration-300 group">
+<div class="w-14 h-14 rounded-xl bg-red-50 text-red-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-2xl">quiz</span>
+</div>
+<h3 class="font-display font-bold text-2xl mb-3 text-on-background">Test</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">High-fidelity exam simulations with predictive scoring and weakness targeting.</p>
+</div>
+<!-- Environment 3 -->
+<div class="bg-surface-container-lowest rounded-2xl p-8 border border-outline-variant shadow-sm hover:shadow-premium transition-all duration-300 group">
+<div class="w-14 h-14 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-2xl">sports_esports</span>
+</div>
+<h3 class="font-display font-bold text-2xl mb-3 text-on-background">Game</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Gamified competitive arenas to benchmark skills against peers nationwide.</p>
+</div>
+<!-- Environment 4 -->
+<div class="bg-surface-container-lowest rounded-2xl p-8 border border-outline-variant shadow-sm hover:shadow-premium transition-all duration-300 group">
+<div class="w-14 h-14 rounded-xl bg-green-50 text-green-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-2xl">account_tree</span>
+</div>
+<h3 class="font-display font-bold text-2xl mb-3 text-on-background">Workspace</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Your personal 'Second Brain'—a semantic knowledge graph of your notes.</p>
+</div>
+<!-- Environment 5 -->
+<div class="bg-surface-container-lowest rounded-2xl p-8 border border-outline-variant shadow-sm hover:shadow-premium transition-all duration-300 group">
+<div class="w-14 h-14 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-2xl">folder_special</span>
+</div>
+<h3 class="font-display font-bold text-2xl mb-3 text-on-background">Resources</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Curated, high-octane academic materials, formulas, and past papers.</p>
+</div>
+<!-- Environment 6 -->
+<div class="bg-surface-container-lowest rounded-2xl p-8 border border-outline-variant shadow-sm hover:shadow-premium transition-all duration-300 group">
+<div class="w-14 h-14 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-2xl">route</span>
+</div>
+<h3 class="font-display font-bold text-2xl mb-3 text-on-background">Career</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Predictive college admission modeling based on current performance trajectories.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. Deep Analytics Showcase -->
+<section class="py-32 bg-inverse-surface text-inverse-on-surface px-6 lg:px-8 w-full">
+<div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+<div>
+<h2 class="font-display text-4xl md:text-5xl font-bold mb-6 text-surface-container-lowest">Deep Analytics Protocol</h2>
+<p class="text-surface-variant text-lg leading-relaxed mb-8 opacity-90">
+                        We don't guess. We measure. The OS continuously aggregates thousands of data points during your sessions, rendering a high-fidelity 'Cognitive Radar Chart' and pinpointing exact micro-topic weaknesses via real-time heatmaps.
+                    </p>
+<ul class="space-y-4 mb-10">
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-fixed">check_circle</span>
+<span class="text-surface-variant">Micro-topic weakness isolation</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-fixed">check_circle</span>
+<span class="text-surface-variant">Predictive exam readiness scoring</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-fixed">check_circle</span>
+<span class="text-surface-variant">Retention decay modeling</span>
+</li>
+</ul>
+</div>
+<div class="relative h-[400px] w-full rounded-3xl border border-surface-variant/30 bg-on-surface/50 p-8 flex items-center justify-center overflow-hidden">
+<!-- Abstract Hexagonal Radar Chart Representation -->
+<div class="absolute inset-0 flex items-center justify-center">
+<svg class="w-full h-full max-w-[300px] opacity-80" viewbox="0 0 100 100">
+<polygon fill="none" points="50,5 90,25 90,75 50,95 10,75 10,25" stroke="#e1e3e4" stroke-opacity="0.3" stroke-width="0.5"></polygon>
+<polygon fill="none" points="50,15 80,32 80,68 50,85 20,68 20,32" stroke="#e1e3e4" stroke-opacity="0.3" stroke-width="0.5"></polygon>
+<polygon fill="none" points="50,25 70,38 70,62 50,75 30,62 30,38" stroke="#e1e3e4" stroke-opacity="0.3" stroke-width="0.5"></polygon>
+<!-- Data Polygon -->
+<polygon fill="rgba(184, 196, 255, 0.2)" points="50,20 85,30 75,70 50,80 15,65 25,35" stroke="#b8c4ff" stroke-width="2"></polygon>
+<!-- Connecting lines -->
+<line stroke="#e1e3e4" stroke-opacity="0.3" stroke-width="0.5" x1="50" x2="50" y1="50" y2="5"></line>
+<line stroke="#e1e3e4" stroke-opacity="0.3" stroke-width="0.5" x1="50" x2="90" y1="50" y2="25"></line>
+<line stroke="#e1e3e4" stroke-opacity="0.3" stroke-width="0.5" x1="50" x2="90" y1="50" y2="75"></line>
+<line stroke="#e1e3e4" stroke-opacity="0.3" stroke-width="0.5" x1="50" x2="50" y1="50" y2="95"></line>
+<line stroke="#e1e3e4" stroke-opacity="0.3" stroke-width="0.5" x1="50" x2="10" y1="50" y2="75"></line>
+<line stroke="#e1e3e4" stroke-opacity="0.3" stroke-width="0.5" x1="50" x2="10" y1="50" y2="25"></line>
+<!-- Dots -->
+<circle cx="50" cy="20" fill="#b8c4ff" r="2"></circle>
+<circle cx="85" cy="30" fill="#b8c4ff" r="2"></circle>
+<circle cx="75" cy="70" fill="#b8c4ff" r="2"></circle>
+<circle cx="50" cy="80" fill="#b8c4ff" r="2"></circle>
+<circle cx="15" cy="65" fill="#b8c4ff" r="2"></circle>
+<circle cx="25" cy="35" fill="#b8c4ff" r="2"></circle>
+</svg>
+</div>
+</div>
+</div>
+</section>
+<!-- 6. Gamification Arena -->
+<section class="py-32 bg-surface px-6 lg:px-8 max-w-7xl mx-auto w-full border-b border-outline-variant/30">
+<div class="bg-surface-container rounded-3xl p-1 lg:p-12 border border-outline-variant flex flex-col md:flex-row items-center justify-between gap-12 overflow-hidden relative shadow-sm">
+<div class="md:w-1/2 p-8 lg:p-0 relative z-10">
+<h2 class="font-display text-4xl md:text-5xl font-bold text-on-background mb-6">The Arena</h2>
+<p class="text-on-surface-variant text-lg mb-8">
+                        Learning isn't passive. Enter the Arena to battle peers in real-time. Maintain streaks, earn XP, and face 'Boss Battles'—synthesized mega-exams designed to push your limits.
+                    </p>
+<div class="flex gap-6 mb-8">
+<div class="flex flex-col">
+<span class="text-3xl font-bold text-primary font-display">12.4k</span>
+<span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Active Gladiators</span>
+</div>
+<div class="flex flex-col border-l border-outline-variant/50 pl-6">
+<span class="text-3xl font-bold text-tertiary font-display">48</span>
+<span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Bosses Defeated</span>
+</div>
+</div>
+<button class="bg-on-background hover:bg-on-background/90 text-surface font-medium py-3 px-8 rounded-lg transition-all duration-200">
+                        Enter Lobby
+                    </button>
+</div>
+<div class="md:w-1/2 w-full h-[300px] md:h-[400px] bg-surface rounded-2xl border border-outline-variant shadow-premium flex items-center justify-center relative overflow-hidden m-4 md:m-0">
+<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-surface to-surface"></div>
+<div class="relative z-10 text-center">
+<span class="material-symbols-outlined text-6xl text-primary/40 mb-4 block">swords</span>
+<div class="text-sm font-bold text-on-surface-variant tracking-widest uppercase">Lobby Connecting...</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 7. Subscription Plans -->
+<section class="py-32 bg-surface-container-lowest px-6 lg:px-8 w-full">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-20">
+<h2 class="font-display text-4xl md:text-5xl font-bold text-on-background mb-4">Architecture Access</h2>
+<p class="text-on-surface-variant text-lg max-w-2xl mx-auto">Select the tier that aligns with your academic ambition.</p>
+</div>
+<div class="grid md:grid-cols-3 gap-8">
+<!-- Free Tier -->
+<div class="bg-surface rounded-3xl p-10 border border-outline-variant shadow-sm hover:shadow-premium transition-all duration-300 flex flex-col">
+<h3 class="font-display font-bold text-2xl text-on-background mb-2">Basic Core</h3>
+<div class="text-4xl font-bold text-on-background mb-6 font-display">Free<span class="text-lg text-on-surface-variant font-normal font-body">/mo</span></div>
+<p class="text-sm text-on-surface-variant mb-8">Essential tools for baseline academic maintenance.</p>
+<ul class="space-y-4 mb-auto flex-grow">
+<li class="flex items-start gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg">check</span>
+<span>Standard Learning Environment</span>
+</li>
+<li class="flex items-start gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg">check</span>
+<span>Basic Analytics Dashboard</span>
+</li>
+<li class="flex items-start gap-3 text-sm text-on-surface-variant/50">
+<span class="material-symbols-outlined text-outline text-lg">close</span>
+<span>Multi-Agent Tutors</span>
+</li>
+</ul>
+<button class="w-full mt-8 bg-surface-container hover:bg-surface-container-high border border-outline-variant text-on-surface font-medium py-3 rounded-xl transition-colors">Current Plan</button>
+</div>
+<!-- Pro Tier -->
+<div class="bg-surface rounded-3xl p-10 border-2 border-primary shadow-premium relative flex flex-col transform md:-translate-y-4">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-on-primary px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Recommended</div>
+<h3 class="font-display font-bold text-2xl text-on-background mb-2">Pro Matrix</h3>
+<div class="text-4xl font-bold text-on-background mb-6 font-display">₹999<span class="text-lg text-on-surface-variant font-normal font-body">/mo</span></div>
+<p class="text-sm text-on-surface-variant mb-8">Full access to the multi-agent cognitive architecture.</p>
+<ul class="space-y-4 mb-auto flex-grow">
+<li class="flex items-start gap-3 text-sm font-medium">
+<span class="material-symbols-outlined text-primary text-lg">check</span>
+<span>Full Multi-Agent Access</span>
+</li>
+<li class="flex items-start gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg">check</span>
+<span>Second Brain Workspace</span>
+</li>
+<li class="flex items-start gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg">check</span>
+<span>Deep Analytics Protocol</span>
+</li>
+<li class="flex items-start gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg">check</span>
+<span>Gamification Arena Entry</span>
+</li>
+</ul>
+<button class="w-full mt-8 bg-primary hover:bg-primary/90 text-on-primary font-medium py-3 rounded-xl shadow-md transition-all active:scale-95">Upgrade to Pro</button>
+</div>
+<!-- Enterprise Tier -->
+<div class="bg-surface rounded-3xl p-10 border border-outline-variant shadow-sm hover:shadow-premium transition-all duration-300 flex flex-col">
+<h3 class="font-display font-bold text-2xl text-on-background mb-2">Institute Node</h3>
+<div class="text-4xl font-bold text-on-background mb-6 font-display">Custom</div>
+<p class="text-sm text-on-surface-variant mb-8">Deployment for schools and coaching institutes.</p>
+<ul class="space-y-4 mb-auto flex-grow">
+<li class="flex items-start gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg">check</span>
+<span>White-label Environments</span>
+</li>
+<li class="flex items-start gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg">check</span>
+<span>Bulk Student Analytics</span>
+</li>
+<li class="flex items-start gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg">check</span>
+<span>Custom Curriculum Integration</span>
+</li>
+</ul>
+<button class="w-full mt-8 bg-surface-container hover:bg-surface-container-high border border-outline-variant text-on-surface font-medium py-3 rounded-xl transition-colors">Contact Sales</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- 8. Professional Footer -->
+<footer class="bg-surface border-t border-outline-variant pt-20 pb-12 px-6 lg:px-8 mt-auto">
+<div class="max-w-7xl mx-auto">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
+<div class="col-span-2 md:col-span-1">
+<span class="font-display font-black text-2xl text-primary mb-4 block">DRONA.AI</span>
+<p class="text-sm text-on-surface-variant mb-6 leading-relaxed">
+                        Synthesizing intelligence for the next generation of academic excellence.
+                    </p>
+</div>
+<div>
+<h4 class="font-bold text-on-background mb-4 text-sm uppercase tracking-wider">Architecture</h4>
+<ul class="space-y-3 text-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">The Master Agent</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Six Environments</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Deep Analytics</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Security</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold text-on-background mb-4 text-sm uppercase tracking-wider">Company</h4>
+<ul class="space-y-3 text-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Research Papers</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold text-on-background mb-4 text-sm uppercase tracking-wider">Legal</h4>
+<ul class="space-y-3 text-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Data Ethics</a></li>
+</ul>
+</div>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-outline-variant/50">
+<span class="text-outline text-sm">© 2024 Drona AI Systems. All rights reserved.</span>
+<div class="flex gap-4">
+<!-- Social placeholders -->
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-sm">link</span>
+</div>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

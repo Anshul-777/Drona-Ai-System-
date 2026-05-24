@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DRONA.AI - Reports Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#001454",
+                        "on-background": "#191c1d",
+                        "surface-tint": "#074af0",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary": "#0042dc",
+                        "on-error": "#ffffff",
+                        "surface": "#f8f9fa",
+                        "surface-container-high": "#e7e8e9",
+                        "primary-container": "#2a5cff",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb59b",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#b8c4ff",
+                        "secondary-container": "#e2e0fc",
+                        "on-tertiary-fixed-variant": "#812800",
+                        "primary-fixed": "#dde1ff",
+                        "on-secondary-fixed-variant": "#45455b",
+                        "inverse-surface": "#2e3132",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f3f4f5",
+                        "outline": "#747688",
+                        "on-primary-fixed-variant": "#0037ba",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container": "#edeeef",
+                        "surface-variant": "#e1e3e4",
+                        "surface-dim": "#d9dadb",
+                        "secondary": "#5d5c74",
+                        "on-primary-container": "#efefff",
+                        "tertiary-fixed": "#ffdbcf",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-container": "#ffede8",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-tertiary-fixed": "#380d00",
+                        "on-secondary-fixed": "#1a1a2e",
+                        "secondary-fixed-dim": "#c6c4df",
+                        "secondary-fixed": "#e2e0fc",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#434656",
+                        "tertiary": "#9a3200",
+                        "outline-variant": "#c4c5d9",
+                        "primary-fixed-dim": "#b8c4ff",
+                        "on-surface": "#191c1d",
+                        "error-container": "#ffdad6",
+                        "background": "#f8f9fa",
+                        "tertiary-container": "#c34100",
+                        "on-secondary-container": "#63627a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Playfair Display", "serif"],
+                        "display": ["Playfair Display", "serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill-icon {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d9dadb;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c4c5d9;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased min-h-screen flex flex-col overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<nav class="bg-surface/80 dark:bg-surface-container/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-8 h-16">
+<div class="flex items-center gap-8">
+<a class="font-display font-black text-2xl tracking-tighter text-primary dark:text-primary-fixed" href="#">DRONA.AI</a>
+<div class="hidden md:flex items-center gap-6">
+<a class="font-display text-lg tracking-tight text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-md" href="#">Learning</a>
+<a class="font-display text-lg tracking-tight text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-md" href="#">Test</a>
+<a class="font-display text-lg tracking-tight text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-md" href="#">Game</a>
+<a class="font-display text-lg tracking-tight text-primary font-bold border-b-2 border-primary pb-1 cursor-pointer active:scale-95 transition-transform hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-md" href="#">Workspace</a>
+<a class="font-display text-lg tracking-tight text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-md" href="#">Resources</a>
+<a class="font-display text-lg tracking-tight text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-md" href="#">Career</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform p-2 rounded-full hover:bg-surface-container-high/50 transition-all duration-200">
+<span class="material-symbols-outlined">military_tech</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform p-2 rounded-full hover:bg-surface-container-high/50 transition-all duration-200">
+<span class="material-symbols-outlined">monetization_on</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant/30 shadow-sm cursor-pointer ml-2">
+<img alt="Student Profile Avatar" class="w-full h-full object-cover" data-alt="A close up, high quality headshot portrait of a professional student avatar. The background is a clean, bright, minimalist light gray, fitting a modern light-mode OS aesthetic. The lighting is soft and even, highlighting the subject's face clearly. The overall tone is calm, focused, and academic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiOjXvOj0HvNsJl8USHgYSEYAOkPQ5-yuBeqA4QvZEXk_gdXCaeC_RPXTmlS7N9S2SuDk4i63yIfHUZQueG44mWmGw2LWmenAZ9gYQq_UytJGZGocv5IHkZcR94IZ3NuAiKqdjD8bTF9MdRgDXkXn0Mnu2rse9XGlg5Qcepx9bOPjLO0rYcNobAWRg9uoNLV6Le_FsoFxfAZknrAycdziulNnTdUJFKLB7PHB6v6U2uh6pAdqgGNvBfXub22LiTWgw57uf9aZfLjk"/>
+</div>
+</div>
+</div>
+</nav>
+<div class="flex flex-1 overflow-hidden relative">
+<!-- SideNavBar -->
+<aside class="bg-surface-container-low dark:bg-surface-dim border-r border-outline-variant/20 fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 hidden lg:flex flex-col z-40">
+<div class="p-6 border-b border-outline-variant/20 flex flex-col items-center text-center gap-3">
+<div class="w-16 h-16 rounded-2xl bg-surface-container-highest shadow-sm flex items-center justify-center p-3 relative group">
+<img alt="Drona Orchestrator Icon" class="w-full h-full object-contain rounded-xl" data-alt="A minimalist, highly polished 3D render of an abstract, futuristic AI core or orchestrator icon. It features clean geometric shapes in a premium metallic blue and bright silver finish, set against a pristine white background. The lighting is crisp and studio-quality, emphasizing the premium, high-tech academic feel of the brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0MiUV7pNyyZdVfm-EfmEs1tWdupsgkPez1jzCmpmtRe4Z2cwc3Ezqe3M1nt11I1LSM5cTjEgZi7mt7EI86jekKz5NXhfY65X5AhiVuypXMMQytutZSAg-8pidEmPErtfyns5nq6tYVrH3vU0Gql2qnLf9tZHQR89A8uYzUk8yGgk2TB-pz_TFygUP7lH3ZkbKXw7jOavgDb38TC3AvhtBFNxhyv4sEChr3YHCqEEaUWhdDoqa81nlZlj3x7eNl99Kzf_MOfcc57w"/>
+<div class="absolute inset-0 bg-primary/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+</div>
+<div>
+<h2 class="font-display text-xl font-bold text-on-surface">Core Learning</h2>
+<p class="font-body text-xs font-medium text-secondary mt-1">Environment: Active</p>
+</div>
+<button class="mt-2 w-full py-2.5 px-4 bg-primary text-on-primary rounded-xl font-body text-sm font-semibold shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
+                    Open Agent Dock
+                </button>
+</div>
+<div class="flex flex-col p-4 gap-2 flex-1 overflow-y-auto">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined text-xl group-hover:opacity-100 transition-opacity">menu_book</span>
+<span class="font-body text-sm font-medium">Curriculum</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined text-xl group-hover:opacity-100 transition-opacity">bolt</span>
+<span class="font-body text-sm font-medium">Active Quests</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined text-xl group-hover:opacity-100 transition-opacity">local_library</span>
+<span class="font-body text-sm font-medium">Library</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined text-xl group-hover:opacity-100 transition-opacity">psychology</span>
+<span class="font-body text-sm font-medium">AI Tutor</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl font-bold shadow-sm hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined text-xl fill-icon group-hover:opacity-100 transition-opacity">leaderboard</span>
+<span class="font-body text-sm">Progress</span>
+</a>
+</div>
+<div class="p-4 border-t border-outline-variant/20 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-2.5 text-secondary hover:bg-surface-container-high rounded-xl hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:opacity-100 transition-opacity">settings</span>
+<span class="font-body text-sm font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-secondary hover:bg-surface-container-high rounded-xl hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:opacity-100 transition-opacity">help</span>
+<span class="font-body text-sm font-medium">Help</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 lg:ml-64 p-6 md:p-10 lg:p-12 overflow-y-auto bg-surface-bright min-h-[calc(100vh-4rem)]">
+<!-- Header -->
+<header class="mb-12">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-primary text-2xl fill-icon">monitoring</span>
+<h1 class="font-headline text-4xl lg:text-5xl font-black text-on-surface tracking-tight">Reports Hub</h1>
+</div>
+<p class="font-body text-secondary text-lg max-w-2xl mt-4">Analytical breakdown of your learning trajectory, cognitive patterns, and academic endurance for the current epoch.</p>
+</header>
+<!-- Bento Grid Canvas -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 auto-rows-[minmax(180px,auto)]">
+<!-- 1. Weekly Mastery Report (Spans 2 columns) -->
+<div class="md:col-span-2 lg:col-span-2 row-span-2 bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-[0_4px_20px_rgba(0,0,0,0.04)] p-8 relative overflow-hidden group hover:-translate-y-0.5 transition-all duration-300">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-inverse-primary"></div>
+<div class="flex justify-between items-start mb-8">
+<div>
+<h3 class="font-headline text-2xl font-bold text-on-surface mb-1">Weekly Mastery Report</h3>
+<p class="text-sm text-secondary font-medium">Improvement across 6 core cognitive vectors</p>
+</div>
+<div class="bg-surface-container-low px-4 py-2 rounded-full border border-outline-variant/50">
+<span class="text-sm font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">trending_up</span>
+                                +14% Overall Growth
+                            </span>
+</div>
+</div>
+<!-- Abstract Hexagon / Radar chart placeholder via grid -->
+<div class="grid grid-cols-2 md:grid-cols-3 gap-6 mt-6">
+<!-- Stat 1 -->
+<div class="flex flex-col gap-2 p-4 rounded-xl bg-surface-container-low/50 border border-outline-variant/20">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">memory</span>
+<span class="text-xs font-semibold uppercase tracking-wider">Retention</span>
+</div>
+<div class="flex items-end gap-2">
+<span class="text-3xl font-display font-black text-on-surface">92%</span>
+<span class="text-xs text-primary font-bold mb-1">+4%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden mt-1">
+<div class="h-full bg-primary w-[92%] rounded-full"></div>
+</div>
+</div>
+<!-- Stat 2 -->
+<div class="flex flex-col gap-2 p-4 rounded-xl bg-surface-container-low/50 border border-outline-variant/20">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">speed</span>
+<span class="text-xs font-semibold uppercase tracking-wider">Velocity</span>
+</div>
+<div class="flex items-end gap-2">
+<span class="text-3xl font-display font-black text-on-surface">88%</span>
+<span class="text-xs text-primary font-bold mb-1">+8%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden mt-1">
+<div class="h-full bg-primary w-[88%] rounded-full"></div>
+</div>
+</div>
+<!-- Stat 3 -->
+<div class="flex flex-col gap-2 p-4 rounded-xl bg-surface-container-low/50 border border-outline-variant/20">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">psychology_alt</span>
+<span class="text-xs font-semibold uppercase tracking-wider">Application</span>
+</div>
+<div class="flex items-end gap-2">
+<span class="text-3xl font-display font-black text-on-surface">76%</span>
+<span class="text-xs text-primary font-bold mb-1">+12%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden mt-1">
+<div class="h-full bg-primary w-[76%] rounded-full"></div>
+</div>
+</div>
+<!-- Stat 4 -->
+<div class="flex flex-col gap-2 p-4 rounded-xl bg-surface-container-low/50 border border-outline-variant/20">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">architecture</span>
+<span class="text-xs font-semibold uppercase tracking-wider">Synthesis</span>
+</div>
+<div class="flex items-end gap-2">
+<span class="text-3xl font-display font-black text-on-surface">81%</span>
+<span class="text-xs text-primary font-bold mb-1">+2%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden mt-1">
+<div class="h-full bg-primary w-[81%] rounded-full"></div>
+</div>
+</div>
+<!-- Stat 5 -->
+<div class="flex flex-col gap-2 p-4 rounded-xl bg-surface-container-low/50 border border-outline-variant/20">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">target</span>
+<span class="text-xs font-semibold uppercase tracking-wider">Precision</span>
+</div>
+<div class="flex items-end gap-2">
+<span class="text-3xl font-display font-black text-on-surface">95%</span>
+<span class="text-xs text-primary font-bold mb-1">+1%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden mt-1">
+<div class="h-full bg-primary w-[95%] rounded-full"></div>
+</div>
+</div>
+<!-- Stat 6 -->
+<div class="flex flex-col gap-2 p-4 rounded-xl bg-surface-container-low/50 border border-outline-variant/20">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">diversity_3</span>
+<span class="text-xs font-semibold uppercase tracking-wider">Collaboration</span>
+</div>
+<div class="flex items-end gap-2">
+<span class="text-3xl font-display font-black text-on-surface">64%</span>
+<span class="text-xs text-primary font-bold mb-1">+22%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden mt-1">
+<div class="h-full bg-primary w-[64%] rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- 2. Mistake Pattern Analysis -->
+<div class="lg:col-span-1 row-span-2 bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-[0_4px_20px_rgba(0,0,0,0.04)] p-8 relative flex flex-col hover:-translate-y-0.5 transition-all duration-300">
+<div class="absolute top-0 left-0 w-full h-1 bg-tertiary-container"></div>
+<div class="flex items-center gap-3 mb-6">
+<div class="p-2 bg-error-container rounded-lg">
+<span class="material-symbols-outlined text-error text-xl">troubleshoot</span>
+</div>
+<h3 class="font-headline text-xl font-bold text-on-surface">Mistake Pattern Analysis</h3>
+</div>
+<p class="text-sm text-secondary mb-6 leading-relaxed">AI analysis indicates recurrent friction points during Phase 3 conceptual synthesis. Recommended intervention protocol activated.</p>
+<div class="flex-1 flex flex-col gap-4">
+<!-- Pattern 1 -->
+<div class="flex gap-4 items-start p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+<div class="w-2 h-2 rounded-full bg-tertiary mt-2 shrink-0"></div>
+<div>
+<h4 class="font-bold text-sm text-on-surface mb-1">Premature Calculation</h4>
+<p class="text-xs text-secondary">Skipping algebraic simplification before substituting values in Physics modules.</p>
+<span class="inline-block mt-2 text-[10px] uppercase tracking-wider font-bold text-tertiary bg-tertiary-container/10 px-2 py-1 rounded">High Impact</span>
+</div>
+</div>
+<!-- Pattern 2 -->
+<div class="flex gap-4 items-start p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+<div class="w-2 h-2 rounded-full bg-secondary mt-2 shrink-0"></div>
+<div>
+<h4 class="font-bold text-sm text-on-surface mb-1">Contextual Oversights</h4>
+<p class="text-xs text-secondary">Missing 'not' operators in long-form multiple choice questions.</p>
+<span class="inline-block mt-2 text-[10px] uppercase tracking-wider font-bold text-secondary bg-secondary-container/30 px-2 py-1 rounded">Medium Impact</span>
+</div>
+</div>
+</div>
+<button class="mt-6 w-full py-3 border border-outline-variant hover:border-primary text-sm font-semibold rounded-xl text-on-surface hover:text-primary transition-colors flex justify-center items-center gap-2">
+<span>Review Deep Dive</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- 3. Study Habit Tracker (Morning vs Night) -->
+<div class="md:col-span-2 lg:col-span-2 row-span-1 bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-[0_4px_20px_rgba(0,0,0,0.04)] p-8 relative flex flex-col hover:-translate-y-0.5 transition-all duration-300">
+<div class="absolute top-0 left-0 w-full h-1 bg-secondary"></div>
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-2xl">schedule</span>
+<h3 class="font-headline text-xl font-bold text-on-surface">Study Habit Tracking</h3>
+</div>
+<div class="text-sm font-medium text-secondary">Current Week vs Last Week</div>
+</div>
+<div class="flex-1 flex items-center justify-between gap-8 mt-2">
+<!-- Morning -->
+<div class="flex-1">
+<div class="flex justify-between items-end mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">light_mode</span>
+<span class="text-sm font-bold text-on-surface">Morning (06:00 - 12:00)</span>
+</div>
+<span class="text-lg font-display font-bold">14h 20m</span>
+</div>
+<div class="flex h-12 w-full bg-surface-container-low rounded-lg overflow-hidden border border-outline-variant/20 relative">
+<!-- Abstract bar chart representation -->
+<div class="h-full bg-primary-container/40 border-r border-white w-[60%] flex items-center justify-end px-3">
+<span class="text-xs font-bold text-on-primary-container">+2h</span>
+</div>
+<div class="h-full bg-surface-container-high w-[40%]"></div>
+</div>
+</div>
+<!-- Divider -->
+<div class="w-px h-16 bg-outline-variant/30 hidden md:block"></div>
+<!-- Night -->
+<div class="flex-1">
+<div class="flex justify-between items-end mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">dark_mode</span>
+<span class="text-sm font-bold text-on-surface">Night (18:00 - 00:00)</span>
+</div>
+<span class="text-lg font-display font-bold text-secondary">6h 45m</span>
+</div>
+<div class="flex h-12 w-full bg-surface-container-low rounded-lg overflow-hidden border border-outline-variant/20 relative">
+<!-- Abstract bar chart representation -->
+<div class="h-full bg-secondary-container/60 border-r border-white w-[35%] flex items-center justify-end px-3">
+<span class="text-xs font-bold text-on-secondary-container">-1h</span>
+</div>
+<div class="h-full bg-surface-container-high w-[65%]"></div>
+</div>
+</div>
+</div>
+<p class="text-xs text-secondary mt-6 italic text-center">Optimum cognitive load detected during morning sessions. Evening retention rates are currently sub-optimal.</p>
+</div>
+<!-- 4. Parent Report Preview -->
+<div class="md:col-span-1 lg:col-span-1 row-span-1 bg-gradient-to-br from-surface-container-lowest to-surface-container rounded-2xl border border-outline-variant/30 shadow-[0_4px_20px_rgba(0,0,0,0.04)] p-8 relative flex flex-col justify-between hover:-translate-y-0.5 transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-headline text-xl font-bold text-on-surface">Parent Report</h3>
+<span class="material-symbols-outlined text-primary text-xl">family_restroom</span>
+</div>
+<div class="bg-white/50 backdrop-blur-sm p-4 rounded-xl border border-white/40 shadow-sm mb-6 flex-1 flex flex-col justify-center">
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                            "Student has shown exemplary focus in advanced mathematics this week. Task completion is at <strong class="text-on-surface">94%</strong>, exceeding baseline expectations. Intervention recommended for minor delays in literature assignments."
+                        </p>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">lock</span> Accountability View
+                        </span>
+<button class="text-primary text-sm font-bold hover:underline underline-offset-4 flex items-center gap-1">
+                            Preview Full PDF
+                        </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

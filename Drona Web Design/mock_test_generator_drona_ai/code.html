@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mock Test Generator - DRONA.AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#001454",
+                        "on-background": "#191c1d",
+                        "surface-tint": "#074af0",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary": "#ba1a1a", /* Editorial Red override for this specific screen's intent as requested */
+                        "on-error": "#ffffff",
+                        "surface": "#f8f9fa",
+                        "surface-container-high": "#e7e8e9",
+                        "primary-container": "#ffdad6", /* Red tint */
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb59b",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#ffb4ab", /* Red tint */
+                        "secondary-container": "#e2e0fc",
+                        "on-tertiary-fixed-variant": "#812800",
+                        "primary-fixed": "#ffdad6", /* Red tint */
+                        "on-secondary-fixed-variant": "#45455b",
+                        "inverse-surface": "#2e3132",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f3f4f5",
+                        "outline": "#747688",
+                        "on-primary-fixed-variant": "#93000a", /* Red tint */
+                        "surface-bright": "#f8f9fa",
+                        "surface-container": "#edeeef",
+                        "surface-variant": "#e1e3e4",
+                        "surface-dim": "#d9dadb",
+                        "secondary": "#5d5c74",
+                        "on-primary-container": "#410002", /* Red tint */
+                        "tertiary-fixed": "#ffdbcf",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-container": "#ffede8",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-tertiary-fixed": "#380d00",
+                        "on-secondary-fixed": "#1a1a2e",
+                        "secondary-fixed-dim": "#c6c4df",
+                        "secondary-fixed": "#e2e0fc",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#434656",
+                        "tertiary": "#9a3200",
+                        "outline-variant": "#c4c5d9",
+                        "primary-fixed-dim": "#ffb4ab", /* Red tint */
+                        "on-surface": "#191c1d",
+                        "error-container": "#ffdad6",
+                        "background": "#f8f9fa",
+                        "tertiary-container": "#c34100",
+                        "on-secondary-container": "#63627a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Playfair Display", "serif"],
+                        "display": ["Playfair Display", "serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .layer-1 {
+            background-color: #ffffff;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        }
+        /* Custom range slider styling for minimalist look */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #ba1a1a;
+            cursor: pointer;
+            margin-top: -6px;
+            box-shadow: 0 2px 6px rgba(186, 26, 26, 0.3);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #e1e3e4;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased min-h-screen flex overflow-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar -->
+<nav aria-label="Main Navigation" class="fixed left-0 top-0 h-screen w-64 bg-surface-container-low border-r border-outline-variant/20 flex flex-col p-4 gap-2 z-40 hidden md:flex">
+<!-- Brand -->
+<div class="px-4 py-6 mb-4">
+<h1 class="font-display text-2xl font-bold text-on-surface tracking-tighter">DRONA.AI</h1>
+</div>
+<!-- Nav Links (Test Hub Order inferred from context: Curriculum, Mock Tests, Analytics...) -->
+<div class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl group transition-all duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined text-xl">menu_book</span>
+<span class="font-body text-sm font-medium">Curriculum</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl shadow-sm group transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">assignment</span>
+<span class="font-body text-sm font-bold">Mock Tests</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl group transition-all duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined text-xl">analytics</span>
+<span class="font-body text-sm font-medium">Performance</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl group transition-all duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined text-xl">psychology</span>
+<span class="font-body text-sm font-medium">AI Tutor</span>
+</a>
+</div>
+<!-- Footer Actions -->
+<div class="mt-auto space-y-1 pt-4 border-t border-outline-variant/20">
+<button class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-surface-container-high text-on-surface hover:bg-surface-variant rounded-xl font-body text-sm font-medium transition-colors">
+<span class="material-symbols-outlined text-lg">dock</span>
+                Open Agent Dock
+            </button>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary hover:bg-surface-container-high rounded-xl mt-2 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">settings</span>
+<span class="font-body text-sm">Settings</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-0 md:ml-64 h-screen overflow-y-auto bg-background flex flex-col relative">
+<!-- Header area for main content -->
+<header class="px-8 py-10 max-w-7xl mx-auto w-full flex-shrink-0">
+<div class="flex items-end justify-between">
+<div>
+<h2 class="font-body text-sm font-semibold text-primary tracking-widest uppercase mb-2">Test Hub</h2>
+<h1 class="font-display text-4xl md:text-5xl font-black text-on-background tracking-tight">Build Your Exam</h1>
+<p class="font-body text-on-surface-variant mt-3 max-w-xl text-lg">Configure your custom mock test. The Orchestrator will synthesize questions based on your parameters.</p>
+</div>
+</div>
+</header>
+<!-- Bento Grid Configuration Area -->
+<div class="px-8 pb-20 max-w-7xl mx-auto w-full flex-1">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
+<!-- Left Column: Core Parameters -->
+<div class="lg:col-span-8 space-y-6 flex flex-col">
+<!-- Subject Selector -->
+<section class="layer-1 rounded-2xl p-8 flex-shrink-0">
+<div class="flex items-center justify-between mb-6 border-b border-surface-variant pb-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary bg-primary-container p-2 rounded-lg">category</span>
+<h3 class="font-display text-2xl font-bold text-on-background">Subject Matrix</h3>
+</div>
+<span class="text-sm font-medium text-secondary">Step 1</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+<label class="cursor-pointer group relative">
+<input checked="" class="peer sr-only" name="subject" type="radio"/>
+<div class="h-24 rounded-xl border-2 border-outline-variant/30 bg-surface flex flex-col items-center justify-center gap-2 transition-all group-hover:border-primary/50 peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:shadow-sm">
+<span class="material-symbols-outlined text-on-surface-variant peer-checked:text-primary">functions</span>
+<span class="font-body text-sm font-semibold text-on-surface peer-checked:text-primary">Math</span>
+</div>
+</label>
+<label class="cursor-pointer group relative">
+<input class="peer sr-only" name="subject" type="radio"/>
+<div class="h-24 rounded-xl border-2 border-outline-variant/30 bg-surface flex flex-col items-center justify-center gap-2 transition-all group-hover:border-primary/50 peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:shadow-sm">
+<span class="material-symbols-outlined text-on-surface-variant peer-checked:text-primary">science</span>
+<span class="font-body text-sm font-semibold text-on-surface peer-checked:text-primary">Physics</span>
+</div>
+</label>
+<label class="cursor-pointer group relative">
+<input class="peer sr-only" name="subject" type="radio"/>
+<div class="h-24 rounded-xl border-2 border-outline-variant/30 bg-surface flex flex-col items-center justify-center gap-2 transition-all group-hover:border-primary/50 peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:shadow-sm">
+<span class="material-symbols-outlined text-on-surface-variant peer-checked:text-primary">experiment</span>
+<span class="font-body text-sm font-semibold text-on-surface peer-checked:text-primary">Chemistry</span>
+</div>
+</label>
+<label class="cursor-pointer group relative">
+<input class="peer sr-only" name="subject" type="radio"/>
+<div class="h-24 rounded-xl border-2 border-outline-variant/30 bg-surface flex flex-col items-center justify-center gap-2 transition-all group-hover:border-primary/50 peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:shadow-sm">
+<span class="material-symbols-outlined text-on-surface-variant peer-checked:text-primary">biotech</span>
+<span class="font-body text-sm font-semibold text-on-surface peer-checked:text-primary">Biology</span>
+</div>
+</label>
+<label class="cursor-pointer group relative">
+<input class="peer sr-only" name="subject" type="radio"/>
+<div class="h-24 rounded-xl border-2 border-outline-variant/30 bg-surface flex flex-col items-center justify-center gap-2 transition-all group-hover:border-primary/50 peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:shadow-sm">
+<span class="material-symbols-outlined text-on-surface-variant peer-checked:text-primary">hub</span>
+<span class="font-body text-sm font-semibold text-on-surface peer-checked:text-primary">Mixed</span>
+</div>
+</label>
+</div>
+</section>
+<!-- Difficulty & Duration (Split Row) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
+<!-- Difficulty Slider -->
+<section class="layer-1 rounded-2xl p-8 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary bg-primary-container p-2 rounded-lg">tune</span>
+<h3 class="font-display text-xl font-bold text-on-background">Difficulty Mix</h3>
+</div>
+<div class="mt-8 px-2 relative">
+<input class="w-full appearance-none bg-transparent" max="100" min="1" type="range" value="65"/>
+<div class="flex justify-between mt-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+<span>Standard</span>
+<span class="text-primary">Challenging</span>
+</div>
+<!-- Visual marker for optimal zone -->
+<div class="absolute top-1 left-[60%] w-[20%] h-1 bg-primary/20 pointer-events-none rounded-full"></div>
+</div>
+</div>
+<div class="mt-6 bg-surface-container-low p-4 rounded-xl flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">info</span>
+<p class="text-xs text-on-surface-variant leading-relaxed">Current mix targets 30% Foundation, 50% Application, and 20% Synthesis level questions.</p>
+</div>
+</section>
+<!-- Duration Selector -->
+<section class="layer-1 rounded-2xl p-8 flex flex-col">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary bg-primary-container p-2 rounded-lg">timer</span>
+<h3 class="font-display text-xl font-bold text-on-background">Duration</h3>
+</div>
+<div class="grid grid-cols-2 gap-3 flex-1">
+<label class="cursor-pointer">
+<input class="peer sr-only" name="duration" type="radio"/>
+<div class="h-full px-4 py-3 rounded-xl border border-outline-variant/30 bg-surface flex items-center justify-between transition-all hover:bg-surface-container-high peer-checked:border-primary peer-checked:bg-primary-container/20">
+<span class="font-body text-sm font-medium text-on-surface">30m</span>
+<span class="text-xs text-secondary">Sprint</span>
+</div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="duration" type="radio"/>
+<div class="h-full px-4 py-3 rounded-xl border border-outline-variant/30 bg-surface flex items-center justify-between transition-all hover:bg-surface-container-high peer-checked:border-primary peer-checked:bg-primary-container/20">
+<span class="font-body text-sm font-medium text-on-surface">1 hr</span>
+<span class="text-xs text-secondary">Standard</span>
+</div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="duration" type="radio"/>
+<div class="h-full px-4 py-3 rounded-xl border border-outline-variant/30 bg-surface flex items-center justify-between transition-all hover:bg-surface-container-high peer-checked:border-primary peer-checked:bg-primary-container/20">
+<span class="font-body text-sm font-medium text-on-surface">2 hr</span>
+<span class="text-xs text-secondary">Deep</span>
+</div>
+</label>
+<label class="cursor-pointer">
+<input checked="" class="peer sr-only" name="duration" type="radio"/>
+<div class="h-full px-4 py-3 rounded-xl border border-outline-variant/30 bg-surface flex items-center justify-between transition-all hover:bg-surface-container-high peer-checked:border-primary peer-checked:bg-primary-container/20">
+<span class="font-body text-sm font-medium text-on-surface">3 hr</span>
+<span class="text-xs text-primary font-bold">Full</span>
+</div>
+</label>
+</div>
+</section>
+</div>
+</div>
+<!-- Right Column: AI Simulators & Rules -->
+<div class="lg:col-span-4 space-y-6 flex flex-col">
+<!-- Advanced Modifiers -->
+<section class="glass-panel rounded-2xl p-8 flex-1 flex flex-col relative overflow-hidden">
+<!-- Decorative gradient background indicating 'AI/Advanced' area -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary-container rounded-full blur-3xl opacity-50 -mr-10 -mt-10"></div>
+<div class="flex items-center gap-3 mb-8 relative z-10">
+<span class="material-symbols-outlined text-primary bg-primary-container p-2 rounded-lg">memory</span>
+<h3 class="font-display text-xl font-bold text-on-background">AI Orchestrator</h3>
+</div>
+<div class="space-y-6 relative z-10 flex-1">
+<!-- Shadow Simulation Toggle -->
+<div class="flex items-start justify-between p-4 bg-surface rounded-xl border border-outline-variant/20 hover:border-primary/30 transition-colors">
+<div>
+<h4 class="font-body text-sm font-bold text-on-surface flex items-center gap-2">
+                                        Shadow Simulation
+                                        <span class="px-1.5 py-0.5 rounded text-[10px] bg-primary text-on-primary font-bold uppercase tracking-wider">Beta</span>
+</h4>
+<p class="text-xs text-on-surface-variant mt-1 max-w-[200px]">Mimics real NTA exam difficulty curves and question pacing.</p>
+</div>
+<!-- Toggle Switch -->
+<label class="relative inline-flex items-center cursor-pointer mt-1">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Weakness Bias Toggle -->
+<div class="flex items-start justify-between p-4 bg-surface rounded-xl border border-outline-variant/20 hover:border-primary/30 transition-colors">
+<div>
+<h4 class="font-body text-sm font-bold text-on-surface">Weakness Bias</h4>
+<p class="text-xs text-on-surface-variant mt-1 max-w-[200px]">Prioritizes red-zone topics from your recent performance heatmap.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer mt-1">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Marking Scheme -->
+<div class="pt-4 border-t border-outline-variant/20">
+<h4 class="font-body text-sm font-bold text-on-surface mb-3">Marking Scheme</h4>
+<div class="flex rounded-lg bg-surface-container-low p-1">
+<button class="flex-1 py-2 text-xs font-medium rounded-md text-secondary hover:text-on-surface transition-colors">Positive Only</button>
+<button class="flex-1 py-2 text-xs font-bold rounded-md bg-white shadow-sm text-primary transition-all">+4 / -1 Standard</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Generate Button -->
+<button class="w-full layer-1 bg-primary text-on-primary rounded-xl py-5 px-6 flex items-center justify-between group hover:-translate-y-1 transition-all duration-300 shadow-[0_8px_16px_rgba(186,26,26,0.2)]">
+<div class="flex flex-col items-start text-left">
+<span class="font-display text-xl font-bold">Generate Test</span>
+<span class="font-body text-xs text-on-primary/80">Estimated compile time: 4s</span>
+</div>
+<div class="bg-white/20 p-2 rounded-full group-hover:bg-white/30 transition-colors">
+<span class="material-symbols-outlined text-2xl">arrow_forward</span>
+</div>
+</button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

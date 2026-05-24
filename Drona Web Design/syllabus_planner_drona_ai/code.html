@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DRONA.AI - Syllabus &amp; Planner</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-fixed": "#001454",
+                      "on-background": "#191c1d",
+                      "surface-tint": "#074af0",
+                      "surface-container-highest": "#e1e3e4",
+                      "primary": "#0042dc",
+                      "on-error": "#ffffff",
+                      "surface": "#f8f9fa",
+                      "surface-container-high": "#e7e8e9",
+                      "primary-container": "#2a5cff",
+                      "error": "#ba1a1a",
+                      "tertiary-fixed-dim": "#ffb59b",
+                      "on-secondary": "#ffffff",
+                      "inverse-primary": "#b8c4ff",
+                      "secondary-container": "#e2e0fc",
+                      "on-tertiary-fixed-variant": "#812800",
+                      "primary-fixed": "#dde1ff",
+                      "on-secondary-fixed-variant": "#45455b",
+                      "inverse-surface": "#2e3132",
+                      "on-error-container": "#93000a",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-low": "#f3f4f5",
+                      "outline": "#747688",
+                      "on-primary-fixed-variant": "#0037ba",
+                      "surface-bright": "#f8f9fa",
+                      "surface-container": "#edeeef",
+                      "surface-variant": "#e1e3e4",
+                      "surface-dim": "#d9dadb",
+                      "secondary": "#5d5c74",
+                      "on-primary-container": "#efefff",
+                      "tertiary-fixed": "#ffdbcf",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-container": "#ffede8",
+                      "inverse-on-surface": "#f0f1f2",
+                      "on-tertiary-fixed": "#380d00",
+                      "on-secondary-fixed": "#1a1a2e",
+                      "secondary-fixed-dim": "#c6c4df",
+                      "secondary-fixed": "#e2e0fc",
+                      "on-primary": "#ffffff",
+                      "on-surface-variant": "#434656",
+                      "tertiary": "#9a3200",
+                      "outline-variant": "#c4c5d9",
+                      "primary-fixed-dim": "#b8c4ff",
+                      "on-surface": "#191c1d",
+                      "error-container": "#ffdad6",
+                      "background": "#f8f9fa",
+                      "tertiary-container": "#c34100",
+                      "on-secondary-container": "#63627a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Playfair Display"],
+                      "display": ["Playfair Display"],
+                      "body": ["Inter"],
+                      "label": ["Inter"]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface/80 dark:bg-surface-container/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-8 h-16">
+<div class="font-display font-black text-2xl tracking-tighter text-primary dark:text-primary-fixed">DRONA.AI</div>
+<nav class="hidden md:flex gap-6 items-center">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-md" href="#">Learning</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-md" href="#">Test</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-md" href="#">Game</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 cursor-pointer active:scale-95 transition-transform hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2" href="#">Workspace</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-md" href="#">Resources</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-md" href="#">Career</a>
+</nav>
+<div class="flex items-center gap-4 text-primary dark:text-primary-fixed-dim">
+<button class="p-2 rounded-full hover:bg-surface-container-high/50 transition-colors cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined">military_tech</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container-high/50 transition-colors cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined">monetization_on</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant/30 cursor-pointer active:scale-95 transition-transform">
+<img alt="Student Profile Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD53lCNNj_AX6OX47-rS84nsYGjJ2VSwEU2q1eJZv4YJVEUGuFphxH_SLibsrsHFXut4xHjN1Zt-lXvJugYS5e3HiPDBAsesE3_1rJn5OH44xOj7eFJh8exOxuG5hRbWYoMLjLctf9fgufX0EPTfVk6dComyuew4v_GAQaotyUFxrFk4jJoR9VcHKxuX1q5BVNVoyA71x6R8iC7dgcRBOfe-33goy9rSgMZAFWgsSX3FNf3wkwChY_P9dNeGvtVvc45UONbicpQb0Q"/>
+</div>
+</div>
+</div>
+</header>
+<div class="flex flex-1 relative">
+<!-- SideNavBar -->
+<aside class="hidden md:flex bg-surface-container-low dark:bg-surface-dim border-r border-outline-variant/20 flat no shadows fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 z-40 group">
+<div class="flex flex-col p-4 gap-2 w-full">
+<!-- Header -->
+<div class="mb-6 p-2 flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
+<img alt="Drona Orchestrator Icon" class="w-8 h-8" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAch7JCHnKY1_clpYJjefHVKDaklNP_CjzPNijpkL2appEqFgweAWeOkJakRXoR38tIInBzhWnc8-No1Cob0CP8Gd1YcnTa11tlmpAX114E2dxRjWJtzaQm4ID25e0lAj7vM5WByOYriCkKcXCK57h2qA5M1DK6HJpG9MAwSaaZQpLNqL5R7mCvbimDUHNwuaFKMc4zYk2DSevq7ZVa9P7G2cUoA03xOc-zNip0Zfc6fY7QNlQ3010eAIceDcE1r23wXFzRf6EG8r4"/>
+</div>
+<div>
+<h2 class="font-display text-xl font-bold text-on-surface">Core Learning</h2>
+<p class="text-xs text-secondary font-medium">Environment: Active</p>
+</div>
+</div>
+<!-- Tabs -->
+<nav class="flex flex-col gap-1 flex-1 font-body text-sm font-medium">
+<a class="bg-primary-container text-on-primary-container rounded-xl font-bold shadow-sm flex items-center gap-3 p-3 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+                        Curriculum
+                    </a>
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 p-3 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim">bolt</span>
+                        Active Quests
+                    </a>
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 p-3 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim">local_library</span>
+                        Library
+                    </a>
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 p-3 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim">psychology</span>
+                        AI Tutor
+                    </a>
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 p-3 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim">leaderboard</span>
+                        Progress
+                    </a>
+</nav>
+<!-- CTA -->
+<div class="mt-4 mb-4">
+<button class="w-full bg-primary text-on-primary py-3 rounded-xl font-medium shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">rocket_launch</span>
+                        Open Agent Dock
+                    </button>
+</div>
+<!-- Footer Tabs -->
+<div class="border-t border-outline-variant/20 pt-4 flex flex-col gap-1 font-body text-sm font-medium">
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 p-3 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim">settings</span>
+                        Settings
+                    </a>
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 p-3 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim">help</span>
+                        Help
+                    </a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 md:ml-64 p-6 md:p-10 lg:p-12 min-h-[calc(100vh-4rem)]">
+<div class="max-w-7xl mx-auto space-y-8">
+<!-- Header Area -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div>
+<h1 class="font-display text-4xl font-bold text-on-background tracking-tight mb-2">Syllabus &amp; Planner</h1>
+<p class="text-on-surface-variant">Autonomous study scheduling and mastery tracking.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 border border-outline-variant text-on-surface rounded-lg font-medium hover:bg-surface-container transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">calendar_month</span>
+                            Sync Calendar
+                        </button>
+<button class="px-4 py-2 bg-primary text-on-primary rounded-lg font-medium shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">magic_button</span>
+                            Auto-Plan Week
+                        </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Syllabus Map (Spans 8 cols) -->
+<div class="lg:col-span-8 bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col">
+<div class="p-6 border-b border-outline-variant/20 flex justify-between items-center bg-surface-bright">
+<h3 class="font-display text-xl font-bold text-on-background flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">account_tree</span>
+                                Syllabus Map
+                            </h3>
+<div class="flex items-center gap-4 text-sm">
+<div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full bg-primary"></div> Mastery</div>
+<div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full bg-primary-container"></div> In Progress</div>
+<div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full bg-surface-container-highest"></div> Locked</div>
+</div>
+</div>
+<div class="p-6 flex-1 bg-surface-bright relative min-h-[400px]">
+<!-- Visual Node Representation -->
+<div class="absolute inset-0 p-8 flex flex-col justify-center gap-8">
+<!-- Node Row 1 -->
+<div class="flex justify-center gap-12 relative z-10">
+<div class="w-32 h-20 rounded-xl bg-primary text-on-primary shadow-sm flex flex-col items-center justify-center p-2 text-center border-2 border-primary cursor-pointer hover:scale-105 transition-transform z-20">
+<span class="font-bold text-sm">Linear Algebra</span>
+<span class="text-xs opacity-80">100% Mastered</span>
+</div>
+<div class="w-32 h-20 rounded-xl bg-primary text-on-primary shadow-sm flex flex-col items-center justify-center p-2 text-center border-2 border-primary cursor-pointer hover:scale-105 transition-transform z-20">
+<span class="font-bold text-sm">Calculus I</span>
+<span class="text-xs opacity-80">100% Mastered</span>
+</div>
+</div>
+<!-- Connecting Lines -->
+<div class="absolute inset-0 pointer-events-none hidden md:block">
+<svg class="w-full h-full" preserveaspectratio="none">
+<path d="M 40% 30% L 50% 50%" fill="none" stroke="#e1e3e4" stroke-width="2"></path>
+<path d="M 60% 30% L 50% 50%" fill="none" stroke="#e1e3e4" stroke-width="2"></path>
+<path d="M 50% 60% L 40% 80%" fill="none" stroke="#e1e3e4" stroke-width="2"></path>
+<path d="M 50% 60% L 60% 80%" fill="none" stroke="#e1e3e4" stroke-width="2"></path>
+</svg>
+</div>
+<!-- Node Row 2 -->
+<div class="flex justify-center gap-12 relative z-10">
+<div class="w-40 h-24 rounded-xl bg-primary-container text-on-primary-container shadow-md flex flex-col items-center justify-center p-3 text-center border-2 border-primary ring-4 ring-primary/20 cursor-pointer hover:scale-105 transition-transform z-20">
+<span class="material-symbols-outlined mb-1">play_circle</span>
+<span class="font-bold text-sm">Multivariable Calc</span>
+<span class="text-xs opacity-80 mt-1">65% Progress</span>
+</div>
+</div>
+<!-- Node Row 3 -->
+<div class="flex justify-center gap-12 relative z-10">
+<div class="w-32 h-20 rounded-xl bg-surface-container-highest text-on-surface-variant flex flex-col items-center justify-center p-2 text-center border border-outline-variant/50 cursor-not-allowed opacity-70 z-20">
+<span class="material-symbols-outlined text-[18px] mb-1">lock</span>
+<span class="font-medium text-sm">Diff Equations</span>
+</div>
+<div class="w-32 h-20 rounded-xl bg-surface-container-highest text-on-surface-variant flex flex-col items-center justify-center p-2 text-center border border-outline-variant/50 cursor-not-allowed opacity-70 z-20">
+<span class="material-symbols-outlined text-[18px] mb-1">lock</span>
+<span class="font-medium text-sm">Real Analysis</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Planner Controls (Spans 4 cols) -->
+<div class="lg:col-span-4 bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm p-6 flex flex-col gap-6">
+<div>
+<h3 class="font-display text-xl font-bold text-on-background flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary">tune</span>
+                                Planner Controls
+                            </h3>
+<p class="text-sm text-on-surface-variant">Instruct the Orchestrator to adjust your path.</p>
+</div>
+<div class="space-y-3 flex-1">
+<button class="w-full text-left px-4 py-3 rounded-xl border border-outline-variant/50 hover:bg-surface-container-low hover:border-primary/50 transition-all group flex items-center justify-between">
+<div>
+<div class="font-medium text-on-background group-hover:text-primary transition-colors">Re-plan for Next Week</div>
+<div class="text-xs text-on-surface-variant">Distribute workload evenly</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary">arrow_forward</span>
+</button>
+<button class="w-full text-left px-4 py-3 rounded-xl border border-outline-variant/50 hover:bg-surface-container-low hover:border-primary/50 transition-all group flex items-center justify-between">
+<div>
+<div class="font-medium text-on-background group-hover:text-primary transition-colors">Focus on Weak Areas</div>
+<div class="text-xs text-on-surface-variant">Prioritize low-mastery nodes</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary">arrow_forward</span>
+</button>
+<button class="w-full text-left px-4 py-3 rounded-xl border border-outline-variant/50 hover:bg-surface-container-low hover:border-primary/50 transition-all group flex items-center justify-between">
+<div>
+<div class="font-medium text-on-background group-hover:text-primary transition-colors">Exam Cram Mode</div>
+<div class="text-xs text-on-surface-variant">High intensity revision</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary">bolt</span>
+</button>
+</div>
+<div class="bg-primary/5 rounded-xl p-4 border border-primary/10">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings: 'FILL' 1;">info</span>
+<div>
+<h4 class="text-sm font-bold text-on-background">Agent Status</h4>
+<p class="text-xs text-on-surface-variant mt-1">Drona Orchestrator has optimized your schedule based on your recent quiz scores.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Autonomous Study Schedule (Full Width) -->
+<div class="lg:col-span-12 bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden mt-2">
+<div class="p-6 border-b border-outline-variant/20 flex justify-between items-center bg-surface-bright">
+<h3 class="font-display text-xl font-bold text-on-background flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">view_timeline</span>
+                                Autonomous Schedule
+                            </h3>
+<div class="text-sm font-medium text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
+                                This Week
+                            </div>
+</div>
+<div class="divide-y divide-outline-variant/20">
+<!-- Schedule Item 1 -->
+<div class="p-4 md:p-6 hover:bg-surface-container-lowest transition-colors flex flex-col md:flex-row gap-4 md:gap-8 items-start md:items-center">
+<div class="w-24 shrink-0 text-center md:text-left">
+<div class="text-lg font-bold text-on-background">Today</div>
+<div class="text-sm text-on-surface-variant">10:00 AM</div>
+</div>
+<div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+</div>
+<div class="flex-1">
+<h4 class="text-lg font-bold text-on-background">Multivariable Calc: Partial Derivatives</h4>
+<p class="text-sm text-on-surface-variant mt-1">Core learning module. Estimated time: 45 mins.</p>
+</div>
+<button class="px-4 py-2 bg-primary text-on-primary rounded-lg font-medium text-sm shadow-sm hover:shadow-md transition-all self-start md:self-auto shrink-0">
+                                    Start Session
+                                </button>
+</div>
+<!-- Schedule Item 2 (Forgetting Curve) -->
+<div class="p-4 md:p-6 hover:bg-surface-container-lowest transition-colors flex flex-col md:flex-row gap-4 md:gap-8 items-start md:items-center bg-tertiary-container/5">
+<div class="w-24 shrink-0 text-center md:text-left">
+<div class="text-lg font-bold text-on-background">Today</div>
+<div class="text-sm text-on-surface-variant">2:00 PM</div>
+</div>
+<div class="w-12 h-12 rounded-full bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0 border border-tertiary/20 relative">
+<span class="material-symbols-outlined">psychology</span>
+<span class="absolute -top-1 -right-1 flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-tertiary"></span>
+</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2">
+<h4 class="text-lg font-bold text-on-background">Revision: Linear Algebra</h4>
+<span class="text-[10px] font-bold tracking-wider uppercase text-tertiary bg-tertiary/10 px-2 py-0.5 rounded border border-tertiary/20">Forgetting Curve</span>
+</div>
+<p class="text-sm text-on-surface-variant mt-1">AI scheduled spaced repetition. Estimated time: 20 mins.</p>
+</div>
+<button class="px-4 py-2 border border-outline-variant text-on-surface rounded-lg font-medium text-sm hover:bg-surface-container transition-colors self-start md:self-auto shrink-0">
+                                    View Details
+                                </button>
+</div>
+<!-- Schedule Item 3 -->
+<div class="p-4 md:p-6 hover:bg-surface-container-lowest transition-colors flex flex-col md:flex-row gap-4 md:gap-8 items-start md:items-center opacity-70">
+<div class="w-24 shrink-0 text-center md:text-left">
+<div class="text-lg font-medium text-on-background">Tomorrow</div>
+<div class="text-sm text-on-surface-variant">11:00 AM</div>
+</div>
+<div class="w-12 h-12 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center shrink-0 border border-outline-variant/30">
+<span class="material-symbols-outlined">quiz</span>
+</div>
+<div class="flex-1">
+<h4 class="text-lg font-medium text-on-background">Assessment: Gradient Vectors</h4>
+<p class="text-sm text-on-surface-variant mt-1">Weekly progress check. Estimated time: 30 mins.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

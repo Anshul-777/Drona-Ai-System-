@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Biology Agent - Drona.ai</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#001454",
+                        "on-background": "#191c1d",
+                        "surface-tint": "#074af0",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary": "#0042dc",
+                        "on-error": "#ffffff",
+                        "surface": "#f8f9fa",
+                        "surface-container-high": "#e7e8e9",
+                        "primary-container": "#2a5cff",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb59b",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#b8c4ff",
+                        "secondary-container": "#e2e0fc",
+                        "on-tertiary-fixed-variant": "#812800",
+                        "primary-fixed": "#dde1ff",
+                        "on-secondary-fixed-variant": "#45455b",
+                        "inverse-surface": "#2e3132",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f3f4f5",
+                        "outline": "#747688",
+                        "on-primary-fixed-variant": "#0037ba",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container": "#edeeef",
+                        "surface-variant": "#e1e3e4",
+                        "surface-dim": "#d9dadb",
+                        "secondary": "#5d5c74",
+                        "on-primary-container": "#efefff",
+                        "tertiary-fixed": "#ffdbcf",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-container": "#ffede8",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-tertiary-fixed": "#380d00",
+                        "on-secondary-fixed": "#1a1a2e",
+                        "secondary-fixed-dim": "#c6c4df",
+                        "secondary-fixed": "#e2e0fc",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#434656",
+                        "tertiary": "#9a3200",
+                        "outline-variant": "#c4c5d9",
+                        "primary-fixed-dim": "#b8c4ff",
+                        "on-surface": "#191c1d",
+                        "error-container": "#ffdad6",
+                        "background": "#f8f9fa",
+                        "tertiary-container": "#c34100",
+                        "on-secondary-container": "#63627a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Playfair Display", "serif"],
+                        "display": ["Playfair Display", "serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4, h5, h6, .font-display, .font-headline { font-family: 'Playfair Display', serif; }
+        .glass-panel { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(226, 232, 240, 0.8); }
+        .ambient-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen flex flex-col overflow-hidden">
+<!-- TopNavBar -->
+<nav class="bg-surface/80 dark:bg-surface-container/80 backdrop-blur-xl docked full-width top-0 sticky z-50 shadow-sm flex justify-between items-center w-full px-8 h-16 border-b border-outline-variant/30">
+<div class="flex items-center gap-8">
+<span class="font-display font-black text-2xl tracking-tighter text-primary dark:text-primary-fixed">DRONA.AI</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-lg" href="#">Learning</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-lg" href="#">Test</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-lg" href="#">Game</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 px-3 py-2" href="#">Workspace</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-lg" href="#">Resources</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-lg" href="#">Career</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high/50 cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined">military_tech</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high/50 cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined">monetization_on</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden border border-outline-variant cursor-pointer">
+<img alt="Student Profile Avatar" class="w-full h-full object-cover" data-alt="A clean, professional headshot of a young student against a light background. Soft studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWbdvXUzPYBQR-8GcIX51bcJtm30ZSrGUE5k-XR2m8njNYQfZn-0AfnaNHEI5F8_RDuX7gm4NnzMR8t1-dJc0Zwd3u4C3ZTUAXHF7M6Bjn4vwJq-sCUblSnmARdIPoOi99DdA8NPdY7MdsbWuIydM2sRp9wgUR4FSR3R0g0Z4OIlf85NWdUuyRyFygF6hOOAq2b6JncCszNSLV6E2GsqrU8LW2zc_QRgejHd85vtvLDMyry9r7yMGRI6MhHBOFlDZXs2-l0vVN89E"/>
+</div>
+</div>
+</nav>
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar -->
+<aside class="hidden md:flex bg-surface-container-low dark:bg-surface-dim border-r border-outline-variant/20 fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 flex-col p-4 gap-2 z-40">
+<div class="mb-6 px-4">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">biotech</span>
+</div>
+<div>
+<h2 class="font-display text-xl font-bold text-on-surface">Core Learning</h2>
+<p class="font-body text-xs text-secondary">Environment: Active</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 px-4 py-3 font-body text-sm font-medium hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">menu_book</span>
+                    Curriculum
+                </a>
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 px-4 py-3 font-body text-sm font-medium hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">bolt</span>
+                    Active Quests
+                </a>
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 px-4 py-3 font-body text-sm font-medium hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">local_library</span>
+                    Library
+                </a>
+<a class="bg-primary-container text-on-primary-container rounded-xl font-bold shadow-sm flex items-center gap-3 px-4 py-3 font-body text-sm hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">psychology</span>
+                    AI Tutor
+                </a>
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 px-4 py-3 font-body text-sm font-medium hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">leaderboard</span>
+                    Progress
+                </a>
+</nav>
+<div class="mt-auto pt-4 border-t border-outline-variant/20 flex flex-col gap-1">
+<button class="w-full bg-primary text-on-primary rounded-xl py-3 px-4 font-body text-sm font-bold flex items-center justify-center gap-2 hover:-translate-y-0.5 transition-transform shadow-sm hover:shadow-md">
+<span class="material-symbols-outlined text-sm">dock</span>
+                    Open Agent Dock
+                </button>
+<div class="flex gap-1 mt-2">
+<a class="flex-1 text-secondary hover:bg-surface-container-high rounded-xl flex items-center justify-center gap-2 px-2 py-2 font-body text-xs font-medium" href="#">
+<span class="material-symbols-outlined text-sm">settings</span> Settings
+                    </a>
+<a class="flex-1 text-secondary hover:bg-surface-container-high rounded-xl flex items-center justify-center gap-2 px-2 py-2 font-body text-xs font-medium" href="#">
+<span class="material-symbols-outlined text-sm">help</span> Help
+                    </a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 bg-surface flex overflow-hidden relative">
+<!-- Chat / Agent Interface -->
+<div class="flex-1 flex flex-col h-full border-r border-outline-variant/20">
+<!-- Chat Header -->
+<header class="h-16 border-b border-outline-variant/20 flex items-center justify-between px-6 bg-surface z-10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container/30 flex items-center justify-center text-primary border border-primary/20">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div>
+<h1 class="font-display font-bold text-lg text-on-surface">Biology Agent</h1>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-body text-xs text-secondary">Active · NCERT Ch. 14 Respiration</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-3 py-1 bg-surface-container-high rounded-full text-xs font-medium text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">verified</span>
+                            NCERT Aligned
+                        </span>
+</div>
+</header>
+<!-- Chat Messages -->
+<div class="flex-1 overflow-y-auto p-6 space-y-6 bg-surface-container-lowest">
+<!-- System/Agent Message -->
+<div class="flex gap-4 max-w-3xl">
+<div class="w-8 h-8 rounded-full bg-primary-container/30 flex-shrink-0 flex items-center justify-center text-primary mt-1">
+<span class="material-symbols-outlined text-sm">psychology</span>
+</div>
+<div class="space-y-3">
+<div class="glass-panel p-4 rounded-2xl rounded-tl-sm ambient-shadow text-sm text-on-surface leading-relaxed">
+<p class="mb-2">Let's dive into Cellular Respiration, specifically the <strong>Krebs Cycle</strong> (Tricarboxylic Acid Cycle). This occurs in the mitochondrial matrix.</p>
+<p>To help you remember the substrates, I've loaded a mnemonic to the side panel. Shall we walk through the diagram step-by-step?</p>
+</div>
+</div>
+</div>
+<!-- User Message -->
+<div class="flex gap-4 max-w-3xl ml-auto justify-end">
+<div class="space-y-3">
+<div class="bg-surface-container p-4 rounded-2xl rounded-tr-sm text-sm text-on-surface leading-relaxed">
+<p>Yes, show me the process diagram. I always get confused between Citrate and Isocitrate.</p>
+</div>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-variant flex-shrink-0 overflow-hidden mt-1 border border-outline-variant">
+<img alt="User" class="w-full h-full object-cover" data-alt="Student avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCtlLhe71qRg_RfI2ojE-sGSJMpK7Hy7rN6V49KVKGCarggkxexjk646tTynV-6UcbWUMbua7EGGHdEKDjkRpd0ZGNfV8j1kTPupEGZY6vcqQTPI8XUqye1dtA1mKngUQh4_oTj41gk-Z64BMkUw3TiMpAQSgzLJLgVTAnc1hwEAFM_FLnGGCWR4mJ9Pzwud3hgvh-ibE3Aabu17SIukztk1wPbbcWSCB8-nTzz6CsGvuHoKNjapqp-kxld-iW0Slf6WCDezBEiWw"/>
+</div>
+</div>
+<!-- Agent Message with Diagram Component -->
+<div class="flex gap-4 max-w-4xl">
+<div class="w-8 h-8 rounded-full bg-primary-container/30 flex-shrink-0 flex items-center justify-center text-primary mt-1">
+<span class="material-symbols-outlined text-sm">psychology</span>
+</div>
+<div class="space-y-4 w-full">
+<div class="glass-panel p-4 rounded-2xl rounded-tl-sm ambient-shadow text-sm text-on-surface leading-relaxed w-fit">
+<p>Here is the Diagram Process Log for the Krebs Cycle. I've highlighted the transition from Citrate to Isocitrate for you.</p>
+</div>
+<!-- Diagram Process Log Component -->
+<div class="bg-white border border-outline-variant/30 rounded-xl overflow-hidden ambient-shadow">
+<div class="border-t-4 border-primary px-4 py-3 bg-surface-container-low flex justify-between items-center">
+<h3 class="font-display font-semibold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">account_tree</span>
+                                        Process Log: Krebs Cycle
+                                    </h3>
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined">fullscreen</span>
+</button>
+</div>
+<div class="p-6 relative">
+<!-- Decorative diagram background -->
+<div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: radial-gradient(#0042dc 1px, transparent 1px); background-size: 20px 20px;"></div>
+<div class="relative z-10 flex flex-col items-center gap-4">
+<!-- Step 1 -->
+<div class="bg-surface-container px-4 py-2 rounded-lg border border-outline-variant/50 w-48 text-center text-sm font-medium">
+                                            Acetyl CoA (2C)
+                                        </div>
+<div class="h-6 w-px bg-outline-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-outline text-xs bg-white">arrow_downward</span>
+</div>
+<!-- Step 2 -->
+<div class="bg-primary/5 px-4 py-2 rounded-lg border border-primary/30 w-48 text-center text-sm font-medium text-primary shadow-sm">
+                                            Citrate (6C)
+                                        </div>
+<div class="h-6 w-px bg-primary/50 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-xs bg-white">arrow_downward</span>
+</div>
+<!-- Step 3 (Highlighted) -->
+<div class="bg-primary px-4 py-3 rounded-lg w-56 text-center shadow-md transform hover:scale-105 transition-transform cursor-pointer group">
+<div class="text-sm font-bold text-on-primary mb-1">Isocitrate (6C)</div>
+<div class="text-xs text-primary-container bg-on-primary/10 rounded px-2 py-1 hidden group-hover:block">Isomerization step via Aconitase</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Chat Input -->
+<div class="p-4 bg-surface border-t border-outline-variant/20 z-10">
+<div class="relative flex items-center bg-surface-container-low rounded-2xl border border-outline-variant/30 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all shadow-sm">
+<button class="p-3 text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-sm font-body text-on-surface placeholder-secondary py-4" placeholder="Ask the Biology Agent..." type="text"/>
+<button class="p-3 text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined">mic</span>
+</button>
+<button class="p-3 mr-1 bg-primary text-on-primary rounded-xl hover:bg-primary/90 transition-colors shadow-sm">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Right Sidebar Widgets (Term Bank & Mnemonics) -->
+<aside class="hidden lg:flex w-80 bg-surface-container-lowest border-l border-outline-variant/20 flex-col overflow-y-auto">
+<!-- Term Bank Widget -->
+<div class="p-6 border-b border-outline-variant/20">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">menu_book</span>
+<h3 class="font-display font-semibold text-lg">Term Bank</h3>
+</div>
+<div class="relative mb-4">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-sm">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg py-2 pl-9 pr-3 text-xs focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Search terminology..." type="text"/>
+</div>
+<div class="space-y-3">
+<div class="glass-panel p-3 rounded-lg border-l-2 border-l-primary hover:-translate-y-0.5 transition-transform cursor-pointer shadow-sm">
+<h4 class="font-bold text-sm text-on-surface mb-1">Aconitase</h4>
+<p class="text-xs text-secondary leading-snug">An enzyme that catalyzes the stereo-specific isomerization of citrate to isocitrate.</p>
+</div>
+<div class="bg-surface-container p-3 rounded-lg border border-outline-variant/30 hover:-translate-y-0.5 transition-transform cursor-pointer">
+<h4 class="font-bold text-sm text-on-surface mb-1">Decarboxylation</h4>
+<p class="text-xs text-secondary leading-snug">A chemical reaction that removes a carboxyl group and releases carbon dioxide (CO2).</p>
+</div>
+</div>
+</div>
+<!-- Mnemonics Widget -->
+<div class="p-6">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">lightbulb</span>
+<h3 class="font-display font-semibold text-lg">Mnemonics</h3>
+</div>
+<button class="text-xs font-medium text-primary hover:underline">View All</button>
+</div>
+<div class="bg-primary/5 border border-primary/20 rounded-xl p-4 relative overflow-hidden">
+<div class="absolute -right-4 -top-4 opacity-10">
+<span class="material-symbols-outlined" style="font-size: 80px;">psychology</span>
+</div>
+<h4 class="font-bold text-sm text-primary-container mb-2 relative z-10">Krebs Cycle Substrates</h4>
+<p class="text-sm font-medium italic text-on-surface mb-3 relative z-10">"<strong>C</strong>an <strong>I</strong> <strong>K</strong>eep <strong>S</strong>elling <strong>S</strong>ubstances <strong>F</strong>or <strong>M</strong>oney, <strong>O</strong>fficer?"</p>
+<div class="space-y-1 relative z-10">
+<div class="flex justify-between text-xs border-b border-primary/10 pb-1">
+<span class="font-bold">C</span><span class="text-secondary">Citrate</span>
+</div>
+<div class="flex justify-between text-xs border-b border-primary/10 py-1 bg-white/50 px-1 rounded">
+<span class="font-bold text-primary">I</span><span class="text-primary font-medium">Isocitrate</span>
+</div>
+<div class="flex justify-between text-xs border-b border-primary/10 py-1">
+<span class="font-bold">K</span><span class="text-secondary">alpha-Ketoglutarate</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</main>
+</div>
+</body></html>

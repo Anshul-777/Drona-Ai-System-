@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DRONA AI - Agent Initialization</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-dim": "#d9dadb",
+                    "on-error-container": "#93000a",
+                    "error-container": "#ffdad6",
+                    "background": "#f8f9fa",
+                    "on-secondary-container": "#63627a",
+                    "outline": "#747688",
+                    "secondary-container": "#e2e0fc",
+                    "primary-fixed-dim": "#b8c4ff",
+                    "inverse-primary": "#b8c4ff",
+                    "on-tertiary-container": "#ffede8",
+                    "on-surface": "#191c1d",
+                    "surface": "#f8f9fa",
+                    "secondary-fixed-dim": "#c6c4df",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed-variant": "#0037ba",
+                    "secondary": "#5d5c74",
+                    "on-tertiary-fixed-variant": "#812800",
+                    "tertiary": "#9a3200",
+                    "surface-container-highest": "#e1e3e4",
+                    "surface-container": "#edeeef",
+                    "on-primary-fixed": "#001454",
+                    "primary": "#0042dc",
+                    "error": "#ba1a1a",
+                    "surface-tint": "#074af0",
+                    "on-surface-variant": "#434656",
+                    "on-primary": "#ffffff",
+                    "tertiary-container": "#c34100",
+                    "surface-container-high": "#e7e8e9",
+                    "tertiary-fixed-dim": "#ffb59b",
+                    "tertiary-fixed": "#ffdbcf",
+                    "surface-container-low": "#f3f4f5",
+                    "primary-fixed": "#dde1ff",
+                    "inverse-on-surface": "#f0f1f2",
+                    "on-secondary": "#ffffff",
+                    "on-primary-container": "#efefff",
+                    "secondary-fixed": "#e2e0fc",
+                    "on-secondary-fixed": "#1a1a2e",
+                    "inverse-surface": "#2e3132",
+                    "surface-variant": "#e1e3e4",
+                    "surface-bright": "#f8f9fa",
+                    "on-background": "#191c1d",
+                    "on-secondary-fixed-variant": "#45455b",
+                    "on-tertiary-fixed": "#380d00",
+                    "surface-container-lowest": "#ffffff",
+                    "outline-variant": "#c4c5d9",
+                    "on-error": "#ffffff",
+                    "primary-container": "#2a5cff"
+            },
+            "fontFamily": {
+                    "headline": ["Playfair Display"],
+                    "display": ["Playfair Display"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .progress-shimmer {
+            background: linear-gradient(90deg, #0042dc 0%, #2a5cff 50%, #0042dc 100%);
+            background-size: 200% 100%;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed overflow-hidden">
+<!-- Background Layer: Cinematic Neural Visualization -->
+<div class="fixed inset-0 z-0">
+<img class="w-full h-full object-cover opacity-60" data-alt="A high-fidelity cinematic neural visualization featuring a translucent, crystalline human brain suspended in a pristine white laboratory environment. Glowing blue electric pulses ripple through the neural pathways, creating a sense of active intelligence. The lighting is soft and high-key, emphasizing a premium minimalist aesthetic. Subtle data overlays and scientific annotations float around the core, evoking a modern academic operating system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCudQ8cbnY6tVZgtNmZUqepUc8Kadxp24L9F9ZGLnq6kcGgY2P12cPcusiAJt1I-wVX27qGPEMV4TB8nek2iI_p1jypMGqbNhMg22WPx_rBvN_bwX7uS1qG6wjx26-7Y9JZAjXioiKUfMihBJeFTBUPWMJZU4Csp_5grfzF1Ig5Zu6Jd_QW_x8kuKJLiFKBfXEiBJQlscON3vu4Z_wxGnAvGsi4U48D5D_pYMYlVhrf2oNT7e1PtoaQ8WLw6oXYI3x1gRJTqKDQRsE"/>
+<div class="absolute inset-0 bg-gradient-to-b from-white/20 via-transparent to-white/40"></div>
+</div>
+<!-- Header / Brand Anchor -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-12 py-8 pointer-events-none">
+<div class="flex flex-col items-start">
+<span class="font-display font-black text-2xl text-primary tracking-tighter pointer-events-auto">DRONA AI</span>
+<span class="font-label text-[10px] uppercase tracking-[0.3em] text-outline opacity-70">Student OS Protocol</span>
+</div>
+<div class="flex gap-6 items-center pointer-events-auto">
+<span class="material-symbols-outlined text-primary text-xl">verified_user</span>
+<span class="font-label text-xs font-bold text-on-surface-variant">SECURE HANDSHAKE</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="relative z-10 min-h-screen flex items-center justify-center p-6">
+<div class="w-full max-auto max-w-4xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+<!-- Central Glassmorphic Module -->
+<div class="lg:col-span-8 glass-panel rounded-3xl p-10 shadow-2xl flex flex-col gap-10">
+<section>
+<h1 class="font-display text-4xl font-black text-on-surface mb-2 tracking-tight">Protocol Initialization: v1.0.4</h1>
+<p class="font-body text-on-surface-variant text-sm leading-relaxed max-w-lg">
+                        Authenticating academic neural pathways. Please configure your model provider to begin the orchestration phase.
+                    </p>
+</section>
+<!-- Phase 1: Provider Authorization (BYOK) -->
+<section class="space-y-6">
+<div class="flex items-center gap-3">
+<span class="font-display italic text-primary text-xl font-bold">01</span>
+<h2 class="font-label font-bold text-xs uppercase tracking-widest text-on-surface">Provider Authorization</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+<button class="flex items-center gap-3 p-4 rounded-xl border border-outline-variant bg-white/40 hover:bg-white/80 hover:border-primary transition-all group">
+<div class="w-8 h-8 rounded-lg bg-surface flex items-center justify-center text-primary font-bold text-xs group-hover:bg-primary group-hover:text-white transition-colors">OA</div>
+<span class="font-label text-sm font-medium">OpenAI</span>
+</button>
+<button class="flex items-center gap-3 p-4 rounded-xl border border-primary bg-primary-fixed/30 hover:bg-white/80 transition-all group">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-xs">AN</div>
+<span class="font-label text-sm font-bold">Anthropic</span>
+</button>
+<button class="flex items-center gap-3 p-4 rounded-xl border border-outline-variant bg-white/40 hover:bg-white/80 hover:border-primary transition-all group">
+<div class="w-8 h-8 rounded-lg bg-surface flex items-center justify-center text-primary font-bold text-xs group-hover:bg-primary group-hover:text-white transition-colors">GO</div>
+<span class="font-label text-sm font-medium">Google</span>
+</button>
+</div>
+<div class="relative">
+<label class="block font-label text-[10px] font-bold text-outline uppercase mb-2 ml-1">API ACCESS KEY (BYOK)</label>
+<div class="relative flex items-center">
+<input class="w-full bg-surface-container/50 border-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 rounded-t-xl px-6 py-4 font-mono text-sm tracking-widest placeholder:text-outline-variant/60" placeholder="sk-••••••••••••••••••••••••••••" type="password"/>
+<button class="absolute right-4 px-4 py-2 bg-primary text-white font-label text-[10px] font-bold uppercase rounded-lg hover:shadow-lg transition-all">Verify Connection</button>
+</div>
+</div>
+</section>
+<!-- Phase 3: Progress Tracker -->
+<section class="space-y-4 pt-4 border-t border-outline-variant/30">
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-display italic text-on-surface text-lg">Calibrating your multi-agent swarm...</h2>
+<p class="font-body text-xs text-on-surface-variant">Allocating compute resources to Student Profile Synthesis</p>
+</div>
+<span class="font-display font-black text-2xl text-primary">78%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full progress-shimmer w-[78%] rounded-full shadow-[0_0_15px_rgba(42,92,255,0.4)]"></div>
+</div>
+</section>
+<!-- Phase 4: Final Action -->
+<div class="flex items-center justify-between gap-6 pt-2">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span class="font-label text-[10px] font-medium">ESTIMATED COMPLETION: 45 SEC</span>
+</div>
+<button class="group relative flex items-center gap-4 bg-[#2a5cff] text-white px-10 py-5 rounded-2xl font-label font-bold uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform shadow-[0_10px_30px_rgba(42,92,255,0.3)]">
+                        Initialize Dashboard
+                        <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Right Side Checklist (Phase 2) -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<div class="glass-panel rounded-3xl p-8 space-y-8 h-full flex flex-col">
+<div class="flex items-center gap-3">
+<span class="font-display italic text-primary text-xl font-bold">02</span>
+<h2 class="font-label font-bold text-xs uppercase tracking-widest text-on-surface">Sub-Agent Calibration</h2>
+</div>
+<div class="flex-1 space-y-8">
+<!-- Step 1 -->
+<div class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-primary-fixed text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-sm font-bold">check</span>
+</div>
+<div class="w-0.5 h-full bg-primary-fixed mt-2"></div>
+</div>
+<div>
+<h3 class="font-label font-bold text-sm text-on-surface">Memory Mesh Synchronization</h3>
+<p class="font-body text-xs text-on-surface-variant mt-1 leading-relaxed">Vector database ready. Long-term memory clusters indexed.</p>
+<span class="inline-block mt-2 font-label text-[9px] font-black uppercase text-primary tracking-tighter">SUCCESS</span>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full border-2 border-primary text-primary flex items-center justify-center animate-pulse">
+<span class="material-symbols-outlined text-sm font-bold">sync</span>
+</div>
+<div class="w-0.5 h-full bg-outline-variant/30 mt-2"></div>
+</div>
+<div>
+<h3 class="font-label font-bold text-sm text-on-surface">Knowledge Base Partitioning</h3>
+<p class="font-body text-xs text-on-surface-variant mt-1 leading-relaxed">Injecting global academic curricula into active memory nodes...</p>
+<span class="inline-block mt-2 font-label text-[9px] font-black uppercase text-on-secondary-container tracking-tighter">IN PROGRESS</span>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="flex gap-4 opacity-40">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full border-2 border-outline-variant text-outline flex items-center justify-center">
+<span class="material-symbols-outlined text-sm font-bold">pending</span>
+</div>
+</div>
+<div>
+<h3 class="font-label font-bold text-sm text-on-surface">Student Profile Synthesis</h3>
+<p class="font-body text-xs text-on-surface-variant mt-1 leading-relaxed">Waiting for cognitive baseline metrics from user history.</p>
+<span class="inline-block mt-2 font-label text-[9px] font-black uppercase text-outline tracking-tighter">PENDING</span>
+</div>
+</div>
+</div>
+<!-- Meta Data -->
+<div class="pt-6 border-t border-outline-variant/20 flex flex-col gap-1">
+<div class="flex justify-between font-label text-[10px] text-outline uppercase font-bold">
+<span>Latent Speed</span>
+<span>340ms</span>
+</div>
+<div class="flex justify-between font-label text-[10px] text-outline uppercase font-bold">
+<span>Auth Status</span>
+<span class="text-primary">ENCRYPTED</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Utility Bar -->
+<footer class="fixed bottom-0 left-0 w-full z-50 flex justify-between items-center px-12 py-8 pointer-events-none">
+<div class="flex gap-8 items-center pointer-events-auto">
+<span class="font-label text-[10px] uppercase font-bold text-outline tracking-widest">© 2024 DRONA ACADEMIC SYSTEMS</span>
+</div>
+<div class="flex gap-8 items-center pointer-events-auto">
+<a class="font-label text-[10px] uppercase font-bold text-outline hover:text-primary transition-colors tracking-widest" href="#">Privacy Protocol</a>
+<a class="font-label text-[10px] uppercase font-bold text-outline hover:text-primary transition-colors tracking-widest" href="#">Security Whitepaper</a>
+</div>
+</footer>
+</body></html>

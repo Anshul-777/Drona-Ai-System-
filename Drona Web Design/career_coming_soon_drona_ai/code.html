@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DRONA.AI - Career Environment</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#001454",
+                        "on-background": "#191c1d",
+                        "surface-tint": "#074af0",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary": "#0042dc",
+                        "on-error": "#ffffff",
+                        "surface": "#f8f9fa",
+                        "surface-container-high": "#e7e8e9",
+                        "primary-container": "#2a5cff",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb59b",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#b8c4ff",
+                        "secondary-container": "#e2e0fc",
+                        "on-tertiary-fixed-variant": "#812800",
+                        "primary-fixed": "#dde1ff",
+                        "on-secondary-fixed-variant": "#45455b",
+                        "inverse-surface": "#2e3132",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f3f4f5",
+                        "outline": "#747688",
+                        "on-primary-fixed-variant": "#0037ba",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container": "#edeeef",
+                        "surface-variant": "#e1e3e4",
+                        "surface-dim": "#d9dadb",
+                        "secondary": "#5d5c74",
+                        "on-primary-container": "#efefff",
+                        "tertiary-fixed": "#ffdbcf",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-container": "#ffede8",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-tertiary-fixed": "#380d00",
+                        "on-secondary-fixed": "#1a1a2e",
+                        "secondary-fixed-dim": "#c6c4df",
+                        "secondary-fixed": "#e2e0fc",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#434656",
+                        "tertiary": "#9a3200",
+                        "outline-variant": "#c4c5d9",
+                        "primary-fixed-dim": "#b8c4ff",
+                        "on-surface": "#191c1d",
+                        "error-container": "#ffdad6",
+                        "background": "#f8f9fa",
+                        "tertiary-container": "#c34100",
+                        "on-secondary-container": "#63627a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {},
+                    "fontFamily": {
+                        "headline": [
+                            "Playfair Display"
+                        ],
+                        "display": [
+                            "Playfair Display"
+                        ],
+                        "body": [
+                            "Inter"
+                        ],
+                        "label": [
+                            "Inter"
+                        ]
+                    },
+                    "fontSize": {}
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="bg-surface/80 dark:bg-surface-container/80 backdrop-blur-xl docked full-width top-0 sticky z-50 shadow-sm border-b border-outline-variant/30 flex justify-between items-center w-full px-8 h-16">
+<div class="font-display font-black text-2xl tracking-tighter text-primary dark:text-primary-fixed cursor-pointer active:scale-95 transition-transform">DRONA.AI</div>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-lg font-display text-lg tracking-tight cursor-pointer active:scale-95 transition-transform" href="#">Learning</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-lg font-display text-lg tracking-tight cursor-pointer active:scale-95 transition-transform" href="#">Test</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-lg font-display text-lg tracking-tight cursor-pointer active:scale-95 transition-transform" href="#">Game</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-lg font-display text-lg tracking-tight cursor-pointer active:scale-95 transition-transform" href="#">Workspace</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-lg font-display text-lg tracking-tight cursor-pointer active:scale-95 transition-transform" href="#">Resources</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-display text-lg tracking-tight cursor-pointer active:scale-95 transition-transform" href="#">Career</a>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim cursor-pointer active:scale-95 transition-transform" data-icon="military_tech">military_tech</span>
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim cursor-pointer active:scale-95 transition-transform" data-icon="monetization_on">monetization_on</span>
+<img alt="Student Profile Avatar" class="w-8 h-8 rounded-full border border-outline-variant/30 cursor-pointer active:scale-95 transition-transform" data-alt="A small circular avatar portrait of a student, well lit, against a clean white background. This fits the minimalist premium academic aesthetic of the overall light mode UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCarKdLznS-mhAX35B-Vk5mTBOoFFalOrNMj7zDK6qcsymS4GRMm7ZV0aWKl8Ld0zLLOltkOmZdcy7bFrrqh6q_wwGMedltKsxWzsO1CSYBWPlzwFpXylVzdnm6fGP4nVECjIQF6v0m4OTpi6dhbjl7I3vzacc4xq0VDt2z71cckuFk0Sy20nQlRK3gt0Z5lHbGIkD95yui94m4rVD4qYipjQ1HPf3BfRmItWCh3lYwkF-RW5t4OH52v6wUxLGmSPTrFmW7RrQEeKU"/>
+</div>
+</nav>
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar -->
+<aside class="hidden md:flex bg-surface-container-low dark:bg-surface-dim fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 border-r border-outline-variant/20 flex-col p-4 gap-2 z-40">
+<div class="flex items-center gap-3 mb-6 px-2">
+<img alt="Drona Orchestrator Icon" class="w-10 h-10 rounded-lg object-cover border border-outline-variant/30" data-alt="A sleek, minimalist abstract icon representing an AI orchestrator. The design should use deep navy and clean whites, fitting a premium modern operating system aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAuZzSdk0V6FTauZAzy2Z-eAbP1YCov3f8FqJ-z8F54cqAlf5ijEqkkAytxrZYZWhA07SBByr_tFhFozv40KazO7xmahwqEdhv9TzL3dpq-m7-GQyVfME8a1tNpKM6RRd44G1ZlODGLdVP2dUlQmvU6yJY1r2A7BcyCoCbQa2p0GZu94LyxfnQRTGYAvXVXWsGAGqLZ6ndhi76Cq0jJDGqo-JR6efPAEqAM2mmULXqs668N7vyAIuf1eOSXxWHNbn-QXe4d9XcwqA"/>
+<div>
+<h2 class="font-display text-xl font-bold text-on-surface">Core Learning</h2>
+<p class="font-body text-xs text-secondary">Environment: Active</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-secondary hover:bg-surface-container-high rounded-xl font-body text-sm font-medium hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:opacity-100 transition-opacity" data-icon="menu_book">menu_book</span>
+                    Curriculum
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-secondary hover:bg-surface-container-high rounded-xl font-body text-sm font-medium hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:opacity-100 transition-opacity" data-icon="bolt">bolt</span>
+                    Active Quests
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-secondary hover:bg-surface-container-high rounded-xl font-body text-sm font-medium hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:opacity-100 transition-opacity" data-icon="local_library">local_library</span>
+                    Library
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-secondary hover:bg-surface-container-high rounded-xl font-body text-sm font-medium hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:opacity-100 transition-opacity" data-icon="psychology">psychology</span>
+                    AI Tutor
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary-container text-on-primary-container rounded-xl font-bold shadow-sm font-body text-sm hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:opacity-100 transition-opacity" data-icon="leaderboard" data-weight="fill" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+                    Progress
+                </a>
+</nav>
+<div class="mt-auto flex flex-col gap-1">
+<button class="w-full bg-primary text-on-primary font-body text-sm font-medium py-2 px-4 rounded-lg shadow-sm hover:-translate-y-0.5 transition-all duration-200 mb-4">Open Agent Dock</button>
+<a class="flex items-center gap-3 px-3 py-2 text-secondary hover:bg-surface-container-high rounded-xl font-body text-sm font-medium hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:opacity-100 transition-opacity" data-icon="settings">settings</span>
+                    Settings
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-secondary hover:bg-surface-container-high rounded-xl font-body text-sm font-medium hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:opacity-100 transition-opacity" data-icon="help">help</span>
+                    Help
+                </a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-64 p-8 lg:p-12 xl:p-16 overflow-y-auto bg-surface-bright min-h-[calc(100vh-4rem)]">
+<div class="max-w-6xl mx-auto">
+<!-- Hero Section -->
+<div class="relative bg-surface rounded-2xl border border-outline-variant/30 shadow-[0_4px_20px_rgba(0,0,0,0.04)] overflow-hidden mb-16">
+<div class="absolute inset-0 bg-gradient-to-br from-primary-container/20 to-transparent pointer-events-none"></div>
+<div class="relative p-10 md:p-16 flex flex-col items-start max-w-3xl">
+<span class="inline-block px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-body text-xs font-bold tracking-wider uppercase mb-6 border border-outline-variant/50">Coming Soon</span>
+<h1 class="font-display text-5xl md:text-6xl font-black text-on-surface leading-tight mb-6 tracking-tight">The Future of Your <br/><span class="text-primary">Career Environment</span></h1>
+<p class="font-body text-lg text-secondary mb-10 leading-relaxed">DRONA.AI is expanding from academia to professional mastery. We are building an elite, OS-level suite of tools to transition your learning into tangible industry success. The next phase of your journey is currently compiling.</p>
+<form class="flex w-full max-w-md gap-3">
+<input class="flex-1 bg-surface-container-lowest border-b-2 border-outline-variant/50 focus:border-primary focus:ring-0 px-4 py-3 font-body text-on-surface placeholder:text-outline outline-none transition-colors rounded-t-sm" placeholder="Enter your academic email" required="" type="email"/>
+<button class="bg-primary text-on-primary font-body font-medium px-6 py-3 rounded-lg shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 flex items-center gap-2" type="submit">
+                                Notify Me
+                                <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+</div>
+<div class="absolute right-0 bottom-0 w-1/3 h-full hidden lg:block opacity-80 mix-blend-multiply">
+<img alt="Abstract architectural background" class="w-full h-full object-cover" data-alt="Abstract modern architecture featuring sweeping curves and silver-toned structural elements. The scene is brightly lit with a clean, light-mode aesthetic, embodying a sense of structured progress and futuristic planning. The tones are cool greys and whites with subtle navy hints." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkp7_4BuSkvPzGOLVf6twgqPflIbxivSky96XjMYrg-fJlFhGU9khcINvQp5lidxhh5ZLFA40ENjCT7mNeEXeBLiVG-Bd8okFSOqeaxLdD7F4IH5QdiN1492cfVxib64QaIJ84ZfNzUlUZ-JcNsJACDrGGzEubu9vnLu1vxl9O7SLByCl1ATaizWETAosyvwWqhjv5HFJHNnWhrL7q_s1liB6vaUX2XG1VRcJumv4ccuOe85KJz1VRkaGf6CAqDxEhSvXaqH8_EGQ"/>
+</div>
+</div>
+<!-- Bento Grid Features -->
+<h2 class="font-display text-3xl font-bold text-on-surface mb-8 tracking-tight">Strategic Roadmap</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(240px,auto)]">
+<!-- Feature 1: Large -->
+<div class="md:col-span-2 bg-surface rounded-2xl border border-outline-variant/30 shadow-[0_4px_20px_rgba(0,0,0,0.04)] p-8 flex flex-col justify-between group hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
+<div class="relative z-10">
+<div class="w-12 h-12 rounded-xl bg-primary-container text-primary flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-2xl" data-icon="route">route</span>
+</div>
+<h3 class="font-display text-2xl font-bold text-on-surface mb-3">AI Career Roadmap Generator</h3>
+<p class="font-body text-secondary leading-relaxed max-w-xl">Generate a dynamic, 5-year strategic plan tailored to your learning data. The Orchestrator will analyze your strengths, map them to emerging industry roles, and define clear milestones to bridge the gap from student to professional.</p>
+</div>
+<div class="mt-8 flex justify-end relative z-10">
+<button class="text-primary font-body font-medium flex items-center gap-2 group-hover:gap-3 transition-all">Get Notified <span class="material-symbols-outlined text-sm" data-icon="notifications">notifications</span></button>
+</div>
+</div>
+<!-- Feature 2: Small -->
+<div class="bg-surface rounded-2xl border border-outline-variant/30 shadow-[0_4px_20px_rgba(0,0,0,0.04)] p-8 flex flex-col justify-between group hover:-translate-y-1 transition-all duration-300">
+<div>
+<div class="w-10 h-10 rounded-lg bg-surface-container-high text-on-surface-variant flex items-center justify-center mb-5">
+<span class="material-symbols-outlined" data-icon="troubleshoot">troubleshoot</span>
+</div>
+<h3 class="font-display text-xl font-bold text-on-surface mb-2">Skill Gap Analyzer</h3>
+<p class="font-body text-sm text-secondary leading-relaxed">Real-time diagnostics comparing your current DRONA.AI curriculum mastery against live job market requirements.</p>
+</div>
+<div class="mt-6">
+<button class="text-on-surface-variant font-body text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors">Notify Me <span class="material-symbols-outlined text-xs" data-icon="arrow_right_alt">arrow_right_alt</span></button>
+</div>
+</div>
+<!-- Feature 3: Small -->
+<div class="bg-surface rounded-2xl border border-outline-variant/30 shadow-[0_4px_20px_rgba(0,0,0,0.04)] p-8 flex flex-col justify-between group hover:-translate-y-1 transition-all duration-300">
+<div>
+<div class="w-10 h-10 rounded-lg bg-surface-container-high text-on-surface-variant flex items-center justify-center mb-5">
+<span class="material-symbols-outlined" data-icon="document_scanner">document_scanner</span>
+</div>
+<h3 class="font-display text-xl font-bold text-on-surface mb-2">AI Resume Builder</h3>
+<p class="font-body text-sm text-secondary leading-relaxed">Automatically translate your active quests and project submissions into high-impact, ATS-optimized professional achievements.</p>
+</div>
+<div class="mt-6">
+<button class="text-on-surface-variant font-body text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors">Notify Me <span class="material-symbols-outlined text-xs" data-icon="arrow_right_alt">arrow_right_alt</span></button>
+</div>
+</div>
+<!-- Feature 4: Large Horizontal -->
+<div class="md:col-span-2 bg-surface rounded-2xl border border-outline-variant/30 shadow-[0_4px_20px_rgba(0,0,0,0.04)] p-0 flex flex-col md:flex-row group hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+<div class="p-8 flex-1 flex flex-col justify-center">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high text-on-surface-variant flex items-center justify-center mb-5">
+<span class="material-symbols-outlined" data-icon="record_voice_over">record_voice_over</span>
+</div>
+<h3 class="font-display text-xl font-bold text-on-surface mb-2">AI Interview Practice</h3>
+<p class="font-body text-sm text-secondary leading-relaxed mb-6">Simulated technical and behavioral interviews using adaptive voice and text agents. Receive instant feedback on tone, pacing, and technical accuracy in a low-stakes environment.</p>
+<button class="w-fit border border-outline-variant/50 text-on-surface font-body text-sm font-medium px-4 py-2 rounded-lg hover:bg-surface-container-high transition-colors flex items-center gap-2">Notify Me</button>
+</div>
+<div class="w-full md:w-2/5 bg-surface-container-low min-h-[200px] border-t md:border-t-0 md:border-l border-outline-variant/30 flex items-center justify-center relative overflow-hidden">
+<!-- Glassmorphic aesthetic element -->
+<div class="absolute inset-4 bg-surface/60 backdrop-blur-md border border-outline-variant/20 rounded-xl flex items-center justify-center shadow-sm">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+<div class="w-2 h-2 rounded-full bg-primary/50"></div>
+<div class="w-2 h-2 rounded-full bg-primary/20"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Section for Timeline -->
+<div class="mt-16 border-t border-outline-variant/30 pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-tertiary-container" data-icon="insights">insights</span>
+<span class="font-display font-medium text-on-surface">Plus: Continuous Industry Trend Updates integrated into your Core Learning dashboard.</span>
+</div>
+<p class="font-body text-xs text-outline">Expected Deployment: Q3</p>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Onboarding Finalization - DRONA.AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#9a3200",
+                        "primary": "#0042dc",
+                        "surface-dim": "#d9dadb",
+                        "secondary-container": "#e2e0fc",
+                        "surface-container": "#edeeef",
+                        "on-surface-variant": "#434656",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f8f9fa",
+                        "on-secondary-fixed-variant": "#45455b",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#5d5c74",
+                        "tertiary-fixed": "#ffdbcf",
+                        "error": "#ba1a1a",
+                        "tertiary-container": "#c34100",
+                        "surface-container-high": "#e7e8e9",
+                        "background": "#f8f9fa",
+                        "outline": "#747688",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#e2e0fc",
+                        "primary-fixed-dim": "#b8c4ff",
+                        "on-primary-container": "#efefff",
+                        "inverse-primary": "#b8c4ff",
+                        "inverse-surface": "#2e3132",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb59b",
+                        "on-tertiary-container": "#ffede8",
+                        "surface-tint": "#074af0",
+                        "surface": "#f8f9fa",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#c4c5d9",
+                        "on-tertiary-fixed": "#380d00",
+                        "on-primary-fixed-variant": "#0037ba",
+                        "surface-variant": "#e1e3e4",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-secondary-container": "#63627a",
+                        "primary-fixed": "#dde1ff",
+                        "on-surface": "#191c1d",
+                        "on-secondary-fixed": "#1a1a2e",
+                        "secondary-fixed-dim": "#c6c4df",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f3f4f5",
+                        "on-primary-fixed": "#001454",
+                        "primary-container": "#2a5cff",
+                        "on-tertiary-fixed-variant": "#812800",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-background": "#191c1d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Playfair Display", "serif"],
+                        "display": ["Playfair Display", "serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body h-screen w-screen overflow-hidden antialiased">
+<!-- Cinematic Background -->
+<div class="absolute inset-0 z-0">
+<img alt="Cinematic background for DRONA.AI onboarding" class="w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida/ADBb0ujUXRAbakBjWjAMOJLpg0xZnb0cUxY--kCOnBVcfPMqGfyHyooLpE9lze3OgVQRFtQsFQtmV9MhpMqAEfjeEBFakEZuMymsm8raH7xjPeTJ2shK00JUuq5Nown4kig20d0tiHWOxRKucNFot8w9dYIfSfqRDtildE-nHOuCOZNBv9-RZbzslvRFbwADYhxNs3nqgyONAK1_AS39pMh_s2p-CUu8CGSOKGxd9VNgQAGLVTRqJ9eqID2W_HM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface/90 via-surface/40 to-transparent"></div>
+</div>
+<!-- Main Content Canvas -->
+<div class="relative z-10 flex flex-col items-center justify-center w-full h-full p-6 md:p-12">
+<!-- Header / Brand -->
+<div class="absolute top-8 left-8 md:top-12 md:left-12">
+<h1 class="font-display font-black text-2xl tracking-tighter text-primary">DRONA.AI</h1>
+</div>
+<!-- Progress Indicator -->
+<div class="absolute top-8 right-8 md:top-12 md:right-12 flex items-center gap-4">
+<span class="font-body text-sm font-medium text-on-surface-variant">Setup 95% Complete</span>
+<div class="w-32 h-1 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[95%]"></div>
+</div>
+</div>
+<!-- Main Glassmorphic Container -->
+<main class="w-full max-w-2xl glass-panel rounded-[2rem] p-8 md:p-12 flex flex-col gap-8 transform transition-transform hover:-translate-y-1 duration-500">
+<!-- Title Area -->
+<div class="flex flex-col gap-2 border-b border-outline-variant/30 pb-6">
+<div class="flex items-center gap-3 text-primary mb-2">
+<span class="material-symbols-outlined fill text-2xl" data-icon="psychology">psychology</span>
+<span class="font-body text-sm font-bold tracking-widest uppercase">Assessment Agent</span>
+</div>
+<h2 class="font-headline text-4xl md:text-5xl font-bold text-on-surface tracking-tight">Onboarding Finalization</h2>
+</div>
+<!-- Message Area -->
+<div class="flex flex-col gap-4">
+<p class="font-body text-lg md:text-xl text-on-surface-variant leading-relaxed">
+                    Profiling is 95% complete. To ensure absolute precision in your personalized learning journey, I recommend a 90-minute Diagnostic Assessment.
+                </p>
+<div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant/20 flex items-start gap-4">
+<span class="material-symbols-outlined text-primary mt-0.5" data-icon="info">info</span>
+<p class="font-body text-sm text-secondary leading-relaxed">
+                        This assessment establishes a highly accurate baseline across core competencies, allowing the orchestrator to tailor the curriculum density immediately.
+                    </p>
+</div>
+</div>
+<!-- Action Area -->
+<div class="flex flex-col gap-6 mt-4">
+<!-- Primary Action -->
+<button class="group relative w-full flex items-center justify-between bg-primary text-on-primary rounded-xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg overflow-hidden">
+<div class="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out"></div>
+<div class="flex flex-col items-start gap-1 z-10">
+<span class="font-headline text-xl md:text-2xl font-semibold">Accept Diagnostic Test</span>
+<span class="font-body text-sm opacity-90">100 questions • 1.5 hours • Maximum Profiling Precision</span>
+</div>
+<span class="material-symbols-outlined text-3xl group-hover:translate-x-1 transition-transform z-10" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<!-- Secondary Action -->
+<div class="flex flex-col items-center gap-3">
+<button class="font-body text-sm font-medium text-secondary hover:text-primary transition-colors pb-1 border-b border-transparent hover:border-primary flex items-center gap-2">
+                        Skip to Dashboard
+                        <span class="material-symbols-outlined text-[16px]" data-icon="skip_next">skip_next</span>
+</button>
+<p class="font-body text-xs text-on-surface-variant/70 text-center max-w-md">
+                        Note: Skipping may result in a weaker initial student profile and less accurate agent adaptation during early sessions.
+                    </p>
+</div>
+</div>
+</main>
+</div>
+</body></html>

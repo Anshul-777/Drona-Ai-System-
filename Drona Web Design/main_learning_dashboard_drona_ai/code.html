@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Drona.ai - Main Learning Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-bright": "#f8f9fa",
+                "on-tertiary": "#ffffff",
+                "on-primary-fixed": "#001454",
+                "surface-container": "#edeeef",
+                "on-secondary-fixed-variant": "#45455b",
+                "background": "#f8f9fa",
+                "tertiary-container": "#c34100",
+                "surface-container-high": "#e7e8e9",
+                "on-primary-container": "#efefff",
+                "on-tertiary-container": "#ffede8",
+                "secondary": "#5d5c74",
+                "secondary-container": "#e2e0fc",
+                "surface": "#f8f9fa",
+                "secondary-fixed": "#e2e0fc",
+                "on-surface-variant": "#434656",
+                "surface-variant": "#e1e3e4",
+                "primary-fixed-dim": "#b8c4ff",
+                "on-error-container": "#93000a",
+                "secondary-fixed-dim": "#c6c4df",
+                "tertiary-fixed-dim": "#ffb59b",
+                "on-tertiary-fixed-variant": "#812800",
+                "tertiary-fixed": "#ffdbcf",
+                "on-secondary-fixed": "#1a1a2e",
+                "on-secondary-container": "#63627a",
+                "on-secondary": "#ffffff",
+                "on-primary-fixed-variant": "#0037ba",
+                "outline": "#747688",
+                "inverse-surface": "#2e3132",
+                "primary-container": "#2a5cff",
+                "primary": "#0042dc",
+                "on-background": "#191c1d",
+                "surface-dim": "#d9dadb",
+                "surface-container-lowest": "#ffffff",
+                "surface-container-highest": "#e1e3e4",
+                "surface-tint": "#074af0",
+                "primary-fixed": "#dde1ff",
+                "tertiary": "#9a3200",
+                "on-primary": "#ffffff",
+                "error": "#ba1a1a",
+                "on-error": "#ffffff",
+                "inverse-on-surface": "#f0f1f2",
+                "surface-container-low": "#f3f4f5",
+                "outline-variant": "#c4c5d9",
+                "on-surface": "#191c1d",
+                "error-container": "#ffdad6",
+                "on-tertiary-fixed": "#380d00",
+                "inverse-primary": "#b8c4ff"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {},
+        "fontFamily": {
+                "headline": [
+                        "Playfair Display"
+                ],
+                "display": [
+                        "Playfair Display"
+                ],
+                "body": [
+                        "Inter"
+                ],
+                "label": [
+                        "Inter"
+                ]
+        },
+        "fontSize": {}
+},
+    },
+  }
+</script>
+<style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 1; }
+        .ambient-shadow { box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
+        .glass-panel { background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased selection:bg-primary selection:text-on-primary">
+<!-- TopNavBar -->
+<nav class="docked full-width top-0 sticky z-50 bg-surface/80 dark:bg-surface-container/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm">
+<div class="flex justify-between items-center w-full px-8 h-16 max-w-[1600px] mx-auto">
+<div class="font-display font-black text-2xl tracking-tighter text-primary dark:text-primary-fixed">DRONA.AI</div>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-display text-lg tracking-tight" href="#">Learning</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-1 rounded font-display text-lg tracking-tight" href="#">Test</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-1 rounded font-display text-lg tracking-tight" href="#">Game</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-1 rounded font-display text-lg tracking-tight" href="#">Workspace</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-1 rounded font-display text-lg tracking-tight" href="#">Resources</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-1 rounded font-display text-lg tracking-tight" href="#">Career</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high/50 cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="font-bold text-sm">14 Day Streak</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high/50 cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+<span class="font-bold text-sm">2,450 XP</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer active:scale-95 transition-transform hover:bg-surface-container-high/50 transition-all duration-200 p-2 rounded-full">monetization_on</span>
+<img alt="Student Profile Avatar" class="w-8 h-8 rounded-full border border-outline-variant/30 object-cover cursor-pointer active:scale-95 transition-transform" data-alt="A clean, professional headshot of a student against a neutral background. The lighting is soft and studio-quality, emphasizing a focused and calm demeanor. The visual style is premium and minimalist, perfectly aligned with the authoritative, scholarly aesthetic of the Drona.ai platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuhqyABXxi2lzfT0R8S-1TaRGjbxI3nY5dPi1x0HFMAtu6YVMQ2ntNC5rzn4wOy7d5YqhTZJ_m1yAyoe90uw1MBRe0ZlaqrcfOBpVPN1lXrFml8tgGvqL2Wpz6jBgylGv44gewypPvkss4ljYOeZs_DiYQC0o_vjBwI7fQXkccACaOwovqZKtWtcFoHPqfQ8NjQPwr1xJJglNADwOlOE2Sny9FY11bAvsi6FuyNVdsVOwqHipMTLVJ22C7oMXIwrhln-XoPCqGz-8"/>
+</div>
+</div>
+</nav>
+<div class="flex max-w-[1600px] mx-auto relative">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col p-4 gap-2 fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 bg-surface-container-low dark:bg-surface-dim border-r border-outline-variant/20 z-40">
+<div class="mb-6 px-4">
+<div class="flex items-center gap-3 mb-2">
+<img alt="Drona Orchestrator Icon" class="w-10 h-10 rounded-xl object-cover shadow-sm" data-alt="An abstract, high-fidelity 3D render of an AI core, symbolizing the Drona Orchestrator. It features sleek, glassmorphic elements and a subtle blue glow, set against a pristine, light-mode background. The aesthetic is premium minimalism, evoking advanced technology and intellectual depth." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDH05JXP7DouToRpNtaykIxZjsrlAE32Llh3wMtmaJ0SnHl9zQ-ieikIS6HWQ5YrY0WbOEZI9KsQvT4sJuHSbibib7b_W836Ad00dZbPUQPN1SjI68aepx4PpxRObONIuDFp4q92X2Xr6EV0yUY4fHBI5KLrRecJRzi9Z6Gv5pOQziebc_BhiEW-1oEqQPl2pGSpVKcBzDhRQMv457JCr0WGfIG0oeRIGFaMcDbhstknbOu7Wo-2NMl-6QsrlM-fL-PzSbUSds55CY"/>
+<div>
+<h2 class="font-display text-xl font-bold text-on-surface">Core Learning</h2>
+<p class="font-body text-xs font-medium text-secondary">Environment: Active</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 bg-primary text-on-primary rounded-xl font-bold shadow-sm font-body text-sm" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+                    Curriculum
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl hover:translate-x-1 transition-transform duration-200 font-body text-sm font-medium" href="#">
+<span class="material-symbols-outlined">bolt</span>
+                    Active Quests
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl hover:translate-x-1 transition-transform duration-200 font-body text-sm font-medium" href="#">
+<span class="material-symbols-outlined">local_library</span>
+                    Library
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl hover:translate-x-1 transition-transform duration-200 font-body text-sm font-medium" href="#">
+<span class="material-symbols-outlined">psychology</span>
+                    AI Tutor
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl hover:translate-x-1 transition-transform duration-200 font-body text-sm font-medium" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+                    Progress
+                </a>
+</nav>
+<button class="w-full py-3 mt-4 bg-primary text-on-primary rounded-xl font-body text-sm font-bold shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">terminal</span>
+                Open Agent Dock
+            </button>
+<div class="mt-4 pt-4 border-t border-outline-variant/20 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-2 text-secondary hover:bg-surface-container-high rounded-xl font-body text-sm font-medium" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+                    Settings
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary hover:bg-surface-container-high rounded-xl font-body text-sm font-medium" href="#">
+<span class="material-symbols-outlined text-[20px]">help</span>
+                    Help
+                </a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-64 p-8 lg:p-12 min-h-screen">
+<div class="max-w-5xl mx-auto space-y-12">
+<!-- Greeting Header -->
+<header class="space-y-4">
+<h1 class="font-headline text-4xl lg:text-5xl font-black text-on-surface tracking-tight">Good morning, Alex.</h1>
+<p class="font-body text-lg text-on-surface-variant max-w-2xl leading-relaxed">Today is dedicated to mastering Rotational Mechanics. Your Orchestrator agent has optimized your study plan for maximum retention.</p>
+</header>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Today's Study Plan (Spans 2 columns on tablet/desktop) -->
+<div class="md:col-span-2 bg-surface-container-lowest rounded-2xl p-6 border-2 border-primary ambient-shadow relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-8xl text-primary">schedule</span>
+</div>
+<h2 class="font-headline text-2xl font-bold text-on-surface mb-6">Today's Study Plan</h2>
+<div class="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-outline-variant/50 before:to-transparent">
+<!-- Session 1 -->
+<div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+<!-- Icon -->
+<div class="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-on-primary border-4 border-surface-container-lowest shadow-sm shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+<!-- Card -->
+<div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl bg-surface-container-low border border-outline-variant/20 group-hover:-translate-y-1 transition-transform duration-300">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-body font-bold text-on-surface text-sm">Rotational Mechanics</h3>
+<span class="font-body text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded">25m</span>
+</div>
+<p class="font-body text-xs text-secondary">Core Concepts &amp; Derivations</p>
+</div>
+</div>
+<!-- Session 2 -->
+<div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+<div class="flex items-center justify-center w-10 h-10 rounded-full bg-surface-container-high text-secondary border-4 border-surface-container-lowest shadow-sm shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+<span class="material-symbols-outlined text-[20px]">psychology</span>
+</div>
+<div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-outline-variant/20 hover:bg-surface-container-lowest transition-colors duration-300">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-body font-bold text-on-surface text-sm opacity-80">Forgetting Curve Review</h3>
+<span class="font-body text-xs font-medium text-secondary opacity-80">20m</span>
+</div>
+<p class="font-body text-xs text-secondary opacity-80">Spaced Repetition AI</p>
+</div>
+</div>
+<!-- Session 3 -->
+<div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+<div class="flex items-center justify-center w-10 h-10 rounded-full bg-surface-container-high text-secondary border-4 border-surface-container-lowest shadow-sm shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+<span class="material-symbols-outlined text-[20px]">science</span>
+</div>
+<div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-outline-variant/20 hover:bg-surface-container-lowest transition-colors duration-300">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-body font-bold text-on-surface text-sm opacity-60">Chemistry Assessment</h3>
+<span class="font-body text-xs font-medium text-secondary opacity-60">15m</span>
+</div>
+<p class="font-body text-xs text-secondary opacity-60">Reaction Mechanisms</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Daily Quest Widget -->
+<div class="bg-primary rounded-2xl p-6 text-on-primary shadow-md relative overflow-hidden flex flex-col justify-between group cursor-pointer border border-primary-fixed-dim/20">
+<div class="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+<div>
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline text-lg font-bold">Daily Quest</h3>
+<span class="material-symbols-outlined text-on-primary">stars</span>
+</div>
+<p class="font-body text-xl font-medium leading-tight mb-4">Master SN1/SN2 mechanisms today.</p>
+</div>
+<div class="flex items-center justify-between mt-auto">
+<span class="font-body text-sm font-bold bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm">+60 XP</span>
+<button class="font-body text-sm font-bold text-primary bg-white px-4 py-2 rounded-lg hover:scale-105 transition-transform">Accept</button>
+</div>
+</div>
+<!-- Weakness Alerts -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/30 ambient-shadow">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-error">warning</span>
+<h2 class="font-headline text-xl font-bold text-on-surface">Attention Needed</h2>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-lowest border border-error-container/30">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<div class="flex-1">
+<h4 class="font-body text-sm font-bold text-on-surface">Kinematics 2D</h4>
+<p class="font-body text-xs text-secondary mt-0.5">Accuracy dropped below 70%</p>
+</div>
+<button class="text-xs font-bold text-primary hover:underline">Review</button>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low border border-outline-variant/20">
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+<div class="flex-1">
+<h4 class="font-body text-sm font-bold text-on-surface">Electromagnetism</h4>
+<p class="font-body text-xs text-secondary mt-0.5">Pending concept check</p>
+</div>
+<button class="text-xs font-bold text-primary hover:underline">Start</button>
+</div>
+</div>
+</div>
+<!-- Current Mastery Radar Chart Placeholder (Spans 2 cols) -->
+<div class="md:col-span-2 bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/30 ambient-shadow flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h2 class="font-headline text-xl font-bold text-on-surface">Current Mastery</h2>
+<button class="text-sm font-body font-medium text-secondary hover:text-primary transition-colors flex items-center gap-1">
+                                Details <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+<!-- Minimalist representation of stats instead of an actual chart for this HTML -->
+<div class="flex-1 grid grid-cols-2 md:grid-cols-3 gap-6 items-center">
+<div class="space-y-2">
+<div class="flex justify-between text-sm font-body">
+<span class="text-on-surface font-medium">Physics</span>
+<span class="text-primary font-bold">85%</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 85%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm font-body">
+<span class="text-on-surface font-medium">Chemistry</span>
+<span class="text-primary font-bold">72%</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 72%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm font-body">
+<span class="text-on-surface font-medium">Mathematics</span>
+<span class="text-primary font-bold">91%</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 91%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm font-body">
+<span class="text-on-surface font-medium">Biology</span>
+<span class="text-secondary font-bold">--%</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5">
+<div class="bg-outline-variant h-1.5 rounded-full" style="width: 0%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm font-body">
+<span class="text-on-surface font-medium">Logic</span>
+<span class="text-primary font-bold">60%</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 60%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm font-body">
+<span class="text-on-surface font-medium">Retention</span>
+<span class="text-primary font-bold">88%</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 88%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

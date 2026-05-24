@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DRONA.AI - Test Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed": "#001454",
+                    "on-background": "#191c1d",
+                    "surface-tint": "#074af0",
+                    "surface-container-highest": "#e1e3e4",
+                    "primary": "#0042dc",
+                    "on-error": "#ffffff",
+                    "surface": "#f8f9fa",
+                    "surface-container-high": "#e7e8e9",
+                    "primary-container": "#2a5cff",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed-dim": "#ffb59b",
+                    "on-secondary": "#ffffff",
+                    "inverse-primary": "#b8c4ff",
+                    "secondary-container": "#e2e0fc",
+                    "on-tertiary-fixed-variant": "#812800",
+                    "primary-fixed": "#dde1ff",
+                    "on-secondary-fixed-variant": "#45455b",
+                    "inverse-surface": "#2e3132",
+                    "on-error-container": "#93000a",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f3f4f5",
+                    "outline": "#747688",
+                    "on-primary-fixed-variant": "#0037ba",
+                    "surface-bright": "#f8f9fa",
+                    "surface-container": "#edeeef",
+                    "surface-variant": "#e1e3e4",
+                    "surface-dim": "#d9dadb",
+                    "secondary": "#5d5c74",
+                    "on-primary-container": "#efefff",
+                    "tertiary-fixed": "#ffdbcf",
+                    "on-tertiary": "#ffffff",
+                    "on-tertiary-container": "#ffede8",
+                    "inverse-on-surface": "#f0f1f2",
+                    "on-tertiary-fixed": "#380d00",
+                    "on-secondary-fixed": "#1a1a2e",
+                    "secondary-fixed-dim": "#c6c4df",
+                    "secondary-fixed": "#e2e0fc",
+                    "on-primary": "#ffffff",
+                    "on-surface-variant": "#434656",
+                    "tertiary": "#9a3200",
+                    "outline-variant": "#c4c5d9",
+                    "primary-fixed-dim": "#b8c4ff",
+                    "on-surface": "#191c1d",
+                    "error-container": "#ffdad6",
+                    "background": "#f8f9fa",
+                    "tertiary-container": "#c34100",
+                    "on-secondary-container": "#63627a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {},
+            "fontFamily": {
+                    "headline": ["Playfair Display"],
+                    "display": ["Playfair Display"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            },
+            "fontSize": {}
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Overriding primary color for the Red theme requested for the Test Environment */
+        .env-test {
+             --tw-text-opacity: 1;
+             color: rgb(232 54 42 / var(--tw-text-opacity)); /* #e8362a */
+        }
+        .bg-env-test {
+             --tw-bg-opacity: 1;
+             background-color: rgb(232 54 42 / var(--tw-bg-opacity)); /* #e8362a */
+        }
+        .border-env-test {
+             --tw-border-opacity: 1;
+             border-color: rgb(232 54 42 / var(--tw-border-opacity)); /* #e8362a */
+        }
+        .bg-env-test-container {
+             --tw-bg-opacity: 1;
+             background-color: rgba(232, 54, 42, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface/80 dark:bg-surface-container/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-8 h-16">
+<div class="font-display font-black text-2xl tracking-tighter text-primary dark:text-primary-fixed">DRONA.AI</div>
+<nav class="hidden md:flex gap-8 h-full items-center">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors h-full flex items-center hover:bg-surface-container-high/50 px-3 cursor-pointer active:scale-95 transition-transform duration-200" href="#">Learning</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 h-full flex items-center hover:bg-surface-container-high/50 px-3 cursor-pointer active:scale-95 transition-transform duration-200" href="#">Test</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors h-full flex items-center hover:bg-surface-container-high/50 px-3 cursor-pointer active:scale-95 transition-transform duration-200" href="#">Game</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors h-full flex items-center hover:bg-surface-container-high/50 px-3 cursor-pointer active:scale-95 transition-transform duration-200" href="#">Workspace</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors h-full flex items-center hover:bg-surface-container-high/50 px-3 cursor-pointer active:scale-95 transition-transform duration-200" href="#">Resources</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors h-full flex items-center hover:bg-surface-container-high/50 px-3 cursor-pointer active:scale-95 transition-transform duration-200" href="#">Career</a>
+</nav>
+<div class="flex items-center gap-4 text-primary dark:text-primary-fixed-dim font-display text-lg tracking-tight">
+<button class="p-2 rounded-full hover:bg-surface-container-high/50 transition-all duration-200 cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined icon-fill">military_tech</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container-high/50 transition-all duration-200 cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined icon-fill">monetization_on</span>
+</button>
+<img alt="Student Profile Avatar" class="w-8 h-8 rounded-full border border-outline-variant/30 object-cover cursor-pointer" data-alt="A close up portrait of a young Indian student looking confident and focused. High quality, professional studio lighting against a clean, light mode neutral background. The aesthetic is premium, modern, and academic, fitting a high-end educational platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6YNH9nJdxaoV1EJ9Vu0rpfZ3ASfOszqpNADlAIHrj7zbTaS5R84qbmkOxHvAnXPTOi3RN1ihZX4v6iYqxW3Cgdx3SRLvr_saeqOrYLXDlKVQo6LfXd5KWxNOxliilLWhcyuI3sShBI51_xvbp2xjrkeWM9w73w4Y9-aBWt5tUQpx1obDIrD5EXcnx3lXIiMJFglpMok1QMDwNJefEboSh9OMR1wj_Er23SXqy9HrNa-LyKVqOYKME-jm4nWzEJU7JP2_6HOtKfE4"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1 relative">
+<!-- SideNavBar (Test Environment Custom) -->
+<aside class="bg-surface-container-low dark:bg-surface-dim border-r border-outline-variant/20 flat no shadows fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 hidden md:flex flex-col p-4 gap-2 z-40 overflow-y-auto">
+<div class="mb-6 px-2">
+<h2 class="font-display text-xl font-bold text-on-surface">Test Hub</h2>
+<p class="font-body text-sm font-medium text-secondary mt-1">Environment: Active</p>
+</div>
+<div class="flex-1 space-y-6">
+<!-- Category: Assessment -->
+<div>
+<h3 class="text-xs font-bold text-secondary uppercase tracking-wider px-2 mb-2">Assessment</h3>
+<nav class="space-y-1">
+<a class="bg-env-test-container text-on-surface rounded-xl font-bold shadow-sm flex items-center gap-3 px-3 py-2 text-sm font-medium transition-all group hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[1.25rem] env-test icon-fill group-hover:opacity-100 transition-opacity">quiz</span>
+                            Test Hub
+                        </a>
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 px-3 py-2 text-sm font-medium transition-all group hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[1.25rem] group-hover:opacity-100 transition-opacity">history_edu</span>
+                            Mock Test Generator
+                        </a>
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 px-3 py-2 text-sm font-medium transition-all group hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[1.25rem] group-hover:opacity-100 transition-opacity">record_voice_over</span>
+                            Viva Examiner
+                        </a>
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 px-3 py-2 text-sm font-medium transition-all group hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[1.25rem] group-hover:opacity-100 transition-opacity">timer</span>
+                            Time Pressure Mode
+                        </a>
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 px-3 py-2 text-sm font-medium transition-all group hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[1.25rem] group-hover:opacity-100 transition-opacity">bolt</span>
+                            Surprise Test
+                        </a>
+</nav>
+</div>
+<!-- Category: Analysis -->
+<div>
+<h3 class="text-xs font-bold text-secondary uppercase tracking-wider px-2 mb-2">Analysis</h3>
+<nav class="space-y-1">
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 px-3 py-2 text-sm font-medium transition-all group hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[1.25rem] group-hover:opacity-100 transition-opacity">analytics</span>
+                            Post-Exam Breakdown
+                        </a>
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 px-3 py-2 text-sm font-medium transition-all group hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[1.25rem] group-hover:opacity-100 transition-opacity">trending_up</span>
+                            Rank Predictor
+                        </a>
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 px-3 py-2 text-sm font-medium transition-all group hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[1.25rem] group-hover:opacity-100 transition-opacity">target</span>
+                            Weak Topic Tests
+                        </a>
+</nav>
+</div>
+<!-- Category: Special Modes -->
+<div>
+<h3 class="text-xs font-bold text-secondary uppercase tracking-wider px-2 mb-2">Special Modes</h3>
+<nav class="space-y-1">
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 px-3 py-2 text-sm font-medium transition-all group hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[1.25rem] group-hover:opacity-100 transition-opacity">event_seat</span>
+                            Exam Day Simulation
+                        </a>
+<a class="text-secondary hover:bg-surface-container-high rounded-xl flex items-center gap-3 px-3 py-2 text-sm font-medium transition-all group hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[1.25rem] group-hover:opacity-100 transition-opacity">draw</span>
+                            Handwritten Evaluator
+                        </a>
+</nav>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/20">
+<button class="w-full bg-env-test hover:opacity-90 text-on-primary py-2 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all active:scale-95 shadow-sm hover:-translate-y-[2px] hover:shadow-md">
+<span class="material-symbols-outlined text-sm">smart_toy</span>
+                    Open Agent Dock
+                </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 p-6 lg:p-10 lg:pl-16 bg-surface-bright min-h-[calc(100vh-4rem)]">
+<!-- Page Header -->
+<div class="mb-10 flex justify-between items-end">
+<div>
+<h1 class="font-headline text-4xl font-bold text-on-surface mb-2">Diagnostic Dashboard</h1>
+<p class="text-secondary font-medium">Real-time performance metrics and predictive analysis.</p>
+</div>
+<div class="hidden sm:block">
+<span class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full bg-env-test-container env-test text-sm font-semibold">
+<span class="material-symbols-outlined text-[1rem]">circle</span>
+                        Live Telemetry
+                    </span>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8">
+<!-- Rank Predictor Card (Hero Card) -->
+<div class="md:col-span-8 lg:col-span-8 bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-6 lg:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.04)] relative overflow-hidden flex flex-col justify-between min-h-[320px] transition-all hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+<div class="absolute top-0 left-0 w-full h-1 bg-env-test"></div>
+<div class="absolute -right-20 -top-20 w-64 h-64 bg-env-test rounded-full blur-[100px] opacity-10 pointer-events-none"></div>
+<div class="flex justify-between items-start mb-8 relative z-10">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined env-test">trending_up</span>
+<h3 class="font-body text-sm font-bold text-secondary uppercase tracking-widest">Predicted JEE Rank</h3>
+</div>
+<h2 class="font-headline text-5xl font-black text-on-surface mt-2">1,248 <span class="text-2xl text-secondary font-medium ml-2">± 120</span></h2>
+</div>
+<div class="text-right">
+<span class="text-sm font-medium text-surface-tint flex items-center gap-1 justify-end bg-surface-tint/10 py-1 px-3 rounded-full">
+<span class="material-symbols-outlined text-[1rem]">arrow_upward</span>
+                                +45 this week
+                            </span>
+</div>
+</div>
+<div class="relative z-10 grid grid-cols-3 gap-4 border-t border-outline-variant/30 pt-6">
+<div>
+<p class="text-xs text-secondary font-medium mb-1">Physics Percentile</p>
+<p class="text-xl font-bold text-on-surface">99.1%</p>
+</div>
+<div>
+<p class="text-xs text-secondary font-medium mb-1">Chemistry Percentile</p>
+<p class="text-xl font-bold text-on-surface">98.4%</p>
+</div>
+<div>
+<p class="text-xs text-secondary font-medium mb-1">Maths Percentile</p>
+<p class="text-xl font-bold text-on-surface">97.8%</p>
+</div>
+</div>
+</div>
+<!-- Shadow Simulation Entry -->
+<div class="md:col-span-4 lg:col-span-4 bg-inverse-surface text-on-error rounded-2xl p-6 lg:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.08)] relative overflow-hidden flex flex-col justify-center min-h-[320px] group transition-all hover:-translate-y-1">
+<div class="absolute inset-0 bg-gradient-to-br from-inverse-surface to-on-surface opacity-90 z-0"></div>
+<div class="relative z-10">
+<div class="w-12 h-12 rounded-xl bg-surface/10 flex items-center justify-center mb-6 backdrop-blur-md border border-surface/20">
+<span class="material-symbols-outlined text-on-error icon-fill">sports_esports</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-3">Shadow Simulation</h3>
+<p class="text-on-error/80 text-sm font-medium mb-8 leading-relaxed">Enter a high-stakes environment. Match wits against historic topper percentiles in real-time.</p>
+<button class="w-full bg-on-error text-inverse-surface py-3 px-4 rounded-xl text-sm font-bold flex items-center justify-between transition-all active:scale-95 group-hover:bg-primary-fixed">
+                            Initialize Sequence
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Recent Performance Trends (Chart Placeholder) -->
+<div class="md:col-span-12 lg:col-span-7 bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.04)] h-96 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-body text-sm font-bold text-on-surface uppercase tracking-widest">Performance Velocity</h3>
+<div class="flex gap-2">
+<span class="w-3 h-3 rounded-full bg-primary mt-1"></span><span class="text-xs font-medium text-secondary mr-3">Physics</span>
+<span class="w-3 h-3 rounded-full bg-surface-tint mt-1"></span><span class="text-xs font-medium text-secondary mr-3">Chem</span>
+<span class="w-3 h-3 rounded-full bg-secondary-fixed mt-1"></span><span class="text-xs font-medium text-secondary">Math</span>
+</div>
+</div>
+<div class="flex-1 w-full bg-surface relative rounded-lg border border-outline-variant/20 overflow-hidden flex items-end justify-between px-8 pb-8 pt-12">
+<!-- Simulated Chart Lines using Tailwind Gradients/Heights -->
+<div class="w-full h-full absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+<!-- Pseudo Bar Chart for simplicity in strict HTML/Tailwind -->
+<div class="w-8 h-[40%] bg-secondary-fixed rounded-t-sm relative z-10 opacity-70 group hover:opacity-100 transition-opacity"></div>
+<div class="w-8 h-[45%] bg-secondary-fixed rounded-t-sm relative z-10 opacity-70 group hover:opacity-100 transition-opacity"></div>
+<div class="w-8 h-[60%] bg-surface-tint rounded-t-sm relative z-10 opacity-80 group hover:opacity-100 transition-opacity"></div>
+<div class="w-8 h-[55%] bg-secondary-fixed rounded-t-sm relative z-10 opacity-70 group hover:opacity-100 transition-opacity"></div>
+<div class="w-8 h-[75%] bg-primary rounded-t-sm relative z-10 opacity-90 group hover:opacity-100 transition-opacity shadow-[0_0_15px_rgba(0,66,220,0.4)]"></div>
+<div class="w-8 h-[85%] bg-primary rounded-t-sm relative z-10 opacity-100 shadow-[0_0_15px_rgba(0,66,220,0.6)]"></div>
+</div>
+</div>
+<!-- Last 3 Mock Tests & Weak Topics -->
+<div class="md:col-span-12 lg:col-span-5 flex flex-col gap-6 lg:gap-8">
+<!-- Last 3 Tests List -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.04)] flex-1">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-body text-sm font-bold text-on-surface uppercase tracking-widest">Recent Mocks</h3>
+<button class="text-xs font-bold text-primary hover:underline">View All</button>
+</div>
+<div class="space-y-4">
+<!-- Test Item -->
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-surface-container-low transition-colors group cursor-pointer border border-transparent hover:border-outline-variant/20">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface-variant group-hover:bg-primary-container group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[1.2rem]">article</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-on-surface">AITS Full Syllabus 04</h4>
+<p class="text-xs text-secondary font-medium">2 days ago • 3 Hrs</p>
+</div>
+</div>
+<div class="text-right">
+<span class="block text-sm font-bold text-on-surface">242 / 300</span>
+</div>
+</div>
+<!-- Test Item -->
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-surface-container-low transition-colors group cursor-pointer border border-transparent hover:border-outline-variant/20">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface-variant group-hover:bg-primary-container group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[1.2rem]">article</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-on-surface">Part Test: Mechanics</h4>
+<p class="text-xs text-secondary font-medium">5 days ago • 1.5 Hrs</p>
+</div>
+</div>
+<div class="text-right">
+<span class="block text-sm font-bold text-on-surface">115 / 120</span>
+</div>
+</div>
+<!-- Test Item -->
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-surface-container-low transition-colors group cursor-pointer border border-transparent hover:border-outline-variant/20">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface-variant group-hover:bg-primary-container group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[1.2rem]">article</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-on-surface">Mock Test Alpha</h4>
+<p class="text-xs text-secondary font-medium">1 week ago • 3 Hrs</p>
+</div>
+</div>
+<div class="text-right">
+<span class="block text-sm font-bold text-on-surface">210 / 300</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Weak Topic Flags -->
+<div class="bg-surface-container-lowest border border-error/20 rounded-2xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.04)] relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-error"></div>
+<h3 class="font-body text-sm font-bold text-error uppercase tracking-widest mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-[1.1rem]">warning</span>
+                            Active Flags
+                        </h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 bg-error-container text-on-error-container text-xs font-bold rounded-md border border-error/20 cursor-pointer hover:bg-error/20 transition-colors">Rotational Dynamics</span>
+<span class="px-3 py-1.5 bg-error-container text-on-error-container text-xs font-bold rounded-md border border-error/20 cursor-pointer hover:bg-error/20 transition-colors">Ionic Equilibrium</span>
+<span class="px-3 py-1.5 bg-surface-container text-on-surface-variant text-xs font-bold rounded-md border border-outline-variant/30 cursor-pointer hover:bg-surface-container-high transition-colors">+ 2 Minor</span>
+</div>
+<div class="mt-4 pt-4 border-t border-outline-variant/20">
+<button class="text-xs font-bold text-error hover:text-on-error-container transition-colors flex items-center gap-1 group">
+                                Generate Target Test <span class="material-symbols-outlined text-[1rem] group-hover:translate-x-1 transition-transform">arrow_right_alt</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Drona.AI - Workspace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary": "#5d5c74",
+                      "on-primary-container": "#003c2d",
+                      "surface-container-high": "#e7e8e9",
+                      "tertiary-container": "#c34100",
+                      "on-tertiary-container": "#ffede8",
+                      "background": "#f8f9fa",
+                      "on-secondary-fixed-variant": "#45455b",
+                      "surface-container": "#edeeef",
+                      "on-primary-fixed": "#002116",
+                      "surface-bright": "#f8f9fa",
+                      "on-tertiary": "#ffffff",
+                      "primary-fixed-dim": "#84d9c0",
+                      "on-surface-variant": "#434656",
+                      "surface-variant": "#e1e3e4",
+                      "secondary-fixed": "#e2e0fc",
+                      "secondary-container": "#e2e0fc",
+                      "surface": "#f8f9fa",
+                      "surface-dim": "#d9dadb",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-highest": "#e1e3e4",
+                      "primary": "#00c896",
+                      "on-background": "#191c1d",
+                      "inverse-surface": "#2e3132",
+                      "outline": "#747688",
+                      "primary-container": "#ccf4e9",
+                      "on-secondary": "#ffffff",
+                      "on-primary-fixed-variant": "#00523c",
+                      "on-secondary-container": "#63627a",
+                      "on-secondary-fixed": "#1a1a2e",
+                      "tertiary-fixed": "#ffdbcf",
+                      "tertiary-fixed-dim": "#ffb59b",
+                      "on-tertiary-fixed-variant": "#812800",
+                      "secondary-fixed-dim": "#c6c4df",
+                      "on-error-container": "#93000a",
+                      "inverse-primary": "#84d9c0",
+                      "on-surface": "#191c1d",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-fixed": "#380d00",
+                      "surface-container-low": "#f3f4f5",
+                      "outline-variant": "#c4c5d9",
+                      "inverse-on-surface": "#f0f1f2",
+                      "on-error": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "primary-fixed": "#a1f6dd",
+                      "tertiary": "#9a3200",
+                      "surface-tint": "#00c896"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {},
+              "fontFamily": {
+                      "headline": [
+                              "Playfair Display"
+                      ],
+                      "display": [
+                              "Playfair Display"
+                      ],
+                      "body": [
+                              "Inter"
+                      ],
+                      "label": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {}
+      },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+          font-family: 'Material Symbols Outlined';
+          font-weight: normal;
+          font-style: normal;
+          font-size: 24px;  /* Preferred icon size */
+          display: inline-block;
+          line-height: 1;
+          text-transform: none;
+          letter-spacing: normal;
+          word-wrap: normal;
+          white-space: nowrap;
+          direction: ltr;
+        }
+      </style>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface/90 dark:bg-surface-container/90 backdrop-blur-xl border-b border-outline-variant/20 shadow-sm docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-8 h-16">
+<div class="flex items-center gap-8">
+<div class="font-display font-black text-2xl tracking-tighter text-primary dark:text-primary-fixed">
+                    DRONA.AI
+                </div>
+<nav class="hidden md:flex gap-6 items-center">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-lg cursor-pointer active:scale-95 transition-transform" href="#">Learning</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-lg cursor-pointer active:scale-95 transition-transform" href="#">Test</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-lg cursor-pointer active:scale-95 transition-transform" href="#">Game</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 cursor-pointer active:scale-95 transition-transform" href="#">Workspace</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-lg cursor-pointer active:scale-95 transition-transform" href="#">Resources</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-lg cursor-pointer active:scale-95 transition-transform" href="#">Career</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary p-2 rounded-full hover:bg-surface-container-high/50 transition-all duration-200 cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined">military_tech</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary p-2 rounded-full hover:bg-surface-container-high/50 transition-all duration-200 cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined">monetization_on</span>
+</button>
+<img alt="Student Profile Avatar" class="w-8 h-8 rounded-full border border-outline-variant cursor-pointer active:scale-95 transition-transform" data-alt="A close-up portrait of a thoughtful student, looking slightly off-camera in a modern, well-lit academic setting. The lighting is bright and clean, typical of a high-end educational environment. The student appears focused and calm, representing the 'Student OS' user persona. The style is premium photographic realism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeOKYt3hiSUNNwfrj3hK3kDqnkm0OIMa764faolsmcWfuzmDcssSoc0IArKfJnWylWOLyKld7OzqC_xWDJatHrdmenzGzhgEvygabKVexMeqzMeQkhcmMgjzFpJhoKuxbJ_5fdPKF3PQSf_a76vuehhfZM4AzTPQjirhkykngIE5-6LhS6IheZ4uVaqPa08r9jGSeSzSOPuNkaQO-K-tgxnj8ULsj7YXhIXildgVS1J0DfpGz1od-YPOLwRZqnVgDlc7Lu9GqGxMU"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden relative">
+<!-- SideNavBar -->
+<aside class="hidden md:flex bg-surface-container-low dark:bg-surface-dim border-r border-outline-variant/10 flex-col p-4 gap-2 w-64 h-[calc(100vh-4rem)] overflow-y-auto shrink-0 z-40">
+<div class="flex items-center gap-3 px-3 py-4 mb-2 border-b border-outline-variant/10">
+<img alt="Drona Orchestrator Icon" class="w-10 h-10 rounded-xl" data-alt="A minimalist, abstract 3D icon representing an AI Orchestrator or virtual tutor. It features smooth, glass-like textures and a glowing, calm aura, sitting on a pristine white background. The aesthetic is highly polished and premium, evoking a sense of advanced intelligence and 'calm focus'." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDF3_QVu8GKivRdzwi1a7qwtTDxNdMDyVkBrQ-bl2jpKBSD6FFIb7d8z1jKNTcpHvtDk9Sui6EwW_LPYV8n6I3CpqEnpFTyTnRoeB6msIhcf0-UzgK08mK4x0giHeZR11vBRT3DfR_RjuZp9J7a4MybtbfNhr1mlqSHgpc2bVutqk9HRi-zPyY2qvbgf49-RutnrNmx5V6ws51ZRTQBQ2uE2EIE4w3nCehuscv4eE9EBiBr2Wqc7k7_gPzuPNHnBMsyE4wlei4HSSs"/>
+<div>
+<h2 class="font-display text-xl font-bold text-on-surface">Core Learning</h2>
+<p class="font-body text-xs font-medium text-secondary">Environment: Active</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1 flex-1">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:opacity-100 transition-opacity">menu_book</span>
+<span class="font-body text-sm font-medium">Curriculum</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:opacity-100 transition-opacity">bolt</span>
+<span class="font-body text-sm font-medium">Active Quests</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:opacity-100 transition-opacity">local_library</span>
+<span class="font-body text-sm font-medium">Library</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:opacity-100 transition-opacity">psychology</span>
+<span class="font-body text-sm font-medium">AI Tutor</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:opacity-100 transition-opacity">leaderboard</span>
+<span class="font-body text-sm font-medium">Progress</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 border-t border-outline-variant/10 flex flex-col gap-1">
+<button class="w-full bg-primary text-on-primary font-body text-sm font-medium py-3 rounded-xl hover:bg-primary/90 transition-colors shadow-sm mb-4">
+                    Open Agent Dock
+                </button>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary hover:bg-surface-container-high rounded-xl hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:opacity-100 transition-opacity">settings</span>
+<span class="font-body text-sm font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary hover:bg-surface-container-high rounded-xl hover:translate-x-1 transition-transform duration-200 group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:opacity-100 transition-opacity">help</span>
+<span class="font-body text-sm font-medium">Help</span>
+</a>
+</div>
+</aside>
+<!-- Main Workspace Canvas -->
+<main class="flex-1 overflow-y-auto bg-surface-bright p-8">
+<div class="max-w-7xl mx-auto flex flex-col gap-8">
+<!-- Header -->
+<div class="flex justify-between items-end border-b-2 border-primary/20 pb-4">
+<div>
+<h1 class="font-display text-4xl font-bold text-on-surface">Workspace</h1>
+<p class="font-body text-secondary mt-2">Environment: <span class="text-primary font-semibold">Productivity Suite</span></p>
+</div>
+<div class="flex gap-4">
+<button class="bg-surface border border-outline-variant/30 px-4 py-2 rounded-xl font-medium text-on-surface-variant flex items-center gap-2 hover:bg-surface-container-low transition-colors shadow-sm hover:-translate-y-[1px]">
+<span class="material-symbols-outlined text-[20px]">share</span>
+                            Share
+                        </button>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-xl font-medium flex items-center gap-2 hover:bg-primary/90 transition-colors shadow-sm hover:-translate-y-[1px]">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                            New Page
+                        </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- File Tree Sidebar (Col 3) -->
+<div class="lg:col-span-3 bg-surface border border-outline-variant/10 rounded-3xl shadow-sm p-5 flex flex-col h-[600px]">
+<h3 class="font-display text-lg font-semibold text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">folder_open</span>
+                            Second Brain
+                        </h3>
+<div class="flex-1 overflow-y-auto pr-2">
+<ul class="space-y-1 font-body text-sm">
+<li>
+<div class="flex items-center gap-2 p-2 hover:bg-surface-container-low rounded-xl cursor-pointer text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[18px]">arrow_right</span>
+<span class="material-symbols-outlined text-[18px] text-primary/80">folder</span>
+                                        JEE Physics
+                                    </div>
+</li>
+<li>
+<div class="flex items-center gap-2 p-2 bg-primary-container/30 rounded-xl cursor-pointer text-primary font-medium transition-colors">
+<span class="material-symbols-outlined text-[18px]">arrow_drop_down</span>
+<span class="material-symbols-outlined text-[18px]">folder_open</span>
+                                        Organic Chem
+                                    </div>
+<ul class="pl-6 space-y-1 mt-1 border-l border-outline-variant/20 ml-4">
+<li>
+<div class="flex items-center gap-2 p-2 hover:bg-surface-container-low rounded-xl cursor-pointer text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[16px]">description</span>
+                                                Reaction Mechanisms
+                                            </div>
+</li>
+<li>
+<div class="flex items-center gap-2 p-2 hover:bg-surface-container-low rounded-xl cursor-pointer text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[16px]">description</span>
+                                                Stereochemistry Notes
+                                            </div>
+</li>
+</ul>
+</li>
+<li>
+<div class="flex items-center gap-2 p-2 hover:bg-surface-container-low rounded-xl cursor-pointer text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[18px]">arrow_right</span>
+<span class="material-symbols-outlined text-[18px] text-tertiary/80">folder</span>
+                                        Calculus Practice
+                                    </div>
+</li>
+</ul>
+</div>
+</div>
+<!-- Main Document Editor (Col 6) -->
+<div class="lg:col-span-6 bg-surface border border-outline-variant/10 rounded-3xl shadow-sm p-10 h-[600px] overflow-y-auto relative">
+<div class="max-w-prose mx-auto">
+<h2 class="font-display text-3xl font-bold text-on-surface mb-6 border-b border-outline-variant/20 pb-4">
+                                Kinematics - Projectile Motion
+                            </h2>
+<div class="bg-surface-container-low/50 rounded-2xl p-5 mb-6 border-l-4 border-primary shadow-sm">
+<h4 class="font-display text-sm font-bold text-primary mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">psychology</span>
+                                    AI Summary
+                                </h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                                    Projectile motion involves independent horizontal and vertical motions. The horizontal velocity remains constant, while vertical motion is subjected to constant acceleration due to gravity. The trajectory path is always a parabola.
+                                </p>
+</div>
+<p class="text-on-surface leading-relaxed mb-4">
+                                Consider an object projected with an initial velocity <span class="font-mono bg-surface-container px-1.5 py-0.5 rounded-md text-primary text-sm">u</span> at an angle <span class="font-mono bg-surface-container px-1.5 py-0.5 rounded-md text-primary text-sm">θ</span> to the horizontal.
+                            </p>
+<div class="bg-surface-container-low my-8 p-8 rounded-2xl flex items-center justify-center font-serif text-xl border border-outline-variant/20 shadow-inner">
+<span class="italic text-on-surface">R</span> = <span class="mx-2">u² sin(2θ)</span> / <span class="mx-2">g</span>
+</div>
+<p class="text-on-surface leading-relaxed mb-4">
+                                The maximum horizontal range occurs when <span class="font-mono bg-surface-container px-1.5 py-0.5 rounded-md text-primary text-sm">sin(2θ) = 1</span>, which means <span class="font-mono bg-surface-container px-1.5 py-0.5 rounded-md text-primary text-sm">2θ = 90°</span> or <span class="font-mono bg-surface-container px-1.5 py-0.5 rounded-md text-primary text-sm">θ = 45°</span>.
+                            </p>
+<!-- Block interaction placeholder -->
+<div class="flex items-center gap-2 mt-8 text-outline/50 hover:text-primary cursor-pointer transition-colors w-max">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="text-sm font-medium">Click to add block</span>
+</div>
+</div>
+</div>
+<!-- Widgets Column (Col 3) -->
+<div class="lg:col-span-3 flex flex-col gap-6">
+<!-- Focus Timer -->
+<div class="bg-surface border border-outline-variant/10 rounded-3xl shadow-sm p-6 text-center relative overflow-hidden flex flex-col items-center">
+<div class="absolute top-0 left-0 w-full h-1.5 bg-primary"></div>
+<h3 class="font-display text-base font-semibold text-on-surface mb-2 flex items-center justify-center gap-2 mt-2">
+<span class="material-symbols-outlined text-primary text-[20px]">timer</span>
+                                Focus Timer
+                            </h3>
+<div class="text-5xl font-display font-medium text-on-surface my-6 tracking-wide">
+                                25:00
+                            </div>
+<div class="flex justify-center gap-4 mb-4">
+<button class="bg-primary text-on-primary w-12 h-12 flex items-center justify-center rounded-full hover:bg-primary/90 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1">
+<span class="material-symbols-outlined text-[28px]">play_arrow</span>
+</button>
+<button class="bg-surface-container border border-outline-variant/20 w-12 h-12 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors shadow-sm">
+<span class="material-symbols-outlined">refresh</span>
+</button>
+</div>
+<div class="w-full pt-4 border-t border-outline-variant/10 flex items-center justify-between">
+<span class="text-sm font-medium text-secondary">DND Mode</span>
+<div class="w-11 h-6 bg-primary rounded-full relative cursor-pointer shadow-inner">
+<div class="w-5 h-5 bg-white rounded-full absolute right-0.5 top-0.5 shadow-sm"></div>
+</div>
+</div>
+</div>
+<!-- Scheduler Widget -->
+<div class="bg-surface border border-outline-variant/10 rounded-3xl shadow-sm p-5 flex-1 flex flex-col">
+<h3 class="font-display text-base font-semibold text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">event_note</span>
+                                Up Next
+                            </h3>
+<div class="flex flex-col gap-3 flex-1 overflow-y-auto">
+<div class="bg-primary-container/20 p-3.5 rounded-2xl border border-primary/20 relative pl-4">
+<div class="absolute left-0 top-0 h-full w-1.5 bg-primary rounded-l-2xl"></div>
+<p class="text-[11px] font-bold text-primary tracking-wider uppercase mb-1">10:00 AM</p>
+<p class="text-sm font-medium text-on-surface">Review Chem Notes</p>
+</div>
+<div class="p-3.5 rounded-2xl border border-outline-variant/20 relative pl-4 hover:bg-surface-container-lowest transition-colors">
+<div class="absolute left-0 top-0 h-full w-1.5 bg-secondary/50 rounded-l-2xl"></div>
+<p class="text-[11px] font-bold text-secondary tracking-wider uppercase mb-1">1:30 PM</p>
+<p class="text-sm font-medium text-on-surface">Math Practice Test</p>
+</div>
+<div class="p-3.5 rounded-2xl border border-outline-variant/20 relative pl-4 hover:bg-surface-container-lowest transition-colors">
+<div class="absolute left-0 top-0 h-full w-1.5 bg-outline/50 rounded-l-2xl"></div>
+<p class="text-[11px] font-bold text-outline tracking-wider uppercase mb-1">4:00 PM</p>
+<p class="text-sm font-medium text-on-surface">Tutor Session</p>
+</div>
+</div>
+</div>
+<!-- Knowledge Graph Preview -->
+<div class="bg-surface border border-outline-variant/10 rounded-3xl shadow-sm p-5 h-32 relative group overflow-hidden cursor-pointer">
+<div class="absolute inset-0 bg-surface-container-low/30"></div>
+<!-- Mock Graph Vis -->
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-2.5 h-2.5 rounded-full bg-primary absolute top-1/4 left-1/4 shadow-[0_0_8px_rgba(0,200,150,0.5)]"></div>
+<div class="w-3.5 h-3.5 rounded-full bg-tertiary absolute top-1/2 left-1/2 shadow-[0_0_8px_rgba(154,50,0,0.5)]"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-secondary absolute bottom-1/4 right-1/3 shadow-[0_0_8px_rgba(93,92,116,0.5)]"></div>
+<svg class="absolute inset-0 w-full h-full opacity-40" stroke="currentColor">
+<line class="text-primary" x1="25%" x2="50%" y1="25%" y2="50%"></line>
+<line class="text-tertiary" x1="50%" x2="66%" y1="50%" y2="75%"></line>
+</svg>
+</div>
+<div class="relative z-10 flex flex-col justify-between h-full">
+<h3 class="font-display text-sm font-semibold text-on-surface">Knowledge Graph</h3>
+<div class="flex items-center text-[11px] uppercase tracking-wider text-primary font-bold group-hover:translate-x-1 transition-transform">
+                                    Expand View <span class="material-symbols-outlined text-[14px] ml-1">open_in_full</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

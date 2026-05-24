@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Game Environment Lobby - DRONA.AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#5d5c74",
+                        "on-primary-container": "#efefff",
+                        "surface-container-high": "#e7e8e9",
+                        "tertiary-container": "#c34100",
+                        "on-tertiary-container": "#ffede8",
+                        "background": "#f8f9fa",
+                        "on-secondary-fixed-variant": "#45455b",
+                        "surface-container": "#edeeef",
+                        "on-primary-fixed": "#001454",
+                        "surface-bright": "#f8f9fa",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#b8c4ff",
+                        "on-surface-variant": "#434656",
+                        "surface-variant": "#e1e3e4",
+                        "secondary-fixed": "#e2e0fc",
+                        "secondary-container": "#e2e0fc",
+                        "surface": "#f8f9fa",
+                        "surface-dim": "#d9dadb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary": "#0042dc",
+                        "on-background": "#191c1d",
+                        "inverse-surface": "#2e3132",
+                        "outline": "#747688",
+                        "primary-container": "#2a5cff",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#0037ba",
+                        "on-secondary-container": "#63627a",
+                        "on-secondary-fixed": "#1a1a2e",
+                        "tertiary-fixed": "#ffdbcf",
+                        "tertiary-fixed-dim": "#ffb59b",
+                        "on-tertiary-fixed-variant": "#812800",
+                        "secondary-fixed-dim": "#c6c4df",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#b8c4ff",
+                        "on-surface": "#191c1d",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#380d00",
+                        "surface-container-low": "#f3f4f5",
+                        "outline-variant": "#c4c5d9",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#dde1ff",
+                        "tertiary": "#9a3200",
+                        "surface-tint": "#074af0",
+                        "game-gold": "#c9a84c",
+                        "game-gold-light": "#ebd18a",
+                        "game-gold-dim": "#8c722a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Playfair Display"],
+                        "display": ["Playfair Display"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4, h5, h6, .font-display { font-family: 'Playfair Display', serif; }
+        .glass-panel { background: #ffffff; border: 1px solid rgba(226, 232, 240, 0.8); }
+        .shadow-ambient { box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 10px -3px rgba(0, 0, 0, 0.02); }
+        .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .fill-icon { font-variation-settings: 'FILL' 1; }
+        
+        /* Game Environment Specific Styles */
+        .game-border-top { border-top: 4px solid #c9a84c; }
+        .game-gradient-text { background: linear-gradient(135deg, #c9a84c, #8c722a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* Radar Chart approximation using CSS for visual effect since JS is not allowed */
+        .radar-container { position: relative; width: 100%; aspect-ratio: 1; border-radius: 50%; border: 1px dashed #c9a84c; display: flex; align-items: center; justify-content: center; }
+        .radar-grid { position: absolute; inset: 10%; border-radius: 50%; border: 1px dashed rgba(201, 168, 76, 0.5); }
+        .radar-grid-inner { position: absolute; inset: 25%; border-radius: 50%; border: 1px dashed rgba(201, 168, 76, 0.3); }
+        .radar-fill { position: absolute; inset: 15%; background: rgba(201, 168, 76, 0.15); clip-path: polygon(50% 0%, 90% 20%, 100% 60%, 70% 100%, 20% 90%, 0% 40%); border: 1px solid #c9a84c; }
+        .radar-point { position: absolute; width: 8px; height: 8px; background: #c9a84c; border-radius: 50%; box-shadow: 0 0 10px #c9a84c; }
+        
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col antialiased">
+<!-- TopNavBar -->
+<header class="bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-8 h-16">
+<div class="flex items-center gap-8">
+<div class="font-display font-black text-2xl tracking-tighter text-primary">DRONA.AI</div>
+<nav class="hidden md:flex gap-6">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-md" href="#">Learning</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-md" href="#">Test</a>
+<a class="text-[#c9a84c] font-bold border-b-2 border-[#c9a84c] pb-1 cursor-pointer active:scale-95 transition-transform px-3 py-2" href="#">Game</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-md" href="#">Workspace</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-md" href="#">Resources</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform hover:bg-surface-container-high/50 transition-all duration-200 px-3 py-2 rounded-md" href="#">Career</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high/50 rounded-full transition-all cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">military_tech</span>
+</button>
+<button class="p-2 text-[#c9a84c] hover:bg-surface-container-high/50 rounded-full transition-all cursor-pointer active:scale-95 flex items-center gap-1">
+<span class="material-symbols-outlined fill-icon text-[#c9a84c]">monetization_on</span>
+<span class="font-bold text-[#c9a84c]">2,450</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-surface-variant overflow-hidden border border-outline-variant/30 ml-2">
+<img alt="Student Profile Avatar" class="w-full h-full object-cover" data-alt="A clean, professional headshot of a young male student in a bright studio setting. The lighting is soft and flattering, creating a premium, modern aesthetic consistent with a high-end educational platform profile picture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4CcVJZS7JqZVuDdAC-6O-WfBXkavXBa1LNAEmYReYSvE1zRzigbo2TEyrm5Ik1bBagdOH9D0dCvWvqBzH69XrXtpYS1iqoK05UCqdOGMzsO4Jux_KFmsuJgXD1igJcjZ_T-H54DpJ_2FeSAXCIeEMisxm7g9YDkc64Gi58rvp0zAITDd7E14SluTP1Nj9pjGfhF5OFHmNLOJxv6gTmciKR2MlDd-RkbBHLaXpkqFKaPEtIx3SkhzoBVAHlb3EZ5ArFXJlsUOxEas"/>
+</div>
+</div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto p-8 lg:p-12">
+<div class="max-w-7xl mx-auto space-y-12">
+<!-- Environment Header -->
+<div class="flex items-end justify-between mb-8 pb-6 border-b border-outline-variant/30">
+<div>
+<p class="text-sm font-semibold text-secondary uppercase tracking-widest mb-1 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-game-gold"></span> Environment: Game
+                        </p>
+<h1 class="font-headline text-4xl lg:text-5xl font-black text-on-surface tracking-tight">Arena Lobby</h1>
+</div>
+<div class="hidden md:flex flex-col items-end">
+<span class="text-xs text-secondary uppercase font-semibold">Knowledge Credits</span>
+<div class="flex items-center gap-2 text-game-gold">
+<span class="material-symbols-outlined fill-icon text-3xl">monetization_on</span>
+<span class="font-headline text-3xl font-bold">2,450</span>
+</div>
+</div>
+</div>
+<!-- Top Row: Radar & Boss Battle -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- 6-Stat Radar Chart Component -->
+<div class="lg:col-span-8 bg-surface rounded-3xl p-10 shadow-ambient game-border-top relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-64 h-64 bg-game-gold/5 rounded-full blur-3xl -mr-20 -mt-20"></div>
+<div class="flex justify-between items-start mb-10 relative z-10">
+<div>
+<h2 class="font-headline text-3xl font-bold text-on-surface mb-2">Cognitive Profile</h2>
+<p class="text-secondary text-base">Holographic performance matrix across 6 core disciplines.</p>
+</div>
+<button class="text-sm font-semibold px-4 py-2 border border-outline-variant rounded-full text-secondary hover:text-on-surface hover:border-outline transition-colors">Detailed Breakdown</button>
+</div>
+<div class="flex flex-col md:flex-row items-center gap-16 relative z-10">
+<!-- Radar Visualization Area -->
+<div class="w-64 h-64 md:w-80 md:h-80 relative flex-shrink-0">
+<div class="radar-container">
+<div class="radar-grid"></div>
+<div class="radar-grid-inner"></div>
+<div class="radar-fill shadow-[0_0_30px_rgba(201,168,76,0.3)]"></div>
+<!-- Stat Labels -->
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 text-sm font-bold text-on-surface text-center whitespace-nowrap">Logic &amp; Reasoning <br/><span class="text-game-gold text-lg">92%</span></div>
+<div class="absolute top-1/4 -right-20 text-sm font-bold text-on-surface text-center">Memory <br/><span class="text-game-gold text-lg">78%</span></div>
+<div class="absolute bottom-1/4 -right-20 text-sm font-bold text-on-surface text-center">Speed <br/><span class="text-game-gold text-lg">85%</span></div>
+<div class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm font-bold text-on-surface text-center whitespace-nowrap">Pattern Rec <br/><span class="text-game-gold text-lg">95%</span></div>
+<div class="absolute bottom-1/4 -left-20 text-sm font-bold text-on-surface text-center">Accuracy <br/><span class="text-game-gold text-lg">88%</span></div>
+<div class="absolute top-1/4 -left-20 text-sm font-bold text-on-surface text-center">Focus <br/><span class="text-game-gold text-lg">82%</span></div>
+</div>
+</div>
+<!-- Key Insights -->
+<div class="flex-1 space-y-8 w-full">
+<div>
+<div class="flex justify-between items-end mb-3">
+<h3 class="text-base font-semibold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-game-gold text-xl">trending_up</span>
+                                            Dominant Trait
+                                        </h3>
+</div>
+<p class="text-base text-secondary leading-relaxed">Your <strong class="text-on-surface">Pattern Recognition</strong> is in the top 5% of all active scholars. Consider engaging higher-tier logic puzzles to push this further.</p>
+</div>
+<div class="h-px w-full bg-outline-variant/30"></div>
+<div>
+<div class="flex justify-between items-end mb-3">
+<h3 class="text-base font-semibold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-xl">build</span>
+                                            Area of Focus
+                                        </h3>
+</div>
+<p class="text-base text-secondary leading-relaxed">Memory retention shows slight degradation under time pressure. The Memory Forge mini-game is recommended.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Boss Battle Lobby Entrance -->
+<div class="lg:col-span-4 rounded-3xl overflow-hidden relative shadow-ambient group cursor-pointer hover-lift">
+<div class="absolute inset-0 bg-inverse-surface z-0">
+<!-- Background Image representing the Boss Battle -->
+<img alt="Cosmic Boss Battle Environment" class="w-full h-full object-cover opacity-50 group-hover:opacity-60 transition-opacity duration-500" data-alt="A dark, cinematic cosmic environment with glowing abstract geometric structures floating in deep space. The lighting is dramatic, featuring deep blacks contrasted with intense, glowing amber and gold energy currents, creating a sense of an epic, high-stakes digital arena suitable for a 'Boss Battle' interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBh7AgOY2IMy1X7tqQK_3OJ9ErrgjR6q-lJoO67G28Jx-kvSrvZlF305l15F82t7KMpwCHavOsGvXWLgpbg81ZPoDCF3lCpAm5X5aP5oejmVMd-f1BxVh4aw0bf2KH_x9rUtnLxeM5L7iLv2o2TKHtAbhojh96InVbmI9nTt8TS1Fhy7c7RkdLSGn5UgBoQINjNYiIqdViqC2KID1q52DVc6JqKpl9m-Y-A7ZJII7Bziwyk3aagwO5XQrUYNHuJZJbGi_lavQZcTOI"/>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent z-10"></div>
+<div class="relative z-20 p-8 h-full flex flex-col justify-end">
+<div class="bg-game-gold/20 backdrop-blur-md border border-game-gold/30 text-game-gold text-xs font-bold px-3 py-1.5 rounded-full w-max mb-auto flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px]">wifi</span>
+                                LIVE EVENT
+                            </div>
+<h2 class="font-headline text-4xl font-black text-white mb-3 mt-12 leading-tight">The Calculus<br/>Colossus</h2>
+<div class="flex items-center gap-4 mb-8">
+<div class="flex -space-x-3">
+<div class="w-10 h-10 rounded-full border-2 border-inverse-surface bg-surface-variant overflow-hidden"><img alt="Player 1" class="w-full h-full object-cover" data-alt="A small, circular avatar portrait of a serious male student looking thoughtfully at the camera, lit with cool studio lighting against a dark background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAc6CHhQ7jJNISbkleSHcujcoUPXWLmI6W3zNzfouivfvSs6-xOWY7sXIEF7JBwJAK4dNhu6tyhNRPrqlGGQ0mdaYyqLrvEHFE9j8MIDTP03Xp3UqB2HGg3nfPW78OnXKD9piyNlmzAmSV1kYXzW8kW9nZCSrPPg0nYDFfdd2CakUwgQZX2x32HD9Fu3dLTu7cZF4B49L4GWwufdM4oiFvyVWLb97V9LpGqkww6ncS4v3kzdu0vrFMRKjZgH2nvR8zKxqbFM6QzjPg"/></div>
+<div class="w-10 h-10 rounded-full border-2 border-inverse-surface bg-surface-variant overflow-hidden"><img alt="Player 2" class="w-full h-full object-cover" data-alt="A small, circular avatar portrait of a confident female student smiling softly, lit brightly against a minimal grey background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBccdVVNinCc2FOXtcWpZmyRHCast8MkvX2hcdL526q9t-AEDEOrMGsYXlKnneFtCHk5BvhiX2srC0F9weYDQIvXbkJr9Kys7TRu-C0WfbTxA7Ghjf9u5H0IrgWhU3sJInuBJAaGtCzjvIJ38F3SC2611Ya1oke80j1RnLejAMqIa8jGp2rUT4miPj8mR59GEz3ziKEhmFhqwmgiCnJekWmo09YSnfT_dgCUKvPXLLHaNskok5JOZQGYXDVydYbTYsecoEqbOs6p7w"/></div>
+<div class="w-10 h-10 rounded-full border-2 border-inverse-surface bg-surface-variant overflow-hidden"><img alt="Player 3" class="w-full h-full object-cover" data-alt="A small, circular avatar portrait of a male student with glasses, looking directly forward in a bright, modern setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCD0M_Y-eVD3LIL50itLtj0mVY_OLkkKsmfr_wlIfSdjNPF0Sy4fqUmswZl75V3FO-C4KhAb23jxtbXE8xrnmnOLoLSJT-Ct1fR3BPjMr5tU9VN5DeoN-eOP7cEpkpRLOjh7-qg7RbfYQXiwFPiI_I-4ScFF0ict_aU4hiRcHpTgccrSNfyHcX9MpOteRtemUdKxN0xhWU21CUeKZygIxRLJE6eziLPGxMqfqokG_D7uakShXanPiaabWytpZfcArGnprnK1gT9Zr0"/></div>
+</div>
+<span class="text-sm text-outline-variant font-medium">+124 Players Online</span>
+</div>
+<button class="w-full bg-game-gold hover:bg-game-gold-light text-on-surface font-bold py-4 px-6 rounded-xl transition-colors flex justify-between items-center group/btn shadow-md">
+                                Enter Lobby
+                                <span class="material-symbols-outlined group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Bottom Row: Leaderboard, Quests, Badges -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Active Missions -->
+<div class="lg:col-span-5 bg-surface rounded-3xl p-8 shadow-ambient">
+<div class="flex justify-between items-center mb-8">
+<h2 class="font-headline text-2xl font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-game-gold text-2xl">track_changes</span>
+                                Active Missions
+                            </h2>
+<span class="text-sm font-medium text-secondary bg-surface-container-high px-3 py-1.5 rounded-lg">3/5 Daily</span>
+</div>
+<div class="space-y-4">
+<!-- Mission 1 -->
+<div class="bg-surface-bright p-5 rounded-2xl border border-outline-variant/40 hover:border-game-gold/50 hover:shadow-md transition-all cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-base font-bold text-on-surface group-hover:text-game-gold transition-colors">30-Day Iron Streak</h3>
+<span class="material-symbols-outlined text-game-gold text-xl">local_fire_department</span>
+</div>
+<p class="text-sm text-secondary mb-4">Maintain daily login and complete one major quest.</p>
+<div class="w-full bg-surface-container-high rounded-full h-2 mb-2">
+<div class="bg-game-gold h-2 rounded-full" style="width: 80%"></div>
+</div>
+<div class="flex justify-between text-xs text-secondary font-semibold">
+<span>Day 24/30</span>
+<span class="text-game-gold">500 Credits</span>
+</div>
+</div>
+<!-- Mission 2 -->
+<div class="bg-surface-bright p-5 rounded-2xl border border-outline-variant/40 hover:border-game-gold/50 hover:shadow-md transition-all cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-base font-bold text-on-surface group-hover:text-game-gold transition-colors">Flawless Victory</h3>
+<span class="material-symbols-outlined text-outline text-xl group-hover:text-game-gold transition-colors">workspace_premium</span>
+</div>
+<p class="text-sm text-secondary mb-4">Score 100% on a Tier-3 Mathematics module.</p>
+<div class="w-full bg-surface-container-high rounded-full h-2 mb-2">
+<div class="bg-outline-variant h-2 rounded-full" style="width: 0%"></div>
+</div>
+<div class="flex justify-between text-xs text-secondary font-semibold">
+<span>Not Started</span>
+<span>1000 Credits</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Achievement Badges Gallery -->
+<div class="lg:col-span-7 bg-surface rounded-3xl p-8 shadow-ambient">
+<div class="flex justify-between items-center mb-8">
+<h2 class="font-headline text-2xl font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-game-gold text-2xl">emoji_events</span>
+                                Arsenal
+                            </h2>
+<button class="text-sm text-primary hover:underline font-semibold">View All</button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<!-- Unlocked Badge 1 -->
+<div class="flex flex-col items-center group cursor-pointer bg-surface-bright p-4 rounded-2xl border border-outline-variant/20 hover:border-game-gold/30 hover:shadow-sm transition-all">
+<div class="w-20 h-20 rounded-full bg-surface border-2 border-game-gold shadow-[0_0_20px_rgba(201,168,76,0.15)] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform relative">
+<span class="material-symbols-outlined text-4xl text-game-gold fill-icon">psychology</span>
+</div>
+<span class="text-xs text-center font-bold text-on-surface leading-tight">Deep Thinker I</span>
+</div>
+<!-- Unlocked Badge 2 -->
+<div class="flex flex-col items-center group cursor-pointer bg-surface-bright p-4 rounded-2xl border border-outline-variant/20 hover:border-game-gold/30 hover:shadow-sm transition-all">
+<div class="w-20 h-20 rounded-full bg-surface border-2 border-game-gold shadow-[0_0_20px_rgba(201,168,76,0.15)] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform relative">
+<span class="material-symbols-outlined text-4xl text-game-gold fill-icon">speed</span>
+</div>
+<span class="text-xs text-center font-bold text-on-surface leading-tight">Speed Demon</span>
+</div>
+<!-- Locked Badge 1 -->
+<div class="flex flex-col items-center group cursor-not-allowed opacity-60 bg-surface-bright p-4 rounded-2xl border border-outline-variant/20">
+<div class="w-20 h-20 rounded-full bg-surface-container-high border-2 border-outline-variant flex items-center justify-center mb-3 relative grayscale">
+<span class="material-symbols-outlined text-4xl text-outline">diamond</span>
+<div class="absolute -bottom-1 -right-1 bg-surface rounded-full p-1 border border-outline-variant shadow-sm">
+<span class="material-symbols-outlined text-[12px] text-outline">lock</span>
+</div>
+</div>
+<span class="text-xs text-center font-medium text-secondary leading-tight">Diamond Tier</span>
+</div>
+<!-- Locked Badge 2 -->
+<div class="flex flex-col items-center group cursor-not-allowed opacity-60 bg-surface-bright p-4 rounded-2xl border border-outline-variant/20">
+<div class="w-20 h-20 rounded-full bg-surface-container-high border-2 border-outline-variant flex items-center justify-center mb-3 relative grayscale">
+<span class="material-symbols-outlined text-4xl text-outline">school</span>
+<div class="absolute -bottom-1 -right-1 bg-surface rounded-full p-1 border border-outline-variant shadow-sm">
+<span class="material-symbols-outlined text-[12px] text-outline">lock</span>
+</div>
+</div>
+<span class="text-xs text-center font-medium text-secondary leading-tight">Master Scholar</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

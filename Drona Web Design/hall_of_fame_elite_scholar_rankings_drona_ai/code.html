@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DRONA.AI - Hall of Fame</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&amp;family=Inter:wght@400;500;600;700&amp;family=DM+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#63627a",
+                        "surface-container-low": "#f3f4f5",
+                        "secondary-container": "#e2e0fc",
+                        "on-secondary-fixed-variant": "#45455b",
+                        "on-secondary-fixed": "#1a1a2e",
+                        "on-tertiary-container": "#ffede8",
+                        "on-primary-fixed-variant": "#0037ba",
+                        "surface-variant": "#e1e3e4",
+                        "on-primary-container": "#efefff",
+                        "on-background": "#191c1d",
+                        "inverse-on-surface": "#f0f1f2",
+                        "outline-variant": "#c4c5d9",
+                        "on-tertiary-fixed": "#380d00",
+                        "primary": "#0042dc",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e1e3e4",
+                        "background": "#f8f9fa",
+                        "tertiary-container": "#c34100",
+                        "surface-container": "#edeeef",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#e2e0fc",
+                        "tertiary-fixed-dim": "#ffb59b",
+                        "surface-bright": "#f8f9fa",
+                        "secondary-fixed-dim": "#c6c4df",
+                        "surface-dim": "#d9dadb",
+                        "surface-container-high": "#e7e8e9",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#074af0",
+                        "on-tertiary-fixed-variant": "#812800",
+                        "on-surface-variant": "#434656",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#2e3132",
+                        "inverse-primary": "#b8c4ff",
+                        "tertiary-fixed": "#ffdbcf",
+                        "tertiary": "#9a3200",
+                        "primary-fixed-dim": "#b8c4ff",
+                        "surface": "#f8f9fa",
+                        "primary-fixed": "#dde1ff",
+                        "secondary": "#5d5c74",
+                        "outline": "#747688",
+                        "on-surface": "#191c1d",
+                        "primary-container": "#2a5cff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#001454",
+                        "tactical-gold": "#c9a84c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Playfair Display"],
+                        "display": ["Playfair Display"],
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "data": ["DM Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col antialiased">
+<!-- TopNavBar (Shared Component JSON) -->
+<header class="bg-surface/80 dark:bg-surface-container/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-8 h-16">
+<div class="flex items-center gap-8">
+<div class="font-display font-black text-2xl tracking-tighter text-tactical-gold dark:text-primary-fixed">
+                    DRONA.AI
+                </div>
+<nav class="hidden md:flex gap-6">
+<a class="text-on-surface-variant font-medium hover:text-tactical-gold transition-colors cursor-pointer active:scale-95 transition-transform font-display text-lg tracking-tight hover:bg-surface-container-high/50 transition-all duration-200 px-2 py-1 rounded" href="#">Learning</a>
+<a class="text-on-surface-variant font-medium hover:text-tactical-gold transition-colors cursor-pointer active:scale-95 transition-transform font-display text-lg tracking-tight hover:bg-surface-container-high/50 transition-all duration-200 px-2 py-1 rounded" href="#">Test</a>
+<a class="text-tactical-gold font-bold border-b-2 border-tactical-gold pb-1 cursor-pointer active:scale-95 transition-transform font-display text-lg tracking-tight px-2" href="#">Game</a>
+<a class="text-on-surface-variant font-medium hover:text-tactical-gold transition-colors cursor-pointer active:scale-95 transition-transform font-display text-lg tracking-tight hover:bg-surface-container-high/50 transition-all duration-200 px-2 py-1 rounded" href="#">Workspace</a>
+<a class="text-on-surface-variant font-medium hover:text-tactical-gold transition-colors cursor-pointer active:scale-95 transition-transform font-display text-lg tracking-tight hover:bg-surface-container-high/50 transition-all duration-200 px-2 py-1 rounded" href="#">Resources</a>
+<a class="text-on-surface-variant font-medium hover:text-tactical-gold transition-colors cursor-pointer active:scale-95 transition-transform font-display text-lg tracking-tight hover:bg-surface-container-high/50 transition-all duration-200 px-2 py-1 rounded" href="#">Career</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-tactical-gold dark:text-primary-fixed-dim hover:bg-surface-container-high/50 p-2 rounded-full transition-all duration-200 cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">military_tech</span>
+</button>
+<button class="text-tactical-gold dark:text-primary-fixed-dim hover:bg-surface-container-high/50 p-2 rounded-full transition-all duration-200 cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">monetization_on</span>
+</button>
+<img alt="Student Profile Avatar" class="w-10 h-10 rounded-full object-cover border border-outline-variant cursor-pointer active:scale-95 hover:shadow-md transition-all duration-200" data-alt="A close-up, high-quality portrait photograph of a young, confident Indian male student. He has dark hair, a subtle smile, and is wearing a modern, minimalist white and grey collared shirt. The background is a soft, out-of-focus light grey, ensuring the subject stands out. The lighting is studio quality, bright and evenly distributed, fitting perfectly into a clean, premium minimalist operating system aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKT3GO1Om9XNfw3N2_Z3bkmhWo8_3tF7pJ2bxIt5A3jk9jkOYenLBA_9cyKvTTRNj7T_8pzZYRQIE50B2Of3QGcPWAb_Blm1Qy_g4l3OYO7XOWaehgMatkq5lpHPK5FnJ3SBmZtovAoG8FxAPN8CRmQVwDj9tSQX5BnOtadWQlmnh4Om8EBWwwkDrFhfux1lmyfIZZPxvMTfkrK6ClB5SyhXquBmYN2RgD060CuPRZ2fKV7Nx8agdXzRpxPYBjCOW8K54X8p2Wst8"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar (Customized for Game Environment based on prompt) -->
+<aside class="hidden md:flex flex-col p-4 gap-2 bg-surface-container-low dark:bg-surface-dim border-r border-outline-variant/20 fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 z-40 overflow-y-auto">
+<div class="px-4 py-6 mb-2 border-b border-outline-variant/20">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 bg-tactical-gold rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">sports_esports</span>
+</div>
+<div>
+<h2 class="font-display text-xl font-bold text-on-surface">Game Hub</h2>
+<p class="font-body text-xs text-on-surface-variant">Environment: Active</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl font-body text-sm font-medium group-hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">meeting_room</span>
+                    Lobby
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl font-body text-sm font-medium group-hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">explore</span>
+                    Quest
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl font-body text-sm font-medium group-hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">swords</span>
+                    Battle Arena
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl font-body text-sm font-medium group-hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+                    Knowledge Arcade
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-tactical-gold text-white rounded-xl font-bold shadow-sm font-body text-sm group-hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined fill">emoji_events</span>
+                    Hall of Fame
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl font-body text-sm font-medium group-hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">storefront</span>
+                    Marketplace
+                </a>
+</nav>
+<div class="mt-auto border-t border-outline-variant/20 pt-4">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl font-body text-sm font-medium group-hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-xl font-body text-sm font-medium group-hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">help</span>
+                    Help
+                </a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 md:ml-64 p-8 overflow-y-auto bg-surface-bright min-h-[calc(100vh-4rem)]">
+<div class="max-w-6xl mx-auto space-y-12">
+<!-- Hero Header -->
+<header class="text-center pt-8 pb-4">
+<h1 class="font-display text-5xl md:text-6xl font-black tracking-tight text-on-surface mb-4">HALL OF FAME</h1>
+<p class="font-body text-lg text-on-surface-variant max-w-2xl mx-auto font-medium">The pinnacle of academic excellence. Immortals forged in the arena of knowledge.</p>
+</header>
+<!-- Filter Bar -->
+<div class="flex justify-center flex-wrap gap-3">
+<button class="px-6 py-2 rounded-full bg-on-surface text-surface font-body text-sm font-medium hover:bg-inverse-surface transition-colors">Overall</button>
+<button class="px-6 py-2 rounded-full bg-surface border border-outline-variant text-on-surface-variant font-body text-sm font-medium hover:bg-surface-container-high transition-colors">Class 10</button>
+<button class="px-6 py-2 rounded-full bg-surface border border-outline-variant text-on-surface-variant font-body text-sm font-medium hover:bg-surface-container-high transition-colors">Class 11</button>
+<button class="px-6 py-2 rounded-full bg-surface border border-outline-variant text-on-surface-variant font-body text-sm font-medium hover:bg-surface-container-high transition-colors">Class 12</button>
+<button class="px-6 py-2 rounded-full bg-surface border border-outline-variant text-on-surface-variant font-body text-sm font-medium hover:bg-surface-container-high transition-colors">JEE</button>
+<button class="px-6 py-2 rounded-full bg-surface border border-outline-variant text-on-surface-variant font-body text-sm font-medium hover:bg-surface-container-high transition-colors">NEET</button>
+</div>
+<!-- Top 3 Podium -->
+<div class="flex flex-col md:flex-row items-end justify-center gap-6 mt-16 pb-12">
+<!-- #2 Scholar -->
+<div class="w-full md:w-72 bg-surface rounded-xl border border-outline-variant/30 shadow-[0_4px_20px_rgba(0,0,0,0.04)] p-6 flex flex-col items-center relative transform hover:-translate-y-2 transition-transform duration-300 md:mb-8">
+<div class="absolute -top-5 bg-[#E0E0E0] text-on-surface font-display font-bold w-10 h-10 rounded-full flex items-center justify-center shadow-md border-2 border-surface">2</div>
+<img alt="Scholar 2" class="w-24 h-24 rounded-full object-cover border-4 border-[#E0E0E0] mb-4 shadow-sm" data-alt="A portrait of a young female Indian student with dark hair tied back, wearing glasses and a crisp white collared shirt. She has a focused, intelligent expression. The background is a clean, bright, and slightly blurred architectural space. The lighting is soft and natural, creating a high-key, premium look suitable for an academic leaderboard profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5d1Mo-WTa3Y5CA0lFOMWq3C7W5DqqSSEo8ryb7OSE55GvzrHpDn7NK7QioE2IluhqxVY4b4rWUZdxss8KJr4OAStTrUia36dMZCj6cgJWQVx1gq-bSdxdyE04wVFE10B0s9kF5QpdV5zd8GrS1uCNJMz4s0Ru-sXR_lAVdygpLYK_wb0lWfv7OkiOy6DT7MsQ7sS3RxvDrxNclMDCS6QbMl3YkYCbfneG86Viz2CUqlFgNakplwRV83SXxUe5YKn2qvcKdQ5Coeg"/>
+<h3 class="font-display text-xl font-bold text-on-surface mb-1">Aisha R.</h3>
+<p class="font-body text-sm text-on-surface-variant mb-4">Master Strategist</p>
+<div class="w-full bg-surface-container-low rounded-lg p-3 text-center border border-outline-variant/20">
+<p class="font-body text-xs text-secondary mb-1 uppercase tracking-wider">Total XP</p>
+<p class="font-data text-xl font-bold text-[#757575]">124,500</p>
+</div>
+</div>
+<!-- #1 Scholar (Center, Larger) -->
+<div class="w-full md:w-80 bg-surface rounded-xl border border-outline-variant/30 shadow-[0_8px_30px_rgba(0,0,0,0.08)] p-8 flex flex-col items-center relative transform hover:-translate-y-2 transition-transform duration-300 z-10 border-t-4 border-t-tactical-gold">
+<div class="absolute -top-6 bg-tactical-gold text-white font-display font-bold w-12 h-12 rounded-full flex items-center justify-center shadow-lg border-2 border-surface">
+<span class="material-symbols-outlined fill text-2xl">trophy</span>
+</div>
+<div class="relative mb-6 mt-2">
+<div class="absolute inset-0 rounded-full bg-tactical-gold/20 animate-pulse blur-md"></div>
+<img alt="Scholar 1" class="w-32 h-32 rounded-full object-cover border-4 border-tactical-gold relative z-10 shadow-md" data-alt="A portrait of a confident young male Indian student with neat dark hair, wearing a dark blazer over a white shirt. He is looking directly at the camera with a determined, calm expression. The background is a soft, pristine white studio backdrop, ensuring maximum focus on the subject. The lighting is bright and editorial, reflecting a premium minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7EuB2Bb4p32_x-REcMDoxs7N7pFn0USGMT5jfHYs8bjNoRte5SCHm9jXaotxqQOKk07GooWyDBPA4BGzy4QHxJsv-7AkyVic8e2tum_OW-kCtr8SIW5nqf9Stfphhs2pyKVqjlNQCwjZfq8_VBpUEs4-wAAuiT0_bTbhd5RenPEuUMlCrrvjKG89Qf-HI0kZIIobYN4xVtu7V69oOE1Acq6uyZzA_o_D4o2UBrJ2wbummkBx3HJVvEVAFs7Qysil66KECJaerTXU"/>
+</div>
+<h3 class="font-display text-2xl font-bold text-on-surface mb-1">Rahul V.</h3>
+<p class="font-body text-sm text-tactical-gold font-semibold mb-5">Grandmaster</p>
+<div class="w-full bg-surface-container-low rounded-lg p-4 text-center border border-tactical-gold/30 bg-gradient-to-b from-surface to-surface-container-low">
+<p class="font-body text-xs text-secondary mb-1 uppercase tracking-wider">Total XP</p>
+<p class="font-data text-3xl font-bold text-tactical-gold">142,800</p>
+</div>
+</div>
+<!-- #3 Scholar -->
+<div class="w-full md:w-72 bg-surface rounded-xl border border-outline-variant/30 shadow-[0_4px_20px_rgba(0,0,0,0.04)] p-6 flex flex-col items-center relative transform hover:-translate-y-2 transition-transform duration-300 md:mb-8">
+<div class="absolute -top-5 bg-[#CD7F32] text-white font-display font-bold w-10 h-10 rounded-full flex items-center justify-center shadow-md border-2 border-surface">3</div>
+<img alt="Scholar 3" class="w-24 h-24 rounded-full object-cover border-4 border-[#CD7F32] mb-4 shadow-sm" data-alt="A portrait of a thoughtful young female Indian student with short hair, wearing a light grey sweater. She has a gentle smile and a relaxed posture. The background is a bright, out-of-focus modern library or study area, conveying an academic atmosphere. The lighting is soft, natural, and high-key, aligning perfectly with a premium minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzjYGgVIqUYhJiWasnXNAskhMAYChzhKal9N2zFdObWPINkkT2Pj37-wB1XN5utNuoSXlC7opSIkr2SHfgMWAKmraoY9x-OPll7rvnH08vkoH3fergl4ZT8AyU8dJc5CoXQpGT8NTC5siYZOZgcVtTUbDpJOpkT2nxaiVwiPbA7xF5lLbn9-09yQvetuGGJenxO3eHkoLrHBJA0Z2G_AcByHH73lwVdVxso2Ho152bCUgYaMLllqpQrYN3mbPpHS26CNhLMa_8JHs"/>
+<h3 class="font-display text-xl font-bold text-on-surface mb-1">Priya K.</h3>
+<p class="font-body text-sm text-on-surface-variant mb-4">Elite Tactician</p>
+<div class="w-full bg-surface-container-low rounded-lg p-3 text-center border border-outline-variant/20">
+<p class="font-body text-xs text-secondary mb-1 uppercase tracking-wider">Total XP</p>
+<p class="font-data text-xl font-bold text-[#A0522D]">118,200</p>
+</div>
+</div>
+</div>
+<!-- Global Rankings List -->
+<div class="bg-surface rounded-xl border border-outline-variant/30 shadow-[0_4px_20px_rgba(0,0,0,0.04)] overflow-hidden">
+<div class="px-6 py-4 border-b border-outline-variant/20 bg-surface-container-lowest">
+<h2 class="font-display text-lg font-bold text-on-surface">Global Rankings</h2>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant/20 bg-surface-container-low/50">
+<th class="px-6 py-4 font-body text-xs font-semibold text-secondary uppercase tracking-wider w-20 text-center">Rank</th>
+<th class="px-6 py-4 font-body text-xs font-semibold text-secondary uppercase tracking-wider">Student</th>
+<th class="px-6 py-4 font-body text-xs font-semibold text-secondary uppercase tracking-wider">Track</th>
+<th class="px-6 py-4 font-body text-xs font-semibold text-secondary uppercase tracking-wider">Level</th>
+<th class="px-6 py-4 font-body text-xs font-semibold text-secondary uppercase tracking-wider text-right">Total XP</th>
+</tr>
+</thead>
+<tbody class="font-data text-sm">
+<!-- Rank 4 -->
+<tr class="border-b border-outline-variant/10 hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4 text-center font-bold text-on-surface-variant">4</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img alt="Student 4" class="w-8 h-8 rounded-full object-cover border border-outline-variant/30" data-alt="A small, circular avatar portrait of a young male student with dark hair and glasses, smiling gently. Clean white background. High quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCtURmkOy5TvFFRzWDq5FbC1d4f3_ote1FIP8itFikT6G47UDdy05IpH7RfMIT3Wh7nvLSkVEEcFr_3cMZUymYwj7qoEX7dIBR7KYo1VR9m03wqMhoJJFLaBzxERUwj1kPRYiPt0lEbPmVdZ994sJYFvgkcpOIVa7QGUqCn6BJw3BqHz9vbmPHw_-8iFTCyLjAz7HlgJm0Lmm672TyRpd45eUtBcvXaP0ujQIvD35FbRMAcxfb1VoLD1_zWfSYGOoFHwfBXYWQMOQ"/>
+<span class="font-medium text-on-surface">Vikram S.</span>
+</div>
+</td>
+<td class="px-6 py-4 text-on-surface-variant">JEE Advanced</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded-md bg-secondary-container text-on-secondary-container text-xs font-medium">Lvl 85</span>
+</td>
+<td class="px-6 py-4 text-right font-medium text-on-surface">105,400</td>
+</tr>
+<!-- Rank 5 -->
+<tr class="border-b border-outline-variant/10 hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4 text-center font-bold text-on-surface-variant">5</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img alt="Student 5" class="w-8 h-8 rounded-full object-cover border border-outline-variant/30" data-alt="A small, circular avatar portrait of a young female student with long dark hair, wearing a neutral-colored top. Calm expression. Clean white background. High quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCftGGFrRlCh3E094CfvhViX7duvuv9NxupOEewlv26ezGXHl3k4x3vA_PvC1vcfj-GwmISHMgKA-wVBVcX928q2UVw8UC7nUHVgxiuwZqBZ9MqgdiQDGcd0lRTCEz2FjtpAQ32u_BJvxu4LOieoktGqh55ba9YKUeE1jys_oVVUev_KK1uEkI0g_LL8vIRommRfOatChcbFpKwyJ54k8E763j0ZRQSZPMDAA0oqwFwx2wiQfXR4yKNtCy443h7z2CwQIyP4trhFno"/>
+<span class="font-medium text-on-surface">Neha G.</span>
+</div>
+</td>
+<td class="px-6 py-4 text-on-surface-variant">NEET</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded-md bg-secondary-container text-on-secondary-container text-xs font-medium">Lvl 82</span>
+</td>
+<td class="px-6 py-4 text-right font-medium text-on-surface">98,200</td>
+</tr>
+<!-- Rank 6 -->
+<tr class="border-b border-outline-variant/10 hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4 text-center font-bold text-on-surface-variant">6</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant font-bold text-xs border border-outline-variant/30">AK</div>
+<span class="font-medium text-on-surface">Arjun K.</span>
+</div>
+</td>
+<td class="px-6 py-4 text-on-surface-variant">Class 12 Boards</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded-md bg-secondary-container text-on-secondary-container text-xs font-medium">Lvl 79</span>
+</td>
+<td class="px-6 py-4 text-right font-medium text-on-surface">91,050</td>
+</tr>
+<!-- Separator for skipped ranks -->
+<tr>
+<td class="px-6 py-2 text-center text-outline text-sm" colspan="5">
+<span class="material-symbols-outlined text-sm">more_vert</span>
+</td>
+</tr>
+<!-- User Context Row (Highlighted) -->
+<tr class="bg-tactical-gold/10 border-l-4 border-l-tactical-gold hover:bg-tactical-gold/20 transition-colors">
+<td class="px-6 py-4 text-center font-bold text-tactical-gold">42</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img alt="Current User" class="w-8 h-8 rounded-full object-cover border-2 border-tactical-gold" data-alt="A small, circular avatar portrait of a confident young Indian male student. This matches the profile picture in the top right navigation. Bright lighting, clean minimalist background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuALok-Uh4yBaBUusFWarSuakuuT1AVJ31vD4E7Yk9zF-rAfuxoCUIak1_eQ6QhivG7IZPxjusaI5t-QPsJZHbaJDgJgx03Fbk_pKSHc-_-yen5idVDuz4ALO2Q3eAOZRfnGJMOC6rjE3GHh6X4ODSYvJCIYML2bnWoOw-uvtNX8tX135tmbusCHlR7TlKLX4gy6HpshDuO0mcEpL9igMCT4dtp4-qXxkkREHPifJkBjuRVP8aHiKpOTIElhHFN4olZTH4oqRDn9SwY"/>
+<span class="font-bold text-on-surface">You</span>
+<span class="ml-2 px-2 py-0.5 rounded text-[10px] font-bold bg-tactical-gold text-white uppercase tracking-wide">Current</span>
+</div>
+</td>
+<td class="px-6 py-4 text-on-surface-variant">JEE Mains</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded-md bg-tactical-gold text-white text-xs font-medium">Lvl 45</span>
+</td>
+<td class="px-6 py-4 text-right font-bold text-tactical-gold">42,100</td>
+</tr>
+<!-- Rank 43 -->
+<tr class="border-b border-outline-variant/10 hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4 text-center font-bold text-on-surface-variant">43</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant font-bold text-xs border border-outline-variant/30">SM</div>
+<span class="font-medium text-on-surface">Sanya M.</span>
+</div>
+</td>
+<td class="px-6 py-4 text-on-surface-variant">NEET</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded-md bg-secondary-container text-on-secondary-container text-xs font-medium">Lvl 44</span>
+</td>
+<td class="px-6 py-4 text-right font-medium text-on-surface">41,850</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 border-t border-outline-variant/20 bg-surface-container-lowest text-center">
+<button class="text-tactical-gold font-body text-sm font-semibold hover:text-tactical-gold/80 transition-colors">View Full Rankings</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

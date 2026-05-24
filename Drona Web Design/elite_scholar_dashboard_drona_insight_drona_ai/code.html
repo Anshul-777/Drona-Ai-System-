@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DRONA.AI - Scholar Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#e1e3e4",
+                        "secondary-container": "#e2e0fc",
+                        "on-secondary-fixed": "#1a1a2e",
+                        "primary": "#0042dc",
+                        "on-primary-fixed-variant": "#0037ba",
+                        "primary-container": "#2a5cff",
+                        "surface-tint": "#074af0",
+                        "surface-container": "#edeeef",
+                        "surface-bright": "#f8f9fa",
+                        "inverse-surface": "#2e3132",
+                        "surface-container-highest": "#e1e3e4",
+                        "surface-container-high": "#e7e8e9",
+                        "primary-fixed": "#dde1ff",
+                        "on-primary-container": "#efefff",
+                        "outline-variant": "#c4c5d9",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f3f4f5",
+                        "tertiary-container": "#c34100",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#434656",
+                        "secondary-fixed": "#e2e0fc",
+                        "on-surface": "#191c1d",
+                        "tertiary-fixed": "#ffdbcf",
+                        "background": "#f8f9fa",
+                        "error-container": "#ffdad6",
+                        "outline": "#747688",
+                        "on-tertiary-container": "#ffede8",
+                        "on-primary-fixed": "#001454",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#5d5c74",
+                        "on-tertiary-fixed-variant": "#812800",
+                        "surface-dim": "#d9dadb",
+                        "tertiary-fixed-dim": "#ffb59b",
+                        "on-background": "#191c1d",
+                        "inverse-on-surface": "#f0f1f2",
+                        "surface": "#f8f9fa",
+                        "on-tertiary-fixed": "#380d00",
+                        "inverse-primary": "#b8c4ff",
+                        "tertiary": "#9a3200",
+                        "on-secondary-container": "#63627a",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed-dim": "#c6c4df",
+                        "on-secondary-fixed-variant": "#45455b",
+                        "primary-fixed-dim": "#b8c4ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Playfair Display", "serif"],
+                        "display": ["Playfair Display", "serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(248, 249, 250, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(196, 197, 217, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+        .polygon-clip {
+            clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+        }
+        .radar-chart {
+            background-image: repeating-radial-gradient(
+                circle at center,
+                rgba(196, 197, 217, 0.2) 0,
+                rgba(196, 197, 217, 0.2) 1px,
+                transparent 1px,
+                transparent 20%
+            );
+        }
+        .radar-polygon {
+            clip-path: polygon(50% 10%, 85% 30%, 85% 70%, 50% 90%, 15% 70%, 15% 30%);
+            background: rgba(42, 92, 255, 0.15);
+            border: 2px solid #2a5cff;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body antialiased min-h-screen flex">
+<!-- Main Content Area -->
+<main class="flex-1 w-full flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-surface/80 dark:bg-surface-container/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm docked full-width top-0 sticky z-50 flex justify-between items-center w-full px-8 h-16">
+<div class="flex items-center gap-8">
+<h1 class="font-display font-black text-2xl tracking-tighter text-primary dark:text-primary-fixed">DRONA.AI</h1>
+<nav class="hidden md:flex gap-6">
+<a class="font-display text-lg tracking-tight text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 duration-200 px-2 py-1 rounded" href="#">Learning</a>
+<a class="font-display text-lg tracking-tight text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 duration-200 px-2 py-1 rounded" href="#">Test</a>
+<a class="font-display text-lg tracking-tight text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 duration-200 px-2 py-1 rounded" href="#">Game</a>
+<a class="font-display text-lg tracking-tight text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 duration-200 px-2 py-1 rounded" href="#">Workspace</a>
+<a class="font-display text-lg tracking-tight text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 duration-200 px-2 py-1 rounded" href="#">Resources</a>
+<a class="font-display text-lg tracking-tight text-on-surface-variant font-medium hover:text-primary transition-colors hover:bg-surface-container-high/50 duration-200 px-2 py-1 rounded" href="#">Career</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform p-2">
+<span class="material-symbols-outlined text-xl">military_tech</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:scale-95 transition-transform p-2">
+<span class="material-symbols-outlined text-xl">monetization_on</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline-variant cursor-pointer">
+<img alt="Student Profile Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXskywhQois87aNvP0WYEL_9tRiLReqY-VpvAQp0El5cEAW2H7ouzY5Z9si9vvqZzj1KbSHSfhAVa76EdGTj38tc75v26nu3Rws9AAv_mwSfdf96dFPCubZhFj_DeWwz0zhkNN905Q1nIIp3_SBJxedxYLiRtXm35GOu3CPOjyIUr17uZgkVOBcrFoCzZ4rDc8ewwodi5ymQqsyTfKl6ycELeGtnzHcUPNHO16gV-5VnyOmygiIVrTNTQ6l7GFnXV362zpOxiWdn4"/>
+</div>
+</div>
+</header>
+<!-- Profile Content -->
+<div class="flex-1 p-6 md:p-8 2xl:p-12 overflow-y-auto">
+<div class="w-full max-w-[1800px] mx-auto space-y-8">
+<!-- Scholar Identity Banner -->
+<section class="glass-panel polygon-clip p-1 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-r from-primary-fixed/20 to-transparent opacity-50"></div>
+<div class="bg-surface relative z-10 polygon-clip p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 border border-outline-variant/30">
+<!-- Avatar & Progress -->
+<div class="relative w-32 h-32 md:w-40 md:h-40 flex-shrink-0">
+<svg class="absolute inset-0 w-full h-full -rotate-90" viewbox="0 0 100 100">
+<circle class="text-surface-variant" cx="50" cy="50" fill="none" r="46" stroke="currentColor" stroke-width="2"></circle>
+<circle class="text-primary drop-shadow-[0_0_8px_rgba(42,92,255,0.5)]" cx="50" cy="50" fill="none" r="46" stroke="currentColor" stroke-dasharray="289" stroke-dashoffset="60" stroke-linecap="round" stroke-width="4"></circle>
+</svg>
+<div class="absolute inset-2 rounded-full overflow-hidden border-4 border-surface bg-surface-container">
+<img alt="Student Avatar" class="w-full h-full object-cover" data-alt="A hyper-detailed, high-fidelity anime-style avatar of a calm, focused male student with dark hair. The art style should be premium, reminiscent of modern, high-end JRPG character portraits, set against a clean, minimal white background. Lighting is soft and bright, creating a serene, intellectual mood that fits a modern academic operating system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAR2pazcACX2vX418_kaXDdK5r5xhWs-g0XkqZ1uVEvVLq3m3ntLqoacUKSZQBDVplN-0RMCz_OyKNlD7x7uXCT5XduYRQJGBE5IUDjekYJVZ3-VC9h2i9u5pYmYQZZq2_BkMOBSypFhkAcQFlGTwtYxNICV-VWW9A-uAC9M0QmJa1sBRqLmIQ89TORxMbV8hoJrmnvPhm9dkWAd-KxXIxQI7x6BGKoMswJQJOoiQ5LMxSIvlLxkRaLITC1BJcnclHqA3qIZWEFAYg"/>
+</div>
+<!-- Level Badge -->
+<div class="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-4 py-1.5 polygon-clip shadow-lg flex flex-col items-center border border-outline-variant/50">
+<span class="text-[10px] font-bold text-outline-variant uppercase tracking-wider leading-none mb-0.5">Level</span>
+<span class="font-display font-black text-xl leading-none text-primary-fixed">99</span>
+</div>
+</div>
+<!-- Identity Info -->
+<div class="flex-1 text-center md:text-left space-y-4 pt-4 md:pt-0">
+<div>
+<h1 class="font-display text-4xl md:text-5xl font-black text-on-surface tracking-tight uppercase">OPERATOR_01</h1>
+<div class="flex flex-col md:flex-row md:items-center justify-center md:justify-start gap-2 mt-2">
+<div class="flex items-center justify-center md:justify-start gap-2 text-primary">
+<span class="material-symbols-outlined text-lg" style='font-variation-settings: "FILL" 1;'>military_tech</span>
+<span class="font-body font-semibold tracking-widest text-sm uppercase">Elite Rank</span>
+</div>
+<span class="hidden md:inline text-outline-variant">•</span>
+<div class="flex items-center justify-center md:justify-start gap-2 text-secondary">
+<span class="material-symbols-outlined text-lg">track_changes</span>
+<span class="font-body font-semibold tracking-widest text-sm uppercase">Class: Tactical Precisionist</span>
+</div>
+</div>
+</div>
+<div class="w-full max-w-2xl">
+<div class="flex justify-between text-xs font-medium mb-1.5">
+<div class="flex items-center gap-3">
+<span class="text-primary font-bold">XP Progress</span>
+<span class="flex items-center gap-1 text-amber-500 font-bold bg-amber-500/10 px-2 py-0.5 rounded-full"><span class="material-symbols-outlined text-[12px]">toll</span> 4,500 KC</span>
+</div>
+<span class="text-on-surface-variant">78,450 <span class="text-outline">/ 100,000</span></span>
+</div>
+<div class="h-2 w-full bg-surface-variant rounded-full overflow-hidden relative">
+<div class="absolute top-0 left-0 h-full bg-primary rounded-full w-[78%] shadow-[0_0_10px_rgba(42,92,255,0.6)]"></div>
+</div>
+</div>
+</div>
+<!-- Live Rank Benchmarking -->
+<div class="hidden lg:flex flex-col items-end justify-center ml-auto pr-8">
+<div class="text-right">
+<span class="text-[10px] font-bold text-outline-variant uppercase tracking-wider block mb-1">Live Rank Benchmark</span>
+<div class="flex items-baseline gap-2 justify-end">
+<span class="text-sm font-semibold text-on-surface-variant">AIR</span>
+<span class="font-display text-4xl font-black text-on-surface">#1,240</span>
+</div>
+<div class="flex items-center gap-2 mt-2 justify-end">
+<div class="w-32 h-1.5 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-emerald-500 w-[99.2%]"></div>
+</div>
+<span class="text-emerald-500 font-bold text-sm">99.2%ile</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Radar & Stats -->
+<div class="lg:col-span-5 space-y-8">
+<!-- Radar Chart Section -->
+<div class="glass-panel rounded-xl p-8 bg-surface h-full">
+<div class="flex justify-between items-center mb-6 border-b border-outline-variant/20 pb-4">
+<h3 class="font-display text-xl font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">radar</span>
+                                    Cognitive Metrics
+                                </h3>
+<div class="flex gap-4">
+<a class="text-sm font-medium text-on-surface-variant hover:text-primary transition-colors" href="#">Detailed Stats</a>
+</div>
+</div>
+<div class="flex flex-col items-center gap-12 pt-4">
+<!-- The Radar Chart (CSS simulated) -->
+<div class="relative w-72 h-72 flex-shrink-0 radar-chart rounded-full border border-outline-variant/20">
+<!-- Axes -->
+<div class="absolute inset-0 flex items-center justify-center opacity-20">
+<div class="w-full h-px bg-outline absolute rotate-0"></div>
+<div class="w-full h-px bg-outline absolute rotate-[60deg]"></div>
+<div class="w-full h-px bg-outline absolute rotate-[120deg]"></div>
+</div>
+<!-- Data Polygon -->
+<div class="absolute inset-4 radar-polygon shadow-[0_0_20px_rgba(42,92,255,0.2)]"></div>
+<!-- Labels -->
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-on-surface tracking-wider uppercase">Precision</span>
+<span class="absolute top-[20%] -right-8 text-[10px] font-bold text-on-surface tracking-wider uppercase">Velocity</span>
+<span class="absolute bottom-[20%] -right-8 text-[10px] font-bold text-on-surface tracking-wider uppercase">Depth</span>
+<span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-on-surface tracking-wider uppercase">Discipline</span>
+<span class="absolute bottom-[20%] -left-8 text-[10px] font-bold text-on-surface tracking-wider uppercase">Recall</span>
+<span class="absolute top-[20%] -left-10 text-[10px] font-bold text-on-surface tracking-wider uppercase">Exploration</span>
+</div>
+<!-- Individual Stat Bars -->
+<div class="w-full space-y-8">
+<div class="space-y-4">
+<div class="space-y-1">
+<div class="flex justify-between text-xs font-medium">
+<span class="text-on-surface">Precision</span>
+<span class="text-primary">+12% (30d)</span>
+</div>
+<div class="h-1.5 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[85%]"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-xs font-medium">
+<span class="text-on-surface">Velocity</span>
+<span class="text-primary">+5% (30d)</span>
+</div>
+<div class="h-1.5 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[70%]"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-xs font-medium">
+<span class="text-on-surface">Depth</span>
+<span class="text-outline-variant">-2% (30d)</span>
+</div>
+<div class="h-1.5 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary/60 w-[60%]"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-xs font-medium">
+<span class="text-on-surface">Discipline</span>
+<span class="text-primary">+20% (30d)</span>
+</div>
+<div class="h-1.5 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[95%]"></div>
+</div>
+</div>
+</div>
+<!-- Tactical Analysis -->
+<div class="bg-primary-fixed/20 border border-primary/20 rounded-lg p-4 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent"></div>
+<div class="relative z-10 flex gap-3">
+<div class="text-primary mt-0.5">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-primary mb-1">Drona's Tactical Analysis</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">Your 'Discipline' is at an all-time high, but 'Recall' in complex organic mechanisms is starting to dip. I've prioritized tomorrow's plan to focus on SN1 reaction pathways to stabilize your foundation.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Center Column: Behavioral & Loadout -->
+<div class="lg:col-span-4 space-y-8">
+<!-- Behavioral Insights -->
+<div class="glass-panel rounded-xl p-8 bg-surface">
+<h3 class="font-display text-xl font-bold text-on-surface border-b border-outline-variant/20 pb-4 mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">psychology_alt</span>
+                                Engagement Analytics
+                            </h3>
+<div class="space-y-8">
+<!-- Fake Graph: Forgetting Curve -->
+<div>
+<p class="text-xs font-semibold text-on-surface mb-2 uppercase tracking-wider">Forgetting Curve Optimization (Ebbinghaus)</p>
+<div class="h-20 w-full relative border-b border-l border-outline-variant/30">
+<svg class="absolute inset-0 h-full w-full" preserveaspectratio="none" viewbox="0 0 100 100">
+<!-- Ideal retention -->
+<path d="M0,0 Q30,80 100,90" fill="none" stroke="#e1e3e4" stroke-dasharray="4" stroke-width="2"></path>
+<!-- Actual retention with interventions -->
+<path d="M0,0 Q10,40 20,40 L20,10 Q40,40 50,40 L50,15 Q70,30 100,20" fill="none" stroke="#2a5cff" stroke-width="2"></path>
+</svg>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-1 text-right">Intervention Effectiveness: <span class="text-primary font-bold">High</span></p>
+</div>
+<!-- Fake Graph: Attention Span -->
+<div>
+<p class="text-xs font-semibold text-on-surface mb-2 uppercase tracking-wider">Attention Span Trends</p>
+<div class="h-20 w-full relative border-b border-l border-outline-variant/30 flex items-end justify-between px-1 gap-1">
+<div class="w-full bg-primary/40 h-[60%] rounded-t-sm"></div>
+<div class="w-full bg-primary/60 h-[80%] rounded-t-sm"></div>
+<div class="w-full bg-primary h-[90%] rounded-t-sm"></div>
+<div class="w-full bg-primary/70 h-[70%] rounded-t-sm"></div>
+<div class="w-full bg-primary/80 h-[85%] rounded-t-sm"></div>
+<div class="w-full bg-primary/90 h-[95%] rounded-t-sm"></div>
+<div class="w-full bg-primary h-[100%] rounded-t-sm"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-1 text-right">Focus Duration: <span class="text-primary font-bold">+18m</span></p>
+</div>
+<!-- Fake Graph: Learning Velocity -->
+<div>
+<p class="text-xs font-semibold text-on-surface mb-2 uppercase tracking-wider">Learning Velocity</p>
+<div class="h-20 w-full relative border-b border-l border-outline-variant/30">
+<svg class="absolute inset-0 h-full w-full" preserveaspectratio="none" viewbox="0 0 100 100">
+<path d="M0,100 L20,80 L40,85 L60,40 L80,50 L100,10" fill="none" stroke="#2a5cff" stroke-width="3"></path>
+</svg>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-1 text-right">Acquisition Rate: <span class="text-primary font-bold">Optimal</span></p>
+</div>
+</div>
+</div>
+<!-- Active Loadout (AI Agents) -->
+<div class="glass-panel rounded-xl p-8 bg-surface">
+<h3 class="font-display text-xl font-bold text-on-surface border-b border-outline-variant/20 pb-4 mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">smart_toy</span>
+                                Active Loadout (Agents)
+                            </h3>
+<div class="space-y-4">
+<div class="bg-surface-container-high rounded-lg p-3 flex items-center justify-between border-l-4 border-amber-400">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-amber-500">science</span>
+<div>
+<span class="block text-sm font-bold text-on-surface">Newton-X (Physics)</span>
+<span class="block text-[10px] text-on-surface-variant uppercase tracking-wider">Tier V • Legendary</span>
+</div>
+</div>
+<span class="text-xs font-bold text-amber-500 bg-amber-500/10 px-2 py-1 rounded">Active</span>
+</div>
+<div class="bg-surface-container-high rounded-lg p-3 flex items-center justify-between border-l-4 border-purple-500">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-purple-500">biotech</span>
+<div>
+<span class="block text-sm font-bold text-on-surface">Curie-AI (Chemistry)</span>
+<span class="block text-[10px] text-on-surface-variant uppercase tracking-wider">Tier IV • Epic</span>
+</div>
+</div>
+<span class="text-xs font-bold text-purple-500 bg-purple-500/10 px-2 py-1 rounded">Active</span>
+</div>
+<div class="bg-surface-container-high rounded-lg p-3 flex items-center justify-between border-l-4 border-blue-500">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-blue-500">calculate</span>
+<div>
+<span class="block text-sm font-bold text-on-surface">Euler-Prime (Math)</span>
+<span class="block text-[10px] text-on-surface-variant uppercase tracking-wider">Tier III • Rare</span>
+</div>
+</div>
+<span class="text-xs font-bold text-blue-500 bg-blue-500/10 px-2 py-1 rounded">Active</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Achievements & Errors & Log -->
+<div class="lg:col-span-3 space-y-8">
+<!-- Achievement Gallery -->
+<div class="glass-panel rounded-xl p-8 bg-surface">
+<h3 class="font-display text-xl font-bold text-on-surface border-b border-outline-variant/20 pb-4 mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">workspace_premium</span>
+                                Milestone Progress
+                            </h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col items-center gap-2 group cursor-pointer bg-surface-container p-4 rounded-lg">
+<div class="w-14 h-14 rounded-full bg-surface-container-high border-2 border-blue-500 flex items-center justify-center text-xl shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+                                        🌱
+                                    </div>
+<span class="text-[10px] font-medium text-center text-blue-500 uppercase">First Step</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer bg-surface-container p-4 rounded-lg">
+<div class="w-14 h-14 rounded-full bg-surface-container-high border-2 border-purple-500 flex items-center justify-center text-xl shadow-[0_0_15px_rgba(168,85,247,0.4)]">
+                                        🔥
+                                    </div>
+<span class="text-[10px] font-bold text-center text-purple-500 uppercase">Week Warrior</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer bg-surface-container p-4 rounded-lg">
+<div class="w-14 h-14 rounded-full bg-surface-container-high border-2 border-amber-400 flex items-center justify-center text-xl shadow-[0_0_15px_rgba(251,191,36,0.5)]">
+                                        👑
+                                    </div>
+<span class="text-[10px] font-bold text-center text-amber-500 uppercase">Rank King</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer bg-surface-container p-4 rounded-lg">
+<div class="w-14 h-14 rounded-full bg-surface-container-high border-2 border-outline-variant/30 flex items-center justify-center text-xl group-hover:border-primary transition-colors shadow-sm opacity-50">
+                                        🔒
+                                    </div>
+<span class="text-[10px] font-medium text-center text-on-surface-variant uppercase">Locked</span>
+</div>
+</div>
+</div>
+<!-- Mistake Pattern -->
+<div class="glass-panel rounded-xl p-8 bg-surface">
+<h3 class="font-display text-xl font-bold text-on-surface border-b border-outline-variant/20 pb-4 mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">bug_report</span>
+                                Error Typology
+                            </h3>
+<div class="flex flex-col gap-4">
+<div class="bg-surface-container-high rounded-lg p-4 flex items-center justify-between border-l-4 border-tertiary-container">
+<div>
+<span class="block text-2xl font-bold text-on-surface">12</span>
+<span class="block text-[10px] text-on-surface-variant uppercase tracking-wider mt-1">Conceptual Gap</span>
+</div>
+<span class="text-tertiary-container material-symbols-outlined">trending_up</span>
+</div>
+<div class="bg-surface-container-high rounded-lg p-4 flex items-center justify-between border-l-4 border-primary">
+<div>
+<span class="block text-2xl font-bold text-on-surface">4</span>
+<span class="block text-[10px] text-on-surface-variant uppercase tracking-wider mt-1">Careless Error</span>
+</div>
+<span class="text-primary material-symbols-outlined">trending_down</span>
+</div>
+</div>
+</div>
+<!-- Combat Log (Session History) -->
+<div class="glass-panel rounded-xl p-8 bg-surface">
+<h3 class="font-display text-xl font-bold text-on-surface border-b border-outline-variant/20 pb-4 mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">history</span>
+                                Mission Log
+                            </h3>
+<div class="space-y-4">
+<div class="flex gap-3">
+<div class="w-2 h-2 rounded-full bg-amber-400 mt-1.5 shadow-[0_0_8px_rgba(251,191,36,0.8)]"></div>
+<div>
+<p class="text-xs font-bold text-on-surface">Boss Defeated: Quantum Mechanics</p>
+<p class="text-[10px] text-on-surface-variant">Cleared Advanced Mock in 45m. +1,200 XP</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-2 h-2 rounded-full bg-primary mt-1.5"></div>
+<div>
+<p class="text-xs font-bold text-on-surface">Daily Streak Maintained</p>
+<p class="text-[10px] text-on-surface-variant">14 Days active. +500 XP, +200 KC</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-2 h-2 rounded-full bg-purple-500 mt-1.5 shadow-[0_0_8px_rgba(168,85,247,0.8)]"></div>
+<div>
+<p class="text-xs font-bold text-on-surface">Epic Milestone: Accuracy &gt; 95%</p>
+<p class="text-[10px] text-on-surface-variant">In Organic Chemistry. +800 XP</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Cognitive Heatmap -->
+<div class="glass-panel rounded-xl p-8 bg-surface">
+<h3 class="font-display text-xl font-bold text-on-surface border-b border-outline-variant/20 pb-4 mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">grid_on</span>
+                        Subject Breakdown (Mastery Heatmap)
+                    </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Physics -->
+<div>
+<h4 class="text-sm font-semibold text-on-surface mb-3 border-l-2 border-emerald-500 pl-2">Physics</h4>
+<div class="grid grid-cols-5 gap-1.5">
+<div class="aspect-square bg-red-500 rounded-sm" title="Mechanics - Basic"></div>
+<div class="aspect-square bg-red-400 rounded-sm"></div>
+<div class="aspect-square bg-amber-400 rounded-sm"></div>
+<div class="aspect-square bg-emerald-400 rounded-sm"></div>
+<div class="aspect-square bg-emerald-700 rounded-sm"></div>
+<div class="aspect-square bg-red-500 rounded-sm"></div>
+<div class="aspect-square bg-amber-500 rounded-sm"></div>
+<div class="aspect-square bg-emerald-500 rounded-sm"></div>
+<div class="aspect-square bg-emerald-800 rounded-sm"></div>
+<div class="aspect-square bg-emerald-900 rounded-sm" title="Quantum - Advanced"></div>
+</div>
+</div>
+<!-- Chemistry -->
+<div>
+<h4 class="text-sm font-semibold text-on-surface mb-3 border-l-2 border-emerald-500 pl-2">Chemistry</h4>
+<div class="grid grid-cols-5 gap-1.5">
+<div class="aspect-square bg-emerald-500 rounded-sm"></div>
+<div class="aspect-square bg-emerald-600 rounded-sm"></div>
+<div class="aspect-square bg-emerald-700 rounded-sm"></div>
+<div class="aspect-square bg-emerald-800 rounded-sm"></div>
+<div class="aspect-square bg-emerald-900 rounded-sm"></div>
+<div class="aspect-square bg-amber-400 rounded-sm"></div>
+<div class="aspect-square bg-emerald-500 rounded-sm"></div>
+<div class="aspect-square bg-emerald-600 rounded-sm"></div>
+<div class="aspect-square bg-emerald-700 rounded-sm"></div>
+<div class="aspect-square bg-emerald-800 rounded-sm"></div>
+</div>
+</div>
+<!-- Math -->
+<div>
+<h4 class="text-sm font-semibold text-on-surface mb-3 border-l-2 border-emerald-500 pl-2">Mathematics</h4>
+<div class="grid grid-cols-5 gap-1.5">
+<div class="aspect-square bg-red-600 rounded-sm"></div>
+<div class="aspect-square bg-red-500 rounded-sm"></div>
+<div class="aspect-square bg-amber-500 rounded-sm"></div>
+<div class="aspect-square bg-emerald-400 rounded-sm"></div>
+<div class="aspect-square bg-emerald-500 rounded-sm"></div>
+<div class="aspect-square bg-red-400 rounded-sm"></div>
+<div class="aspect-square bg-amber-400 rounded-sm"></div>
+<div class="aspect-square bg-emerald-500 rounded-sm"></div>
+<div class="aspect-square bg-emerald-600 rounded-sm"></div>
+<div class="aspect-square bg-emerald-700 rounded-sm"></div>
+</div>
+</div>
+<!-- Biology -->
+<div>
+<h4 class="text-sm font-semibold text-on-surface mb-3 border-l-2 border-emerald-500 pl-2">Biology</h4>
+<div class="grid grid-cols-5 gap-1.5">
+<div class="aspect-square bg-emerald-600 rounded-sm"></div>
+<div class="aspect-square bg-emerald-700 rounded-sm"></div>
+<div class="aspect-square bg-emerald-900 rounded-sm"></div>
+<div class="aspect-square bg-emerald-800 rounded-sm"></div>
+<div class="aspect-square bg-emerald-700 rounded-sm"></div>
+<div class="aspect-square bg-emerald-800 rounded-sm"></div>
+<div class="aspect-square bg-emerald-900 rounded-sm"></div>
+<div class="aspect-square bg-emerald-800 rounded-sm"></div>
+<div class="aspect-square bg-emerald-600 rounded-sm"></div>
+<div class="aspect-square bg-emerald-500 rounded-sm"></div>
+</div>
+</div>
+</div>
+<div class="mt-6 flex items-center justify-end gap-2 text-xs font-medium text-on-surface-variant">
+<span>Needs Review</span>
+<div class="flex gap-1">
+<div class="w-3 h-3 bg-red-600 rounded-sm"></div>
+<div class="w-3 h-3 bg-red-400 rounded-sm"></div>
+<div class="w-3 h-3 bg-amber-400 rounded-sm"></div>
+<div class="w-3 h-3 bg-emerald-500 rounded-sm"></div>
+<div class="w-3 h-3 bg-emerald-900 rounded-sm"></div>
+</div>
+<span>Mastered</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

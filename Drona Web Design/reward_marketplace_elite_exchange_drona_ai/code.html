@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DRONA AI - Marketplace</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#e2e0fc",
+                    "on-primary-fixed-variant": "#0037ba",
+                    "surface-bright": "#f8f9fa",
+                    "error-container": "#ffdad6",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-high": "#e7e8e9",
+                    "on-tertiary-fixed": "#380d00",
+                    "inverse-on-surface": "#f0f1f2",
+                    "tertiary-container": "#c34100",
+                    "on-surface": "#191c1d",
+                    "on-primary-fixed": "#001454",
+                    "on-secondary-fixed-variant": "#45455b",
+                    "surface": "#ffffff",
+                    "primary-fixed": "#dde1ff",
+                    "on-surface-variant": "#434656",
+                    "inverse-surface": "#2e3132",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed": "#e2e0fc",
+                    "on-secondary-container": "#63627a",
+                    "error": "#ba1a1a",
+                    "primary-container": "#2a5cff",
+                    "secondary-fixed-dim": "#c6c4df",
+                    "background": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb59b",
+                    "surface-dim": "#d9dadb",
+                    "surface-container-highest": "#e1e3e4",
+                    "surface-container": "#edeeef",
+                    "secondary": "#5d5c74",
+                    "outline-variant": "#c4c5d9",
+                    "on-tertiary-fixed-variant": "#812800",
+                    "tertiary-fixed": "#ffdbcf",
+                    "on-error": "#ffffff",
+                    "on-background": "#191c1d",
+                    "surface-container-low": "#f8f9fa",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed": "#1a1a2e",
+                    "tertiary": "#9a3200",
+                    "on-tertiary-container": "#ffede8",
+                    "primary": "#0042dc",
+                    "outline": "#747688",
+                    "on-primary-container": "#efefff",
+                    "surface-variant": "#e1e3e4",
+                    "primary-fixed-dim": "#b8c4ff",
+                    "on-secondary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "inverse-primary": "#b8c4ff",
+                    "surface-tint": "#074af0",
+                    "accent-gold": "#c9a84c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "1rem",
+                    "3xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Playfair Display"],
+                    "display": ["Playfair Display"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="w-full top-0 sticky z-50 bg-surface/90 backdrop-blur-xl border-b border-outline-variant/20 shadow-sm h-16 flex justify-between items-center px-8 transition-all duration-200">
+<!-- Brand -->
+<div class="flex items-center gap-2">
+<span class="font-display font-black text-2xl tracking-tighter text-on-surface">DRONA<span class="text-accent-gold">.AI</span></span>
+</div>
+<!-- Navigation Links (Hidden on Mobile) -->
+<nav class="hidden md:flex items-center gap-8 font-display text-lg tracking-tight">
+<a class="text-on-surface-variant font-medium hover:text-accent-gold transition-colors px-3 py-1 rounded-md cursor-pointer active:scale-95" href="#">Learning</a>
+<a class="text-on-surface-variant font-medium hover:text-accent-gold transition-colors px-3 py-1 rounded-md cursor-pointer active:scale-95" href="#">Test</a>
+<a class="text-accent-gold font-bold border-b-2 border-accent-gold pb-1 cursor-pointer active:scale-95 transition-transform" href="#">Game</a>
+<a class="text-on-surface-variant font-medium hover:text-accent-gold transition-colors px-3 py-1 rounded-md cursor-pointer active:scale-95" href="#">Workspace</a>
+<a class="text-on-surface-variant font-medium hover:text-accent-gold transition-colors px-3 py-1 rounded-md cursor-pointer active:scale-95" href="#">Resources</a>
+<a class="text-on-surface-variant font-medium hover:text-accent-gold transition-colors px-3 py-1 rounded-md cursor-pointer active:scale-95" href="#">Career</a>
+</nav>
+<!-- Trailing Actions & Profile Block -->
+<div class="flex items-center gap-4">
+<!-- Custom KC / Level Display as requested -->
+<div class="hidden lg:flex items-center gap-3 mr-4 bg-surface-container-low py-1.5 px-3 rounded-full border border-outline-variant/20 shadow-sm">
+<div class="flex items-center gap-1.5 text-accent-gold font-bold text-sm">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+<span>Lvl 99</span>
+</div>
+<div class="w-px h-4 bg-outline-variant/50"></div>
+<div class="flex items-center gap-1.5 text-accent-gold font-bold text-sm">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+<span>12,450 KC</span>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-accent-gold transition-colors p-2 rounded-full hover:bg-surface-container-high/50 cursor-pointer active:scale-95">
+<span class="material-symbols-outlined" data-icon="military_tech">military_tech</span>
+</button>
+<button class="text-on-surface-variant hover:text-accent-gold transition-colors p-2 rounded-full hover:bg-surface-container-high/50 cursor-pointer active:scale-95">
+<span class="material-symbols-outlined" data-icon="monetization_on">monetization_on</span>
+</button>
+<div class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border border-outline-variant/30 cursor-pointer active:scale-95 transition-transform hover:shadow-sm">
+<img alt="Student Profile Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdIQX4lZwwL7TFiL9NG7nYlMBu8tTtnVECqb5I3UqfaXYEd42IbrnvcpYKIEs2dIw_rSK32HVcDVLKqIlrq-34NIIzsO27zJAZfQ_9yDJ6Df9Bkdiw1pdwoYSxVzasVcjrm18VMU7-zCQp6P0r4UBXjT0yAsjTC0ehUfpBsjWv93ytd7NLePUy--HyaOuOrRx66DcXsT8tjdU0tp_Yipo8ysAaCyuOOJTLwsLmbA6z9hhrTuV-t_1NSm4L7_ZUbPj2AM_DOqd2sko"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 bg-surface border-r border-outline-variant/20 flex flex-col p-4 gap-2 z-40 overflow-y-auto hidden md:flex font-body text-sm font-medium">
+<!-- Header section of sidebar -->
+<div class="mb-6 px-3">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-8 h-8 rounded bg-accent-gold/10 flex items-center justify-center text-accent-gold">
+<span class="material-symbols-outlined text-[20px]" data-icon="sports_esports">sports_esports</span>
+</div>
+<span class="font-display text-xl font-bold text-on-surface">Game Client</span>
+</div>
+<p class="text-xs text-secondary">Environment: Active</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-low rounded-xl group transition-all duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined group-hover:opacity-100 transition-opacity" data-icon="meeting_room">meeting_room</span>
+                    Lobby
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-low rounded-xl group transition-all duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined group-hover:opacity-100 transition-opacity" data-icon="bolt">bolt</span>
+                    Quest
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-low rounded-xl group transition-all duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined group-hover:opacity-100 transition-opacity" data-icon="sports_martial_arts">sports_martial_arts</span>
+                    Battle Arena
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-low rounded-xl group transition-all duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined group-hover:opacity-100 transition-opacity" data-icon="joystick">joystick</span>
+                    Knowledge Arcade
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-low rounded-xl group transition-all duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined group-hover:opacity-100 transition-opacity" data-icon="emoji_events">emoji_events</span>
+                    Hall of Fame
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-accent-gold/10 text-accent-gold rounded-xl font-bold shadow-sm transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="storefront" style="font-variation-settings: 'FILL' 1;">storefront</span>
+                    Marketplace
+                </a>
+</nav>
+<button class="mt-4 mb-4 w-full py-2.5 bg-surface text-accent-gold border border-accent-gold/30 rounded-xl hover:bg-accent-gold/5 transition-colors font-semibold shadow-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">dock</span>
+                Open Agent Dock
+            </button>
+<div class="mt-auto pt-4 border-t border-outline-variant/20 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-2.5 text-secondary hover:bg-surface-container-low rounded-xl group transition-all duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+                    Settings
+                </a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-secondary hover:bg-surface-container-low rounded-xl group transition-all duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="help">help</span>
+                    Help
+                </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 ml-0 md:ml-64 p-8 lg:p-12">
+<div class="max-w-7xl mx-auto space-y-10">
+<!-- Page Header & Balance Card -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+<div class="space-y-3">
+<div class="flex items-center gap-2 text-accent-gold font-bold text-sm tracking-widest uppercase">
+<span class="material-symbols-outlined text-[18px]">workspace_premium</span>
+                            Armory
+                        </div>
+<h1 class="font-display text-4xl lg:text-5xl font-black text-on-surface tracking-tight">Marketplace</h1>
+<p class="text-on-surface-variant text-lg max-w-xl leading-relaxed">
+                            Redeem your Knowledge Credits for elite academic gear and technology.
+                        </p>
+</div>
+<!-- KC Balance Card -->
+<div class="bg-surface border border-outline-variant/20 rounded-3xl p-6 shadow-[0_4px_30px_rgba(0,0,0,0.03)] min-w-[320px]">
+<div class="flex justify-between items-start mb-2">
+<span class="text-secondary font-medium text-sm uppercase tracking-wider">Available Balance</span>
+<a class="text-accent-gold text-sm font-bold hover:underline flex items-center gap-1" href="#">
+                                History
+                                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+<div class="flex items-end gap-2">
+<span class="font-display text-5xl font-black text-on-surface">12,450</span>
+<span class="font-bold text-accent-gold mb-1">KC</span>
+</div>
+<div class="mt-5 h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-accent-gold w-3/4 rounded-full"></div>
+</div>
+<p class="text-xs text-secondary mt-3 flex justify-between">
+<span>Progress to Elite Rank</span>
+<span class="font-semibold text-accent-gold">75%</span>
+</p>
+</div>
+</div>
+<!-- Shop Categories -->
+<div class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
+<button class="px-6 py-2.5 bg-accent-gold text-white rounded-full font-bold text-sm shadow-[0_4px_15px_rgba(201,168,76,0.3)] whitespace-nowrap transition-transform active:scale-95">
+                        Featured
+                    </button>
+<button class="px-6 py-2.5 bg-surface border border-outline-variant/30 text-on-surface-variant rounded-full font-medium text-sm hover:bg-surface-container-low transition-colors whitespace-nowrap active:scale-95">
+                        Technology
+                    </button>
+<button class="px-6 py-2.5 bg-surface border border-outline-variant/30 text-on-surface-variant rounded-full font-medium text-sm hover:bg-surface-container-low transition-colors whitespace-nowrap active:scale-95">
+                        Essential Gear
+                    </button>
+<button class="px-6 py-2.5 bg-surface border border-outline-variant/30 text-on-surface-variant rounded-full font-medium text-sm hover:bg-surface-container-low transition-colors whitespace-nowrap active:scale-95">
+                        Boosters
+                    </button>
+</div>
+<!-- Dynamic Asymmetric Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+<!-- FEATURED: Grand Prize 1 (Span 2 Cols) -->
+<div class="xl:col-span-2 bg-surface rounded-3xl overflow-hidden border border-outline-variant/10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group flex flex-col md:flex-row">
+<div class="md:w-1/2 aspect-square md:aspect-auto bg-surface-container-low relative overflow-hidden">
+<div class="absolute top-4 left-4 z-10">
+<div class="bg-accent-gold text-white px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">stars</span> Legendary
+                                </div>
+</div>
+<img alt="MacBook Pro" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1N451peDExn1rd-St6JMhU6Wb_S2SyM_5kcZfhN-hxOX6C1VoFCuq8V2AyTr1QOCHatVtG9VDppnvtIYszcsjhafGUmrUuXBNyH2gQh6JI7DoRgIzrl_ZAfZTuzaJ87m-CXIHb4j0sdctYhaSaoohlEYo1s0PgQH43qpXyPTmsy_wzE69nucC3pfkiZsiEHOkOwWZm66cX7HPc1lvnc8771HdaS3dtCqoHxhSREP8ZKviPcICJKz5mvoCbdXGoDAOrHDMTi-kIrs"/>
+</div>
+<div class="p-6 md:w-1/2 flex flex-col justify-between bg-surface relative">
+<div>
+<h3 class="font-display text-2xl font-black text-on-surface mb-2">MacBook Pro 14"</h3>
+<p class="text-secondary text-sm mb-4 leading-relaxed">M3 Pro chip. The ultimate machine for compiling code, running simulations, and crushing your academic quests.</p>
+</div>
+<div class="mt-6 flex flex-col gap-4">
+<div class="flex items-center gap-1.5 text-accent-gold font-black text-xl">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+                                    150,000 KC
+                                </div>
+<button class="w-full py-3 bg-accent-gold text-white hover:bg-accent-gold/90 rounded-2xl font-bold text-sm transition-colors shadow-[0_4px_15px_rgba(201,168,76,0.3)] active:scale-95">
+                                    Redeem Reward
+                                </button>
+</div>
+</div>
+</div>
+<!-- FEATURED: Grand Prize 2 (Span 2 Cols) -->
+<div class="xl:col-span-2 bg-surface rounded-3xl overflow-hidden border border-outline-variant/10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group flex flex-col md:flex-row">
+<div class="md:w-1/2 aspect-square md:aspect-auto bg-surface-container-low relative overflow-hidden">
+<div class="absolute inset-0 bg-surface/40 z-10 flex items-center justify-center backdrop-blur-sm">
+<div class="bg-surface px-4 py-2 rounded-xl flex items-center gap-2 text-on-surface font-bold text-sm shadow-lg border border-outline-variant/20">
+<span class="material-symbols-outlined text-[20px] text-accent-gold">lock</span>
+                                    Unlock at Lvl 100
+                                </div>
+</div>
+<div class="absolute top-4 left-4 z-10">
+<div class="bg-surface/80 backdrop-blur text-on-surface px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase shadow-sm">
+                                    Epic
+                                </div>
+</div>
+<img alt="iPad Air" class="w-full h-full object-cover opacity-60 grayscale-[30%] transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmvHihD_Q7ml3dDmZYNb7IvYjaeOORX3TIKIIjHxhMYann8iHNdCGosdtFr5HVmujfVLT1UsvN3zv3DYbgmzU2roVJBP5eHlKercOtV21L_X5s5TTn3Zuv3T8Ix-5HQB8R8ACe2GtfprZeqzZ4pyZlY2IlwnJNCsTz8dY8eG6yJaWUyUMGFQHOav9tr812kb5LPxXoaQK4_JTWpk5MyPv9MeFDsxVXxeJgxMHWYzrwmeNp_sS-adpMl7QKXXuJdLG6bT9YEhs4hdc"/>
+</div>
+<div class="p-6 md:w-1/2 flex flex-col justify-between bg-surface relative opacity-80">
+<div>
+<h3 class="font-display text-2xl font-black text-on-surface mb-2">iPad Air + Pencil</h3>
+<p class="text-secondary text-sm mb-4 leading-relaxed">The perfect companion for digital note-taking, sketching diagrams, and studying on the go.</p>
+</div>
+<div class="mt-6 flex flex-col gap-4">
+<div class="flex items-center gap-1.5 text-on-surface-variant font-black text-xl">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+                                    85,000 KC
+                                </div>
+<button class="w-full py-3 bg-surface-container-high text-outline rounded-2xl font-bold text-sm cursor-not-allowed">
+                                    Level Locked
+                                </button>
+</div>
+</div>
+</div>
+<!-- STANDARD: Essential Gear -->
+<div class="bg-surface rounded-3xl overflow-hidden border border-outline-variant/10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group flex flex-col">
+<div class="aspect-square bg-surface-container-low relative overflow-hidden p-6 flex items-center justify-center">
+<img alt="Precision Pen Set" class="w-full h-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-110 drop-shadow-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNpXSfpGx-1MjryjPsDFC-GmCEHmauxKubCimcxipdPQugntfjXN0ZRlWdhnGNJIwB45OlwSrxA5nWL0v7fhkNWzDd6JmTvDaBNmTAJBa6aV5UT94gmEhRg8VEw1Z5aEDwOcrlf-AtcHYT2QJ_IhYdAeyiyOUo7LYlRq6mu7NR7sgw4pr3-FoMo38J93Btzgku_XhXWEBYp8tKeMsuyecI5BJ99_QEeUi3ZjPfclUPoJ6Cd_6uO1LNoT7Y9UEcdteM4gFuzHwhBeU"/>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<h3 class="font-display text-lg font-bold text-on-surface mb-1">Tactical Precision Pen Set</h3>
+<p class="text-secondary text-xs mb-5 line-clamp-2">Machined aluminum body with micro-textured grip. Engineered for endurance.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex items-center gap-1 text-accent-gold font-bold text-lg">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+                                    4,500 KC
+                                </div>
+<button class="px-5 py-2.5 bg-accent-gold text-white hover:bg-accent-gold/90 rounded-xl font-bold text-sm transition-colors shadow-sm active:scale-95">
+                                    Redeem
+                                </button>
+</div>
+</div>
+</div>
+<!-- STANDARD: Essential Gear -->
+<div class="bg-surface rounded-3xl overflow-hidden border border-outline-variant/10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group flex flex-col">
+<div class="aspect-square bg-surface-container-low relative overflow-hidden p-6 flex items-center justify-center">
+<img alt="Scholar Notebooks" class="w-full h-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-110 drop-shadow-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZ-ljWXwB_OsTATcFI3qqQSAYOsFRDajhori7LHiziRCOMmUZosTf34ARGrI-95A8HD3FrCE6AcwP5K012MFMyd6majnHVHKRr9S13VFVgVM7oaaKVsf3CbojqekPDN7P8NUvSTrKBNP4PElRPKVnsGEOIY6ZaHsA5W6YZ3gs75apwP8glyK0SvM0tf9PlvwcfbI0cctyId5otT0Bbzj7G7aHXYXywy5ysm275-a1IKeFj7L01Zg7oTlfe8C9pgBEmJpOmlshOOog"/>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<h3 class="font-display text-lg font-bold text-on-surface mb-1">Master Scholar Notebooks</h3>
+<p class="text-secondary text-xs mb-5 line-clamp-2">Set of 5. Heavyweight dotted grid paper. Lays perfectly flat.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex items-center gap-1 text-accent-gold font-bold text-lg">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+                                    3,200 KC
+                                </div>
+<button class="px-5 py-2.5 bg-accent-gold text-white hover:bg-accent-gold/90 rounded-xl font-bold text-sm transition-colors shadow-sm active:scale-95">
+                                    Redeem
+                                </button>
+</div>
+</div>
+</div>
+<!-- STANDARD: Tall Card Highlight (Span 2 Rows potentially, or just normal for now to keep grid simple) -->
+<div class="bg-surface rounded-3xl overflow-hidden border border-outline-variant/10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group flex flex-col">
+<div class="aspect-[4/3] bg-surface-container-low relative overflow-hidden flex items-center justify-center p-4">
+<img alt="Physics Desk Lamp" class="w-full h-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-110 drop-shadow-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6uHPc7zVQovqDOONqgStKl4aS9187vwam-Ek34Y_QXi2hb6B9WmKk5RxDd1oVWGdliVOtBxpIOR9jaX7obQ2VbwHMW79tgfO-MWwPUfqEKi_GhnUtZhsp-bu-0H-830R9jANf-Nl30A-SiCDmn-08zuGRUg0sAH0pFf4QR1CbkfkdL_ush8Hj5pryWqV-TE6AsONeDN4O2xdTVaRdQ5-ZuP9YdPvDI83hV_IVQ4c5F3NO5U4z2wLzcoCg9p2IWYhxgwjORDFZgeQ"/>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<h3 class="font-display text-lg font-bold text-on-surface mb-1">Legendary Physics Lamp</h3>
+<p class="text-secondary text-xs mb-5 line-clamp-2">Articulated multi-axis design with adjustable temperature LED.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex items-center gap-1 text-accent-gold font-bold text-lg">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+                                    8,000 KC
+                                </div>
+<button class="px-5 py-2.5 bg-accent-gold text-white hover:bg-accent-gold/90 rounded-xl font-bold text-sm transition-colors shadow-sm active:scale-95">
+                                    Redeem
+                                </button>
+</div>
+</div>
+</div>
+<!-- STANDARD: Booster Item -->
+<div class="bg-surface rounded-3xl overflow-hidden border border-outline-variant/10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group flex flex-col">
+<div class="aspect-[4/3] bg-surface-container-low relative overflow-hidden flex items-center justify-center bg-gradient-to-br from-surface-container-low to-surface-container-highest">
+<span class="material-symbols-outlined text-[80px] text-accent-gold drop-shadow-md" style="font-variation-settings: 'FILL' 1;">local_cafe</span>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<h3 class="font-display text-lg font-bold text-on-surface mb-1">2x XP Booster (24h)</h3>
+<p class="text-secondary text-xs mb-5 line-clamp-2">Double your experience points gained from all academic quests for 24 hours.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex items-center gap-1 text-accent-gold font-bold text-lg">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+                                    1,500 KC
+                                </div>
+<button class="px-5 py-2.5 bg-accent-gold text-white hover:bg-accent-gold/90 rounded-xl font-bold text-sm transition-colors shadow-sm active:scale-95">
+                                    Redeem
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

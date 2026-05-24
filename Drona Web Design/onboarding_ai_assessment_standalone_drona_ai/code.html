@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Assessment - Foundation Protocol</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "secondary-container": "#e2e0fc",
+                    "on-tertiary-fixed": "#380d00",
+                    "tertiary-container": "#c34100",
+                    "surface-dim": "#d9dadb",
+                    "on-primary-fixed-variant": "#0037ba",
+                    "primary-fixed": "#dde1ff",
+                    "on-primary-container": "#efefff",
+                    "tertiary-fixed": "#ffdbcf",
+                    "surface-container-highest": "#e1e3e4",
+                    "on-error": "#ffffff",
+                    "outline": "#747688",
+                    "on-secondary-fixed-variant": "#45455b",
+                    "secondary": "#5d5c74",
+                    "inverse-on-surface": "#f0f1f2",
+                    "on-secondary-container": "#63627a",
+                    "secondary-fixed": "#e2e0fc",
+                    "background": "#f8f9fa",
+                    "on-primary-fixed": "#001454",
+                    "error": "#ba1a1a",
+                    "on-surface": "#191c1d",
+                    "surface-tint": "#074af0",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#edeeef",
+                    "secondary-fixed-dim": "#c6c4df",
+                    "primary-fixed-dim": "#b8c4ff",
+                    "on-secondary-fixed": "#1a1a2e",
+                    "outline-variant": "#c4c5d9",
+                    "on-error-container": "#93000a",
+                    "surface": "#f8f9fa",
+                    "on-background": "#191c1d",
+                    "surface-container-high": "#e7e8e9",
+                    "primary": "#0042dc",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb59b",
+                    "tertiary": "#9a3200",
+                    "surface-container-low": "#f3f4f5",
+                    "surface-bright": "#f8f9fa",
+                    "primary-container": "#2a5cff",
+                    "on-surface-variant": "#434656",
+                    "inverse-primary": "#b8c4ff",
+                    "surface-variant": "#e1e3e4",
+                    "inverse-surface": "#2e3132",
+                    "on-tertiary-container": "#ffede8",
+                    "on-tertiary-fixed-variant": "#812800",
+                    "error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px",
+                    "2xl": "1rem",
+                    "3xl": "1.5rem"
+            },
+            "spacing": {},
+            "fontFamily": {
+                    "headline": ["Playfair Display"],
+                    "display": ["Playfair Display"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            },
+            "fontSize": {}
+    },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col antialiased relative">
+<!-- Cinematic Background -->
+<div class="fixed inset-0 z-[-1]">
+<img alt="Cinematic AI Neural Network Background" class="w-full h-full object-cover opacity-80 mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIlat7D48cwHcE9TO54SYKCLPCQVVROo1qUoyjKBvV_ylkq4P4C_MknvL5EmFFN27HU-ZU_kv2N_PDY_QCGcaX1hyVugU1bd6mndywIfMHmLsp8dxMWY_lqXdRN-TbuRBRKY7R2f0VSP6SuIBenA55DWBUKPISVMhIA2ez2BUUWOFgK54HWi519YAhnEYzIcNFQROzR7hqLDGtFKwEYIUpPxnJyllOEsFYXy3UbcVT_w7J6Fmx0yiTo4O2_o9kQ1OtSO7Y42-FUhE"/>
+<div class="absolute inset-0 bg-gradient-to-b from-white/40 via-white/60 to-white/90 backdrop-blur-[2px]"></div>
+</div>
+<!-- Top Navigation (Suppressed per instructions for focused standalone screen) -->
+<header class="w-full px-8 h-20 flex justify-between items-center bg-white/40 backdrop-blur-md border-b border-white/50 sticky top-0 z-50">
+<div class="font-display font-black text-2xl tracking-tighter text-primary">DRONA.AI</div>
+<!-- Simplified right side to maintain focus -->
+<div class="flex items-center gap-4">
+<span class="text-sm font-medium text-on-surface-variant">Assessment Protocol</span>
+<span class="material-symbols-outlined text-outline">help</span>
+</div>
+</header>
+<main class="flex-grow flex flex-col w-full max-w-4xl mx-auto mt-12 mb-24 px-4 sm:px-8 gap-12 relative z-10">
+<!-- Main Assessment Area -->
+<div class="flex-grow flex flex-col w-full">
+<!-- Onboarding Notice -->
+<div class="mb-10 p-6 rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 shadow-sm flex items-start gap-4">
+<span class="material-symbols-outlined text-primary shrink-0 mt-0.5">info</span>
+<p class="text-on-surface-variant leading-relaxed text-sm">
+<strong class="text-on-surface font-semibold block mb-1 text-base">Onboarding Notice</strong>
+This assessment is essential for initializing your personalized multi-agent intelligence. Your responses directly seed the agents' foundational knowledge base.
+</p>
+</div>
+<!-- Progress Section -->
+<div class="mb-12 px-2">
+<div class="flex justify-between items-end mb-4">
+<h2 class="font-display text-4xl font-semibold text-on-surface tracking-tight">Profiling Completion</h2>
+<span class="font-headline text-2xl text-primary italic font-medium">60%</span>
+</div>
+<div class="w-full h-1.5 bg-white/50 backdrop-blur-sm rounded-full overflow-hidden border border-white/60 shadow-inner">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container rounded-full transition-all duration-1000 ease-out w-[60%] relative">
+<div class="absolute inset-0 bg-white/20 w-full animate-pulse"></div>
+</div>
+</div>
+<p class="text-sm text-on-surface-variant mt-3 font-medium tracking-wide uppercase">Phase 2: Cognitive Mapping</p>
+</div>
+<!-- Conversational Card -->
+<div class="bg-white/70 backdrop-blur-xl rounded-3xl border border-white/80 shadow-[0_8px_32px_rgba(0,0,0,0.06)] p-8 md:p-14 relative overflow-hidden group">
+<!-- Decorative highlights -->
+<div class="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-24 -left-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl"></div>
+<div class="relative z-10">
+<div class="flex items-start gap-6 mb-10">
+<div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center shrink-0 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-white text-2xl" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<div class="pt-1">
+<h3 class="font-body text-sm uppercase tracking-widest font-semibold text-primary/80 mb-3">Drona Assessment Agent</h3>
+<p class="font-display text-on-surface leading-tight text-3xl md:text-4xl font-medium">"To best structure your intelligence feeds, what type of learning materials do you find most engaging and effective for grasping new concepts?"</p>
+</div>
+</div>
+<!-- Response Options -->
+<div class="space-y-4 pl-0 md:pl-20 mt-12">
+<button class="w-full text-left p-6 rounded-2xl border-2 border-primary bg-primary/5 ring-4 ring-primary/10 transition-all duration-300 group/btn relative overflow-hidden shadow-sm">
+<div class="relative z-10 flex items-center justify-between">
+<span class="font-medium text-lg text-primary transition-colors">Conceptual Deep-Dives</span>
+<span class="material-symbols-outlined text-primary transition-all text-2xl">check_circle</span>
+</div>
+</button>
+<button class="w-full text-left p-6 rounded-2xl border-2 border-white hover:border-primary/30 bg-white/50 hover:bg-white/80 transition-all duration-300 group/btn relative overflow-hidden shadow-sm">
+<div class="relative z-10 flex items-center justify-between">
+<span class="font-medium text-lg text-on-surface group-hover/btn:text-primary transition-colors">Problem-Solving Drills</span>
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant/50 group-hover/btn:border-primary/50 flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-primary opacity-0 group-hover/btn:opacity-100 transition-all text-sm transform scale-50 group-hover/btn:scale-100">circle</span>
+</div>
+</div>
+</button>
+<button class="w-full text-left p-6 rounded-2xl border-2 border-white hover:border-primary/30 bg-white/50 hover:bg-white/80 transition-all duration-300 group/btn relative overflow-hidden shadow-sm">
+<div class="relative z-10 flex items-center justify-between">
+<span class="font-medium text-lg text-on-surface group-hover/btn:text-primary transition-colors">Visual Narratives</span>
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant/50 group-hover/btn:border-primary/50 flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-primary opacity-0 group-hover/btn:opacity-100 transition-all text-sm transform scale-50 group-hover/btn:scale-100">circle</span>
+</div>
+</div>
+</button>
+</div>
+<!-- Input Field alternative -->
+<div class="mt-12 pt-8 border-t border-outline-variant/20 pl-0 md:pl-20">
+<label class="block text-sm font-medium text-on-surface-variant mb-4">Or elaborate on your approach:</label>
+<textarea class="w-full bg-white/40 backdrop-blur-sm border border-white/80 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 rounded-xl px-5 py-4 text-on-surface placeholder:text-outline/60 resize-none transition-all shadow-inner" placeholder="Type your answer here..." rows="3"></textarea>
+<!-- Remark State -->
+<div class="mt-6 p-5 rounded-xl bg-white/50 border border-white/60 backdrop-blur-sm flex items-start gap-3 transition-opacity duration-500 shadow-sm">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">auto_awesome</span>
+<span class="text-sm font-medium text-on-surface-variant italic">Insight captured. Calibrating your precision vectors...</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Primary Action -->
+<div class="mt-16 flex justify-end">
+<button class="bg-primary text-white font-semibold py-4 px-12 rounded-2xl hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,66,220,0.3)] transition-all duration-300 flex items-center gap-3 text-lg border border-primary-container/50">
+                    Next Question
+                    <span class="material-symbols-outlined">east</span>
+</button>
+</div>
+</div>
+</main>
+</body></html>

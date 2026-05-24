@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DRONA AI — India's First Multi-Agent AI Education System</title>
+<meta name="description" content="DRONA AI — India's first multi-agent AI education platform. 100+ features across 6 connected environments. Personalized, gamified, story-mode learning for 10th, 11th, 12th, JEE, NEET, CET." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --ink:#0a0a0f; --ink-80:#1a1a24; --ink-60:#3a3a4a; --ink-40:#6a6a7a; --ink-20:#9a9aaa; --ink-10:#c8c8d4;
+  --paper:#fafaf8; --paper-2:#f4f4f0; --paper-3:#eeede8; --paper-4:#e8e7e0;
+  --accent:#2a5cff; --accent-dim:#d6e0ff; --accent-soft:#eef2ff;
+  --accent-2:#ff4d2a; --accent-3:#00c896; --accent-4:#f5a623; --accent-5:#9b5de5; --gold:#c9a84c;
+  --border:#e4e3de; --border-2:#d0cfca;
+  --shadow-sm:0 1px 4px rgba(10,10,15,.06);
+  --shadow-md:0 4px 20px rgba(10,10,15,.08);
+  --shadow-lg:0 20px 60px rgba(10,10,15,.10);
+  --r:10px; --r-lg:18px; --r-xl:28px;
+  --ff-display:'Playfair Display',Georgia,serif;
+  --ff-serif:'Instrument Serif',Georgia,serif;
+  --ff-body:'DM Sans',system-ui,sans-serif;
+  --ff-mono:'DM Mono','Courier New',monospace;
+  --max:1320px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--ff-body);background:var(--paper);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--accent-dim);color:var(--ink)}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:var(--paper-2)}
+::-webkit-scrollbar-thumb{background:var(--ink-10);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--ink-20)}
+
+h1,h2,h3,h4,h5{font-family:var(--ff-display);font-weight:600;line-height:1.1;letter-spacing:-.02em;color:var(--ink)}
+h1{font-size:clamp(3rem,7vw,6.5rem)}
+h2{font-size:clamp(2.2rem,4.4vw,4rem)}
+h3{font-size:clamp(1.5rem,2.4vw,2.2rem)}
+h4{font-size:1.25rem;font-family:var(--ff-body);font-weight:600;letter-spacing:0}
+p{font-size:1rem;color:var(--ink-60)}
+a{color:inherit;text-decoration:none}
+em{font-family:var(--ff-serif);font-style:italic;color:var(--ink)}
+
+.wrap{max-width:var(--max);margin:0 auto;padding:0 32px;width:100%}
+.eyebrow{font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-40)}
+.kicker{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border:1px solid var(--border-2);border-radius:999px;font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-60);background:rgba(255,255,255,.6);backdrop-filter:blur(8px)}
+.kicker .dot{width:6px;height:6px;border-radius:50%;background:var(--accent-3);box-shadow:0 0 12px var(--accent-3)}
+
+/* ========= NAV ========= */
+.nav{position:fixed;top:0;left:0;right:0;z-index:110;padding:18px 0;transition:.3s;background:rgba(250,250,248,0);backdrop-filter:blur(0)}
+.nav.scrolled{background:rgba(250,250,248,.86);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:12px 0}
+.nav-row{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:12px;font-family:var(--ff-display);font-size:1.35rem;font-weight:700;letter-spacing:-.01em}
+.brand-mark{width:36px;height:36px;border-radius:10px;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-family:var(--ff-display);font-weight:800;font-size:1.05rem;position:relative;overflow:hidden}
+.brand-mark::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.25),transparent 60%)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:9px 14px;border-radius:8px;font-size:.92rem;color:var(--ink-60);transition:.2s}
+.nav-links a:hover{color:var(--ink);background:rgba(0,0,0,.04)}
+.nav-cta{display:flex;gap:10px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;font-size:.9rem;font-weight:500;transition:.25s;border:1px solid transparent;cursor:pointer;font-family:var(--ff-body)}
+.btn-ghost{color:var(--ink);border-color:var(--border-2);background:transparent}
+.btn-ghost:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn-dark{background:var(--ink);color:var(--paper)}
+.btn-dark:hover{background:var(--accent);transform:translateY(-1px)}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{background:var(--ink);transform:translateY(-1px)}
+.btn svg{width:14px;height:14px}
+@media (max-width:900px){.nav-links{display:none}}
+
+/* ========= HERO ========= */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:var(--paper)}
+.hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(250,250,248,.2) 0%,rgba(250,250,248,.55) 55%,rgba(250,250,248,.95) 100%);pointer-events:none}
+.hero-bg svg{position:absolute;inset:0;width:100%;height:100%}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(10,10,15,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(10,10,15,.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,#000 30%,transparent 75%)}
+.hero-orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.5}
+.orb-1{width:560px;height:560px;background:radial-gradient(circle,#d6e0ff,transparent 70%);top:-160px;left:-160px;animation:float1 18s ease-in-out infinite}
+.orb-2{width:460px;height:460px;background:radial-gradient(circle,#ffe1d6,transparent 70%);bottom:-140px;right:-110px;animation:float2 22s ease-in-out infinite}
+.orb-3{width:420px;height:420px;background:radial-gradient(circle,#d6ffe9,transparent 70%);top:26%;right:8%;animation:float1 26s ease-in-out infinite reverse}
+@keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(70px,45px)}}
+@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(-60px,-35px)}}
+
+.hero-inner{position:relative;z-index:2;width:100%;padding:120px 0 80px}
+.hero-grid-2{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:center}
+@media (max-width:1024px){.hero-grid-2{grid-template-columns:1fr;gap:40px}}
+.hero-title{margin:24px 0 28px;font-weight:600}
+.hero-title .line{display:block;overflow:hidden}
+.hero-title .word{display:inline-block;animation:rise .9s cubic-bezier(.2,.8,.2,1) both}
+.hero-title em{color:var(--accent)}
+@keyframes rise{from{transform:translateY(120%);opacity:0}to{transform:translateY(0);opacity:1}}
+.hero-sub{font-size:1.18rem;color:var(--ink-60);max-width:620px;margin-bottom:36px}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.hero-meta{display:flex;gap:32px;margin-top:48px;flex-wrap:wrap}
+.hero-meta .m{display:flex;flex-direction:column;gap:4px}
+.hero-meta .m b{font-family:var(--ff-display);font-size:1.6rem;color:var(--ink)}
+.hero-meta .m span{font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-40)}
+
+/* hero photo collage */
+.hero-visual{position:relative;width:100%;max-width:620px;margin-left:auto}
+.hero-photo{position:relative;width:100%;aspect-ratio:1/1;min-height:420px}
+.hero-photo .hp-main,.hero-photo .hp-sub{position:absolute;border-radius:22px;overflow:hidden;box-shadow:var(--shadow-lg);background:#0a0a0f;transform:translateZ(0)}
+.hero-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:.65s cubic-bezier(.2,.8,.2,1)}
+.hp-main{top:0;left:0;width:76%;height:82%;border:1px solid var(--border-2)}
+.hp-main:hover img{transform:scale(1.06)}
+.hp-sub-1{bottom:0;right:0;width:52%;height:50%;border:6px solid var(--paper);transform:rotate(2.2deg)}
+.hp-sub-2{top:7%;right:0;width:40%;height:36%;border:6px solid var(--paper);transform:rotate(-3deg)}
+.hp-badge{position:absolute;top:16px;left:16px;display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:999px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);font-family:var(--ff-mono);font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);z-index:3}
+.hp-badge .d{width:7px;height:7px;border-radius:50%;background:var(--accent-3);box-shadow:0 0 14px var(--accent-3);animation:pulseDot 1.7s ease-in-out infinite}
+@keyframes pulseDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.85)}}
+.hp-card{position:absolute;left:-14px;bottom:8%;background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow-lg);font-family:var(--ff-mono);font-size:.72rem;color:var(--ink-60);z-index:4;width:280px;max-width:86%;animation:floatCard 6s ease-in-out infinite}
+.hp-row{display:flex;align-items:center;gap:10px;padding:6px 0;line-height:1.35}
+.hp-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+@keyframes floatCard{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@media (max-width:1024px){.hero-visual{max-width:520px;margin:18px auto 0}}
+
+/* ========= MARQUEE ========= */
+.marquee{padding:34px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--paper);overflow:hidden}
+.marquee-track{display:flex;gap:60px;animation:slide 42s linear infinite;white-space:nowrap;will-change:transform}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.marquee span{font-family:var(--ff-display);font-size:1.6rem;color:var(--ink-40);font-style:italic}
+.marquee em{color:var(--accent);font-style:normal}
+
+/* ========= SECTIONS ========= */
+section{padding:120px 0;position:relative}
+.sec-head{display:grid;grid-template-columns:1fr 1.6fr;gap:60px;margin-bottom:80px;align-items:end}
+@media (max-width:900px){.sec-head{grid-template-columns:1fr;gap:24px}}
+.sec-head .left .num{font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.2em;color:var(--ink-40);text-transform:uppercase;margin-bottom:14px}
+.sec-head h2{margin:0}
+.sec-head .right p{font-size:1.1rem;color:var(--ink-60)}
+
+/* ========= TOP 10 FEATURES (asymmetric mosaic) ========= */
+.top-feat{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}
+.top-feat .card{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:32px;display:flex;flex-direction:column;justify-content:space-between;min-height:240px;transition:.35s;position:relative;overflow:hidden}
+.top-feat .card::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,var(--accent-soft) 0%,transparent 60%);opacity:0;transition:.35s;pointer-events:none}
+.top-feat .card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--ink-10)}
+.top-feat .card:hover::before{opacity:1}
+.top-feat .card .num{font-family:var(--ff-display);font-size:3.5rem;color:var(--ink-10);line-height:1;font-style:italic}
+.top-feat .card h3{margin:8px 0 10px;font-size:1.4rem}
+.top-feat .card p{font-size:.95rem;color:var(--ink-60)}
+.top-feat .card .tag{font-family:var(--ff-mono);font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.tf-1{grid-column:span 7}
+.tf-2{grid-column:span 5}
+.tf-3{grid-column:span 4}
+.tf-4{grid-column:span 4}
+.tf-5{grid-column:span 4}
+.tf-6{grid-column:span 5}
+.tf-7{grid-column:span 7}
+.tf-8{grid-column:span 4}
+.tf-9{grid-column:span 4}
+.tf-10{grid-column:span 4}
+.tf-1 .num{font-size:5rem}
+@media (max-width:900px){.top-feat>*{grid-column:span 12 !important}}
+
+.tf-big{background:linear-gradient(135deg,#0a0a0f 0%,#1a1a2e 100%) !important;color:var(--paper) !important}
+.tf-big *{color:inherit !important}
+.tf-big h3{color:#fff !important}
+.tf-big p{color:rgba(255,255,255,.7) !important}
+.tf-big .num{color:rgba(255,255,255,.15) !important}
+
+/* ========= ROTATING CAPABILITIES TRACK ========= */
+.rotor{position:relative;margin:60px -32px 0;overflow:hidden;padding:20px 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.rotor-track{display:flex;gap:18px;width:max-content;animation:rotorSlide 60s linear infinite;will-change:transform}
+.rotor:hover .rotor-track{animation-play-state:paused}
+@keyframes rotorSlide{from{transform:translateX(0)}to{transform:translateX(calc(-50% - 9px))}}
+.rotor-card{position:relative;width:280px;height:340px;border-radius:18px;overflow:hidden;flex-shrink:0;background:#0a0a0f;cursor:pointer;transition:.5s cubic-bezier(.2,.8,.2,1);box-shadow:var(--shadow-sm)}
+.rotor-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.62;transition:.7s cubic-bezier(.2,.8,.2,1)}
+.rotor-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,15,.15) 0%,rgba(10,10,15,.45) 45%,rgba(10,10,15,.95) 100%)}
+.rotor-card:hover{transform:translateY(-10px) scale(1.04);box-shadow:var(--shadow-lg);z-index:5}
+.rotor-card:hover img{opacity:.88;transform:scale(1.1)}
+.rotor-inner{position:absolute;inset:0;z-index:2;padding:24px;display:flex;flex-direction:column;justify-content:space-between;color:#fff}
+.rotor-card .rc-tag{display:inline-flex;align-self:flex-start;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.14);backdrop-filter:blur(8px);font-family:var(--ff-mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:#fff;border:1px solid rgba(255,255,255,.18)}
+.rotor-card h5{color:#fff;font-family:var(--ff-display);font-weight:600;font-size:1.45rem;line-height:1.15;margin-bottom:6px}
+.rotor-card .rc-desc{color:rgba(255,255,255,.78);font-size:.85rem;line-height:1.5;max-height:0;overflow:hidden;transition:.45s ease;opacity:0}
+.rotor-card:hover .rc-desc{max-height:165px;opacity:1;margin-top:8px}
+.rotor-card .rc-num{position:absolute;top:18px;right:22px;font-family:var(--ff-display);font-style:italic;font-size:1.15rem;color:rgba(255,255,255,.55);z-index:3}
+@media (max-width:600px){.rotor{margin:60px -16px 0}.rotor-card{width:240px;height:300px}}
+
+/* ========= AGENT MOSAIC ========= */
+.agent-mosaic{display:grid;grid-template-columns:1.4fr 1fr 1fr;grid-auto-rows:200px;gap:14px;margin-top:20px}
+.am-tile{position:relative;border-radius:var(--r-lg);overflow:hidden;background:#000;cursor:pointer;transition:.5s cubic-bezier(.2,.8,.2,1)}
+.am-tile img{width:100%;height:100%;object-fit:cover;display:block;transition:.8s cubic-bezier(.2,.8,.2,1);opacity:.85}
+.am-tile:hover img{transform:scale(1.06);opacity:1}
+.am-tile::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(10,10,15,.85) 100%)}
+.am-cap{position:absolute;left:22px;right:22px;bottom:18px;z-index:2;color:#fff}
+.am-cap .t{font-family:var(--ff-mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;opacity:.7;margin-bottom:6px}
+.am-cap h4{color:#fff;font-family:var(--ff-display);font-weight:600;font-size:1.25rem}
+.am-tile.big{grid-column:span 1;grid-row:span 2}
+.am-tile.wide{grid-column:span 2}
+@media (max-width:900px){.agent-mosaic{grid-template-columns:1fr 1fr}.am-tile.big,.am-tile.wide{grid-column:span 2;grid-row:span 1}}
+
+/* ========= ENVIRONMENTS ========= */
+.envs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.env{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:0;cursor:pointer;transition:.45s cubic-bezier(.2,.8,.2,1);position:relative;overflow:visible;height:355px;display:flex;flex-direction:column;transform-origin:center}
+.env-cover{position:relative;height:170px;overflow:hidden;flex-shrink:0}
+.env-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:.65s cubic-bezier(.2,.8,.2,1)}
+.env-cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(10,10,15,.6))}
+.env-icon{position:absolute;top:14px;left:14px;width:42px;height:42px;border-radius:10px;display:grid;place-items:center;font-size:20px;background:rgba(255,255,255,.92);backdrop-filter:blur(6px);z-index:2}
+.env-num{position:absolute;top:22px;right:18px;font-family:var(--ff-mono);font-size:.65rem;letter-spacing:.18em;color:#fff;text-transform:uppercase;z-index:2;background:rgba(0,0,0,.42);backdrop-filter:blur(6px);padding:5px 10px;border-radius:999px}
+.env-body{padding:22px 24px 20px;flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
+.env h3{font-size:1.4rem;margin:0}
+.env .env-tag{font-family:var(--ff-serif);font-style:italic;color:var(--ink-60);font-size:.95rem;line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.env-link{margin-top:auto;display:inline-flex;align-items:center;gap:6px;font-family:var(--ff-mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);align-self:flex-start;padding-top:10px;position:relative;z-index:20}
+.env-link::after{content:"→";transition:.25s}
+.env:hover{transform:translateY(-10px) scale(1.03);box-shadow:var(--shadow-lg);border-color:var(--ink-20);z-index:30}
+.env:hover .env-cover img{transform:scale(1.09)}
+.env:hover .env-link{color:var(--accent)}
+.env:hover .env-link::after{transform:translateX(4px)}
+
+/* expanded floating panel (fixed for clickability) */
+.env-pop{position:absolute;left:0;right:0;bottom:0;background:#fff;padding:18px 24px 22px;border-top:1px solid var(--border);transform:translateY(120%);transition:.45s cubic-bezier(.2,.8,.2,1);z-index:25;pointer-events:none;opacity:.0}
+.env-pop ul{list-style:none;padding:0;margin:0;display:grid;gap:7px}
+.env-pop li{font-size:.84rem;color:var(--ink-60);padding-left:14px;position:relative;line-height:1.55}
+.env-pop li::before{content:"›";position:absolute;left:0;color:var(--accent);font-weight:600}
+.env:hover .env-pop{transform:translateY(0);pointer-events:auto;opacity:1}
+
+.env-1 .env-cover::before,.env-2 .env-cover::before,.env-3 .env-cover::before,.env-4 .env-cover::before,.env-5 .env-cover::before,.env-6 .env-cover::before{content:"";position:absolute;inset:0;mix-blend-mode:multiply;z-index:1;pointer-events:none;opacity:.32}
+.env-1 .env-cover::before{background:#2a5cff}
+.env-2 .env-cover::before{background:#ff4d2a}
+.env-3 .env-cover::before{background:#9b5de5}
+.env-4 .env-cover::before{background:#00c896}
+.env-5 .env-cover::before{background:#f5a623}
+.env-6 .env-cover::before{background:#0a0a0f;opacity:.5}
+
+@media (max-width:900px){.envs{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.envs{grid-template-columns:1fr}}
+
+/* ========= JOURNEY ========= */
+.journey{position:relative;padding:40px 0}
+.journey-track{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;position:relative}
+.journey-track::before{content:"";position:absolute;top:36px;left:5%;right:5%;height:1px;background:linear-gradient(90deg,transparent,var(--ink-10),var(--ink-10),transparent);z-index:0}
+.j-step{position:relative;z-index:1;cursor:pointer}
+.j-step .j-dot{width:72px;height:72px;border-radius:50%;background:#fff;border:1px solid var(--border-2);display:grid;place-items:center;margin:0 auto 14px;font-family:var(--ff-display);font-style:italic;font-size:1.4rem;transition:.3s}
+.j-step:hover .j-dot{background:var(--ink);color:var(--paper);transform:scale(1.08)}
+.j-step h5{text-align:center;font-size:.95rem;margin-bottom:6px}
+.j-step p{text-align:center;font-size:.78rem;color:var(--ink-40)}
+@media (max-width:900px){.journey-track{grid-template-columns:1fr 1fr;gap:24px}.journey-track::before{display:none}}
+
+/* ========= PHILOSOPHY ========= */
+.philosophy{background:var(--ink);color:var(--paper);position:relative;overflow:hidden}
+.philosophy::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at top right,rgba(42,92,255,.15),transparent 50%)}
+.philosophy h2,.philosophy .eyebrow{color:#fff}
+.philosophy .eyebrow{color:rgba(255,255,255,.5)}
+.philosophy p{color:rgba(255,255,255,.65)}
+.philo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:60px}
+@media (max-width:900px){.philo-grid{grid-template-columns:1fr}}
+.philo-card{padding:32px;border:1px solid rgba(255,255,255,.1);border-radius:var(--r-lg);background:rgba(255,255,255,.03);backdrop-filter:blur(10px)}
+.philo-card .pn{font-family:var(--ff-display);font-style:italic;font-size:3rem;color:rgba(255,255,255,.2);line-height:1}
+.philo-card h4{color:#fff;font-family:var(--ff-display);font-weight:600;font-size:1.4rem;margin:10px 0 12px}
+
+/* ========= 25 FEATURES GRID ========= */
+.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media (max-width:1024px){.feat-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:600px){.feat-grid{grid-template-columns:1fr}}
+.fg-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px;transition:.3s;cursor:default}
+.fg-card:hover{border-color:var(--ink);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.fg-card .fg-num{font-family:var(--ff-mono);font-size:.65rem;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;margin-bottom:10px}
+.fg-card h5{font-family:var(--ff-body);font-weight:600;font-size:1rem;margin-bottom:6px}
+.fg-card p{font-size:.85rem;color:var(--ink-60);line-height:1.5}
+
+/* ========= CONNECTION ========= */
+.conn{margin-top:40px;display:grid;grid-template-columns:1.2fr 1fr;gap:18px;align-items:stretch}
+.conn-hero{position:relative;border-radius:var(--r-xl);overflow:hidden;min-height:520px;background:#000}
+.conn-hero img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:.78}
+.conn-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,10,15,.55),rgba(42,92,255,.25) 50%,rgba(10,10,15,.85))}
+.conn-hero .ch-in{position:relative;z-index:2;padding:42px;color:#fff;height:100%;display:flex;flex-direction:column;justify-content:space-between}
+.conn-hero .ch-in h3{color:#fff;font-size:2.4rem;max-width:520px}
+.conn-hero .ch-in p{color:rgba(255,255,255,.8);max-width:520px;margin-top:14px}
+.conn-hero .ch-tags{display:flex;flex-wrap:wrap;gap:8px}
+.conn-hero .ch-tags span{padding:6px 12px;border:1px solid rgba(255,255,255,.25);border-radius:999px;font-family:var(--ff-mono);font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;backdrop-filter:blur(6px);background:rgba(255,255,255,.06)}
+.conn-side{display:grid;grid-template-rows:1fr 1fr;gap:18px}
+.conn-card{position:relative;border-radius:var(--r-xl);overflow:hidden;min-height:250px;background:#000}
+.conn-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.7;transition:.7s}
+.conn-card:hover img{opacity:.92;transform:scale(1.05)}
+.conn-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(10,10,15,.85))}
+.conn-card .cc{position:absolute;left:24px;right:24px;bottom:20px;z-index:2;color:#fff}
+.conn-card .cc .t{font-family:var(--ff-mono);font-size:.62rem;letter-spacing:.18em;opacity:.7;text-transform:uppercase;margin-bottom:6px}
+.conn-card .cc h4{color:#fff;font-family:var(--ff-display);font-size:1.2rem}
+@media (max-width:900px){.conn{grid-template-columns:1fr}}
+
+/* ========= PRICING ========= */
+.pricing{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media (max-width:1024px){.pricing{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.pricing{grid-template-columns:1fr}}
+.plan{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:34px;display:flex;flex-direction:column;transition:.3s;position:relative}
+.plan:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.plan.featured{background:var(--ink);color:var(--paper)}
+.plan h3{font-size:1.4rem;margin-bottom:6px}
+.plan .ptag{font-family:var(--ff-mono);font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-40);margin-bottom:24px}
+.plan .price{display:flex;align-items:baseline;gap:6px;margin-bottom:24px}
+.plan .price b{font-family:var(--ff-display);font-size:3rem;font-weight:600}
+.plan .price span{color:var(--ink-40);font-size:.9rem}
+.plan ul{list-style:none;padding:0;margin:0 0 28px;flex:1}
+.plan li{padding:7px 0;font-size:.88rem;color:var(--ink-60);border-bottom:1px solid rgba(0,0,0,.04)}
+.plan li::before{content:"+ ";color:var(--accent);font-weight:600}
+.plan.featured .ptag{color:rgba(255,255,255,.5)}
+.plan.featured li{border-color:rgba(255,255,255,.06)}
+.plan.featured h3,.plan.featured .price b{color:#fff}
+.plan.featured p,.plan.featured li{color:rgba(255,255,255,.7)}
+.plan .pop{position:absolute;top:-12px;right:24px;background:var(--accent);color:#fff;padding:5px 12px;border-radius:999px;font-family:var(--ff-mono);font-size:.65rem;letter-spacing:.16em;text-transform:uppercase}
+.plan.featured .pop{background:var(--accent)}
+
+/* ========= ABOUT ========= */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+@media (max-width:900px){.about-grid{grid-template-columns:1fr}}
+.about-stat{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:30px}
+.as{padding:24px;background:var(--paper-2);border-radius:14px}
+.as b{font-family:var(--ff-display);font-size:2.4rem;display:block;line-height:1}
+.as span{font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-40);margin-top:6px;display:block}
+
+.faq{display:grid;gap:10px;max-width:900px;margin:0 auto}
+.faq-item{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:.3s}
+.faq-item:hover{border-color:var(--ink-20)}
+.faq-q{padding:22px 28px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:500;font-size:1.02rem}
+.faq-q .pm{font-family:var(--ff-display);font-size:1.6rem;line-height:1;transition:.3s;color:var(--accent)}
+.faq-item.open .pm{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;padding:0 28px;transition:.45s;color:var(--ink-60);font-size:.95rem}
+.faq-item.open .faq-a{max-height:420px;padding:0 28px 22px}
+
+footer{background:var(--ink);color:var(--paper);padding:80px 0 40px}
+.foot{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:40px;margin-bottom:60px}
+@media (max-width:900px){.foot{grid-template-columns:1fr 1fr}}
+.foot h6{font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:18px}
+.foot a{color:rgba(255,255,255,.7);font-size:.92rem;display:block;padding:5px 0;transition:.2s}
+.foot a:hover{color:#fff;padding-left:6px}
+.foot-brand .brand{color:#fff;margin-bottom:18px}
+.foot-brand p{color:rgba(255,255,255,.5);max-width:320px;font-size:.92rem}
+.foot-bottom{display:flex;justify-content:space-between;padding-top:30px;border-top:1px solid rgba(255,255,255,.1);font-family:var(--ff-mono);font-size:.72rem;color:rgba(255,255,255,.4);letter-spacing:.12em;flex-wrap:wrap;gap:14px}
+
+/* ========= MENU DROPDOWN ========= */
+.nav-menu-btn{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;gap:5px;padding:8px 0;margin-right:16px}
+.nav-menu-btn span{width:24px;height:2px;background:var(--ink);border-radius:1px;transition:.3s;display:block}
+.nav-menu-btn.open span:nth-child(1){transform:rotate(45deg) translate(8px,8px)}
+.nav-menu-btn.open span:nth-child(2){opacity:0}
+.nav-menu-btn.open span:nth-child(3){transform:rotate(-45deg) translate(7px,-7px)}
+.nav-dropdown{position:fixed;top:70px;right:32px;background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-lg);overflow:hidden;max-width:280px;z-index:99;max-height:0;transition:.4s;opacity:0;pointer-events:none}
+.nav-dropdown.active{max-height:600px;opacity:1;pointer-events:auto}
+.nav-dropdown-group{padding:0;margin:0;border-bottom:1px solid var(--border)}
+.nav-dropdown-group:last-child{border-bottom:none}
+.nav-dropdown-title{font-family:var(--ff-mono);font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-40);padding:12px 16px 8px;font-weight:600}
+.nav-dropdown-item{padding:10px 16px;font-size:.9rem;color:var(--ink-60);cursor:pointer;transition:.2s;display:block;width:100%}
+.nav-dropdown-item:hover{background:var(--paper-2);color:var(--accent)}
+@media (max-width:900px){.nav-menu-btn{display:flex}}
+
+/* ========= ENV DETAIL PAGES ========= */
+.page{display:none;min-height:100vh;padding:140px 0 80px;background:var(--paper)}
+.page.active{display:block;animation:fadeIn .5s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.page-back{display:inline-flex;align-items:center;gap:8px;margin-bottom:30px;font-family:var(--ff-mono);font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-60);cursor:pointer;transition:.2s}
+.page-back:hover{color:var(--accent)}
+.page-hero{margin-bottom:60px;border-bottom:1px solid var(--border);padding-bottom:50px}
+.page-hero .lead{font-size:1.2rem;color:var(--ink-60);max-width:760px;margin-top:20px}
+.page-section{margin-bottom:60px}
+.page-section h3{margin-bottom:24px}
+.page-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:900px){.page-cards{grid-template-columns:1fr}}
+.pc{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:28px;transition:.3s}
+.pc:hover{box-shadow:var(--shadow-md);transform:translateY(-3px)}
+.pc .pic{width:42px;height:42px;border-radius:10px;background:var(--paper-2);display:grid;place-items:center;font-size:18px;margin-bottom:14px}
+.pc h4{margin-bottom:8px}
+.pc p{font-size:.9rem;color:var(--ink-60)}
+
+.viz{background:var(--paper-2);border-radius:var(--r-xl);padding:40px;margin-top:30px}
+.viz svg{width:100%;height:auto}
+
+/* ========= CONTACT FORM MODAL ========= */
+.contact-modal{display:none;position:fixed;inset:0;background:rgba(10,10,15,.6);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;animation:fadeIn .3s ease}
+.contact-modal.open{display:flex}
+.contact-form-wrap{background:#fff;border-radius:var(--r-xl);box-shadow:var(--shadow-lg);padding:48px;max-width:520px;width:92%;animation:slideUp .4s cubic-bezier(.2,.8,.2,1)}
+@keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+.contact-form-wrap h3{margin-bottom:8px}
+.contact-form-wrap .desc{font-size:.95rem;color:var(--ink-60);margin-bottom:28px}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-40);margin-bottom:8px}
+.form-group input,.form-group textarea{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-family:var(--ff-body);font-size:.95rem;color:var(--ink);transition:.2s;background:var(--paper-2)}
+.form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px var(--accent-soft)}
+.form-group textarea{resize:vertical;min-height:110px}
+.form-actions{display:flex;gap:12px;margin-top:28px}
+.form-actions .btn{flex:1}
+.contact-modal .close-btn{position:absolute;top:28px;right:28px;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--ink-40);transition:.2s}
+.contact-modal .close-btn:hover{color:var(--ink)}
+.form-success{color:var(--accent-3);font-family:var(--ff-mono);font-size:.75rem;text-transform:uppercase;margin-top:14px;display:none}
+.form-success.show{display:block}
+
+/* ========= REVEAL ========= */
+.reveal{opacity:0;transform:translateY(30px);transition:.85s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
+.divider{height:1px;background:var(--border);margin:80px 0}
+
+/* a11y helper */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="wrap nav-row">
+    <a class="brand" data-nav="home">
+      <span class="brand-mark">D</span>
+      <span>DRONA<sup style="font-size:.5em;color:var(--accent)">AI</sup></span>
+    </a>
+    <div class="nav-links">
+      <a data-nav="home">Overview</a>
+      <a href="#features">Features</a>
+      <a href="#environments">Environments</a>
+      <a href="#agents">Agents</a>
+      <a href="#journey">Journey</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#about">About</a>
+    </div>
+    <div class="nav-cta">
+      <button class="nav-menu-btn" id="menuToggle" aria-label="Open environments menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-dropdown" id="navDropdown" role="menu" aria-label="Environments menu">
+        <div class="nav-dropdown-group">
+          <div class="nav-dropdown-title">Environments</div>
+          <a class="nav-dropdown-item" data-nav="env-main">🎓 Main Learning</a>
+          <a class="nav-dropdown-item" data-nav="env-test">📝 Test & Exams</a>
+          <a class="nav-dropdown-item" data-nav="env-game">🎮 Game Arena</a>
+          <a class="nav-dropdown-item" data-nav="env-workspace">🗂️ Workspace</a>
+          <a class="nav-dropdown-item" data-nav="env-resources">🛠️ Resources</a>
+          <a class="nav-dropdown-item" data-nav="env-career">🚀 Career Path</a>
+        </div>
+        <div class="nav-dropdown-group">
+          <div class="nav-dropdown-title">Account</div>
+          <a class="nav-dropdown-item">Sign In</a>
+          <a class="nav-dropdown-item" id="contactLink">Get in Touch</a>
+        </div>
+      </div>
+      <a class="btn btn-ghost">Sign In</a>
+      <a class="btn btn-dark">Begin Assessment <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+    </div>
+  </div>
+</nav>
+
+<div id="page-home">
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-grid"></div>
+    <div class="hero-orb orb-1"></div>
+    <div class="hero-orb orb-2"></div>
+    <div class="hero-orb orb-3"></div>
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;">
+      <defs>
+        <linearGradient id="lg1" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stop-color="#2a5cff" stop-opacity=".08"/>
+          <stop offset="1" stop-color="#9b5de5" stop-opacity=".03"/>
+        </linearGradient>
+      </defs>
+      <path d="M0,650 Q400,500 800,600 T1600,580 L1600,900 L0,900 Z" fill="url(#lg1)"/>
+      <path d="M0,720 Q400,620 800,700 T1600,680" stroke="#2a5cff" stroke-width=".5" fill="none" opacity=".25"/>
+    </svg>
+  </div>
+
+  <div class="hero-inner wrap">
+    <div class="hero-grid-2">
+      <div>
+        <span class="kicker"><span class="dot"></span> A Premium Education Brand, Built for Mastery</span>
+        <h1 class="hero-title">
+          <span class="line"><span class="word">A</span> <span class="word" style="animation-delay:.06s"><em>personal</em></span></span>
+          <span class="line"><span class="word" style="animation-delay:.12s">learning</span> <span class="word" style="animation-delay:.18s">faculty,</span></span>
+          <span class="line"><span class="word" style="animation-delay:.24s">ready</span> <span class="word" style="animation-delay:.30s"><em>today.</em></span></span>
+        </h1>
+        <p class="hero-sub">DRONA AI is a world-class teaching experience for Indian competitive exams—six connected learning environments, built to help students remember more, panic less, and progress faster.</p>
+        <div class="hero-cta">
+          <a class="btn btn-dark" href="#environments" data-nav="env-main">Start the Experience <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+          <a class="btn btn-ghost" href="#features">Explore the Proof</a>
+        </div>
+        <div class="hero-meta">
+          <div class="m"><b>100+</b><span>Learning Modules</span></div>
+          <div class="m"><b>06</b><span>Environments</span></div>
+          <div class="m"><b>25+</b><span>Built-in Capabilities</span></div>
+          <div class="m"><b>∞</b><span>Progress Loop</span></div>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-photo">
+          <div class="hp-main">
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=900&q=80&auto=format&fit=crop" alt="Students learning with AI"/>
+            <div class="hp-badge"><span class="d"></span> Live Learning Experience</div>
+          </div>
+          <div class="hp-sub hp-sub-1">
+            <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=520&q=80&auto=format&fit=crop" alt="Learning dashboard"/>
+          </div>
+          <div class="hp-sub hp-sub-2">
+            <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=520&q=80&auto=format&fit=crop" alt="Knowledge library"/>
+          </div>
+          <div class="hp-card">
+            <div class="hp-row"><span class="hp-dot" style="background:#2a5cff"></span> Clarify Physics with precision</div>
+            <div class="hp-row"><span class="hp-dot" style="background:#00c896"></span> Master Mathematics with cadence</div>
+            <div class="hp-row"><span class="hp-dot" style="background:#ff4d2a"></span> Train for mocks with confidence</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee">
+  <div class="marquee-track">
+    <span>Instruction that</span><span>·</span><span><em>sticks</em></span><span>·</span><span><em>Personal</em></span><span>·</span><span>Performance</span><span>·</span>
+    <span>Connected</span><span>·</span><span><em>Memory-led</em></span><span>·</span><span>Environment-based</span><span>·</span><span><em>Mastery loop</em></span><span>·</span>
+    <span>Instruction that</span><span>·</span><span><em>sticks</em></span><span>·</span><span><em>Personal</em></span><span>·</span><span>Performance</span><span>·</span>
+    <span>Connected</span><span>·</span><span><em>Memory-led</em></span><span>·</span><span>Environment-based</span><span>·</span><span><em>Mastery loop</em></span><span>·</span>
+  </div>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="left"><div class="num">— 01 / Mastery</div><h2>Capabilities designed<br/>for <em>results</em>.</h2></div>
+      <div class="right"><span class="eyebrow">Ten transformative pillars</span><p style="margin-top:14px">Every capability is built to feel like premium teaching: guided structure, confident explanations, and progress that stays consistent across your full journey.</p></div>
+    </div>
+
+    <div class="top-feat reveal">
+      <div class="card tf-1 tf-big">
+        <div><span class="num">01</span><div class="tag">TEACHING</div><h3>Signature Learning Faculty</h3><p>A coordinated learning experience that plans, clarifies, and continuously upgrades your lesson flow—so you stay focused on mastering, not guessing.</p></div>
+        <div style="margin-top:auto;font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.16em;color:var(--ink-40);text-transform:uppercase">Learn how →</div>
+      </div>
+      <div class="card tf-2">
+        <div><span class="num">02</span><div class="tag">MEMORY</div><h3>Personal Recall Engine</h3><p>Your lessons evolve with you—doubts and mistakes are remembered and refined into better practice over time.</p></div>
+        <div style="margin-top:auto;font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.16em;color:var(--ink-40);text-transform:uppercase">Learn how →</div>
+      </div>
+      <div class="card tf-3">
+        <div><span class="num">03</span><div class="tag">SOLUTIONS</div><h3>Instant Step Guidance</h3><p>From question to structured explanation with clear steps, linked concepts, and exam-style clarity.</p></div>
+        <div style="margin-top:auto;font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.16em;color:var(--ink-40);text-transform:uppercase">Learn how →</div>
+      </div>
+      <div class="card tf-4">
+        <div><span class="num">04</span><div class="tag">VISUAL</div><h3>Diagram-to-Understanding</h3><p>Turn complex topics into digestible diagrams and flow-based learning snapshots you can revisit anytime.</p></div>
+        <div style="margin-top:auto;font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.16em;color:var(--ink-40);text-transform:uppercase">Learn how →</div>
+      </div>
+      <div class="card tf-5">
+        <div><span class="num">05</span><div class="tag">TESTS</div><h3>Mock Training that Feels Real</h3><p>Train with smart difficulty patterns, realistic grading cues, and a post-test breakdown that leads to better attempts.</p></div>
+        <div style="margin-top:auto;font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.16em;color:var(--ink-40);text-transform:uppercase">Learn how →</div>
+      </div>
+      <div class="card tf-6">
+        <div><span class="num">06</span><div class="tag">INSIGHTS</div><h3>Progress Radar</h3><p>See your learning in six dimensions—precision, pace, recall, endurance, and consistency—updated as you grow.</p></div>
+        <div style="margin-top:auto;font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.16em;color:var(--ink-40);text-transform:uppercase">Learn how →</div>
+      </div>
+      <div class="card tf-7">
+        <div><span class="num">07</span><div class="tag">GAME</div><h3>Arena-Based Practice</h3><p>Practice in an engaging arena format—leaderboards, quests, and achievement milestones that keep momentum alive.</p></div>
+        <div style="margin-top:auto;font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.16em;color:var(--ink-40);text-transform:uppercase">Learn how →</div>
+      </div>
+      <div class="card tf-8">
+        <div><span class="num">08</span><div class="tag">CONTROL</div><h3>Bring Your Preferred Tools</h3><p>Use your own teaching providers and keep the experience unified inside a premium DRONA learning identity.</p></div>
+        <div style="margin-top:auto;font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.16em;color:var(--ink-40);text-transform:uppercase">Learn how →</div>
+      </div>
+      <div class="card tf-9">
+        <div><span class="num">09</span><div class="tag">WORKSPACE</div><h3>Second Brain for Learners</h3><p>Organize your schedule, notes, and focus sessions—then reuse that structure for better learning outcomes.</p></div>
+        <div style="margin-top:auto;font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.16em;color:var(--ink-40);text-transform:uppercase">Learn how →</div>
+      </div>
+      <div class="card tf-10">
+        <div><span class="num">10</span><div class="tag">Socratic</div><h3>Discovery-first Coaching</h3><p>Instead of giving answers, the experience guides you toward the next correct step—so learning becomes yours.</p></div>
+        <div style="margin-top:auto;font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.16em;color:var(--ink-40);text-transform:uppercase">Learn how →</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:40px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="left"><div class="num">— 02 / Rotor</div><h2>Hover to pause.<br/><em>Expand</em> for details.</h2></div>
+      <div class="right"><span class="eyebrow">A living capability reel</span><p style="margin-top:14px">Hover the carousel to stop motion—then read the full capability card. This creates a calm, premium browsing experience while still feeling energetic.</p></div>
+    </div>
+    <div class="rotor reveal">
+      <div class="rotor-track" id="rotorTrack"></div>
+    </div>
+  </div>
+</section>
+
+<section id="agents">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="left"><div class="num">— 03 / Teachers</div><h2>The faculty behind the<br/><em>clarity</em>.</h2></div>
+      <div class="right"><span class="eyebrow">Orchestration, not noise</span><p style="margin-top:14px">Behind every interaction is a coordinated teaching experience that keeps explanations structured, keeps plans consistent, and keeps your progress moving forward.</p></div>
+    </div>
+    <div class="agent-mosaic reveal">
+      <div class="am-tile big">
+        <img src="https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=900&q=80&auto=format&fit=crop" alt="Teacher orchestration"/>
+        <div class="am-cap"><div class="t">Lead · Orchestrator</div><h4>The principal that guides every lesson</h4></div>
+      </div>
+      <div class="am-tile">
+        <img src="https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?w=700&q=80&auto=format&fit=crop" alt="Physics"/>
+        <div class="am-cap"><div class="t">Subject · Physics</div><h4>Clarity through problem-first teaching</h4></div>
+      </div>
+      <div class="am-tile">
+        <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=700&q=80&auto=format&fit=crop" alt="Chemistry"/>
+        <div class="am-cap"><div class="t">Subject · Chemistry</div><h4>Concept maps and structured notes</h4></div>
+      </div>
+      <div class="am-tile">
+        <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=700&q=80&auto=format&fit=crop" alt="Mathematics"/>
+        <div class="am-cap"><div class="t">Subject · Mathematics</div><h4>Multiple methods, one mastery path</h4></div>
+      </div>
+      <div class="am-tile">
+        <img src="https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=700&q=80&auto=format&fit=crop" alt="Biology"/>
+        <div class="am-cap"><div class="t">Subject · Biology</div><h4>Memory-friendly understanding</h4></div>
+      </div>
+      <div class="am-tile wide">
+        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80&auto=format&fit=crop" alt="Specialists"/>
+        <div class="am-cap"><div class="t">+ Strategic support</div><h4>Coaching, testing, pacing, and planning—integrated</h4></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="environments" style="background:var(--paper-2)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="left"><div class="num">— 04 / Environments</div><h2>Six worlds.<br/>One <em>continuum</em>.</h2></div>
+      <div class="right"><span class="eyebrow">Hover to preview · Click to enter</span><p style="margin-top:14px">Each environment is themed for a specific learning job—yet your progress flows seamlessly across them. Hover cards reveal details; click enters the environment page with a cinematic transition.</p></div>
+    </div>
+
+    <div class="envs reveal">
+      <div class="env env-1" data-env="main">
+        <div class="env-cover"><img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=700&q=80&auto=format&fit=crop" alt="Main Learning"/><div class="env-icon">🎓</div><div class="env-num">Env / 01</div></div>
+        <div class="env-body">
+          <h3>Main Learning</h3>
+          <div class="env-tag">The default experience—guided teaching that adapts to your pace and builds confident recall.</div>
+          <a class="env-link" data-nav="env-main" href="#">Enter</a>
+        </div>
+        <div class="env-pop"><ul><li>Personalized lesson depth</li><li>Structured explanations</li><li>Follow-up coaching</li><li>Practice that builds retention</li></ul></div>
+      </div>
+
+      <div class="env env-2" data-env="test">
+        <div class="env-cover"><img src="https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=700&q=80&auto=format&fit=crop" alt="Test"/><div class="env-icon">📝</div><div class="env-num">Env / 02</div></div>
+        <div class="env-body">
+          <h3>Test & Exams</h3>
+          <div class="env-tag">Mock training and post-exam intelligence—so every attempt becomes sharper than the last.</div>
+          <a class="env-link" data-nav="env-test" href="#">Enter</a>
+        </div>
+        <div class="env-pop"><ul><li>Realistic simulation flow</li><li>Step-aware grading clarity</li><li>Performance breakdown insights</li><li>Targeted next practice</li></ul></div>
+      </div>
+
+      <div class="env env-3" data-env="game">
+        <div class="env-cover"><img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=700&q=80&auto=format&fit=crop" alt="Game"/><div class="env-icon">🎮</div><div class="env-num">Env / 03</div></div>
+        <div class="env-body">
+          <h3>Game Arena</h3>
+          <div class="env-tag">A premium competition layer—leaderboards, quests, and achievement milestones that keep momentum alive.</div>
+          <a class="env-link" data-nav="env-game" href="#">Enter</a>
+        </div>
+        <div class="env-pop"><ul><li>Boss-style practice matches</li><li>Friend challenges for motivation</li><li>Milestones and achievements</li><li>Reward marketplace (coming)</li></ul></div>
+      </div>
+
+      <div class="env env-4" data-env="workspace">
+        <div class="env-cover"><img src="https://images.unsplash.com/photo-1497032628192-86f99bcd76b82b?w=700&q=80&auto=format&fit=crop" alt="Workspace" onerror="this.src='https://images.unsplash.com/photo-1497032628192-86f99bcd76b82b?w=700&q=80&auto=format&fit=crop'"/><div class="env-icon">🗂️</div><div class="env-num">Env / 04</div></div>
+        <div class="env-body">
+          <h3>Workspace</h3>
+          <div class="env-tag">Your learning dashboard—notes, schedules, focus sessions, and progress reporting in one place.</div>
+          <a class="env-link" data-nav="env-workspace" href="#">Enter</a>
+        </div>
+        <div class="env-pop"><ul><li>Second-brain organization</li><li>Planning & focus timers</li><li>Daily progress summary</li><li>Parent-friendly reports</li></ul></div>
+      </div>
+
+      <div class="env env-5" data-env="resources">
+        <div class="env-cover"><img src="https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=700&q=80&auto=format&fit=crop" alt="Resources"/><div class="env-icon">🛠️</div><div class="env-num">Env / 05</div></div>
+        <div class="env-body">
+          <h3>Resources</h3>
+          <div class="env-tag">Studios for learning assets—diagrams, flashcards, audio-style explainers, and structured tools.</div>
+          <a class="env-link" data-nav="env-resources" href="#">Enter</a>
+        </div>
+        <div class="env-pop"><ul><li>Diagram-to-learning flows</li><li>Flashcards for retention</li><li>Formula vault clarity</li><li>Smart searches for academic topics</li></ul></div>
+      </div>
+
+      <div class="env env-6" data-env="career">
+        <div class="env-cover"><img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=700&q=80&auto=format&fit=crop" alt="Career"/><div class="env-icon">🚀</div><div class="env-num">Env / 06</div></div>
+        <div class="env-body">
+          <h3>Career Path</h3>
+          <div class="env-tag">A future-forward environment for long-term growth—roadmaps, interviews, and skill alignment. <em>Coming soon.</em></div>
+          <a class="env-link" data-nav="env-career" href="#">Enter</a>
+        </div>
+        <div class="env-pop"><ul><li>Long-term learning roadmaps</li><li>Skill-gap clarity</li><li>Interview practice</li><li>Professional progress planning</li></ul></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="journey">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="left"><div class="num">— 05 / Journey</div><h2>From sign-up<br/>to <em>self mastery</em>.</h2></div>
+      <div class="right"><span class="eyebrow">A deliberately cinematic flow</span><p style="margin-top:14px">Six acts that transform first-time learners into confident problem solvers—assessment, profiling, guided onboarding, learning, and measurable mastery.</p></div>
+    </div>
+    <div class="journey-track reveal">
+      <div class="j-step"><div class="j-dot">I</div><h5>Register</h5><p>Choose your path</p></div>
+      <div class="j-step"><div class="j-dot">II</div><h5>Assessment</h5><p>Personal baseline</p></div>
+      <div class="j-step"><div class="j-dot">III</div><h5>Profiling</h5><p>Your learning map</p></div>
+      <div class="j-step"><div class="j-dot">IV</div><h5>Onboarding</h5><p>Cinematic first tour</p></div>
+      <div class="j-step"><div class="j-dot">V</div><h5>Learning</h5><p>Adaptive teaching loops</p></div>
+      <div class="j-step"><div class="j-dot">VI</div><h5>Mastery</h5><p>Progress that compounds</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="philosophy">
+  <div class="wrap">
+    <div class="sec-head reveal" style="margin-bottom:40px">
+      <div class="left"><div class="eyebrow">— 06 / Philosophy</div><h2>Built on three<br/><em>uncompromising</em> beliefs.</h2></div>
+      <div class="right"><p>DRONA AI is engineered to be a complete learning system—premium teaching in every click. No distractions. No generic worksheets. Only structured mastery experiences.</p></div>
+    </div>
+    <div class="philo-grid reveal">
+      <div class="philo-card">
+        <div class="pn">i.</div>
+        <h4>The teacher must remember.</h4>
+        <p>Every doubt and mistake becomes better practice—your next lesson is built from your learning history, not from random repetition.</p>
+      </div>
+      <div class="philo-card">
+        <div class="pn">ii.</div>
+        <h4>The student must <em>feel</em> the lesson.</h4>
+        <p>Emotion supports memory. That’s why DRONA uses story-mode pacing, confident visuals, and environment transitions that keep attention locked.</p>
+      </div>
+      <div class="philo-card">
+        <div class="pn">iii.</div>
+        <h4>One perspective is not enough.</h4>
+        <p>Learning is deeper when it’s multi-layered—explanations, practice, assessment, and planning working together as one branded experience.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--paper-2)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="left"><div class="num">— 07 / Capabilities</div><h2>Twenty-five<br/>more <em>essentials</em>.</h2></div>
+      <div class="right"><span class="eyebrow">Beyond the top ten</span><p style="margin-top:14px">A premium stack of teaching primitives—built to make every environment smarter, smoother, and more personal.</p></div>
+    </div>
+
+    <div class="feat-grid reveal">
+      <div class="fg-card"><div class="fg-num">01 / 25</div><h5>Adaptive Depth</h5><p>Short ↔ detailed lessons tuned to your learning intent.</p></div>
+      <div class="fg-card"><div class="fg-num">02 / 25</div><h5>Precision Coaching</h5><p>Guided corrections that help you fix the root concept.</p></div>
+      <div class="fg-card"><div class="fg-num">03 / 25</div><h5>Heatmap Clarity</h5><p>Topic-wise progress visibility updated per session.</p></div>
+      <div class="fg-card"><div class="fg-num">04 / 25</div><h5>Forgetting Curve Reset</h5><p>Targeted recall sessions to protect retention.</p></div>
+      <div class="fg-card"><div class="fg-num">05 / 25</div><h5>Mistake Patterns</h5><p>Turn recurring errors into focused practice plans.</p></div>
+      <div class="fg-card"><div class="fg-num">06 / 25</div><h5>Auto Difficulty</h5><p>Questions scale to match confidence and accuracy.</p></div>
+      <div class="fg-card"><div class="fg-num">07 / 25</div><h5>Predict Next Doubt</h5><p>Surface the follow-up you’ll need next—before you struggle.</p></div>
+      <div class="fg-card"><div class="fg-num">08 / 25</div><h5>Break Coach</h5><p>Smart pacing so you learn without burnout.</p></div>
+      <div class="fg-card"><div class="fg-num">09 / 25</div><h5>Momentum Guard</h5><p>Detect drift and return you to focused learning flow.</p></div>
+      <div class="fg-card"><div class="fg-num">10 / 25</div><h5>Why-Wrong Mode</h5><p>Understand the error, then master the correct logic.</p></div>
+      <div class="fg-card"><div class="fg-num">11 / 25</div><h5>Five-Minute Topic</h5><p>A fast mastery snapshot for last-minute clarity.</p></div>
+      <div class="fg-card"><div class="fg-num">12 / 25</div><h5>Personal Examples</h5><p>Analogies that connect to your interests.</p></div>
+      <div class="fg-card"><div class="fg-num">13 / 25</div><h5>Mastery 0–100</h5><p>Concept scores that persist and visibly improve.</p></div>
+      <div class="fg-card"><div class="fg-num">14 / 25</div><h5>Concept Map</h5><p>Interactive learning connections across topics.</p></div>
+      <div class="fg-card"><div class="fg-num">15 / 25</div><h5>Annotated PDF</h5><p>Highlight content and receive targeted explanations.</p></div>
+      <div class="fg-card"><div class="fg-num">16 / 25</div><h5>What-If Learning</h5><p>Scenario practice for deeper conceptual ownership.</p></div>
+      <div class="fg-card"><div class="fg-num">17 / 25</div><h5>Handwriting Eval</h5><p>Upload answers and get step-aware guidance.</p></div>
+      <div class="fg-card"><div class="fg-num">18 / 25</div><h5>Step Marking</h5><p>Rubric-style evaluation that improves your method.</p></div>
+      <div class="fg-card"><div class="fg-num">19 / 25</div><h5>Confidence Graph</h5><p>Track certainty vs accuracy as you improve.</p></div>
+      <div class="fg-card"><div class="fg-num">20 / 25</div><h5>Exam-Day Simulation</h5><p>Train with strict timing and focused conditions.</p></div>
+      <div class="fg-card"><div class="fg-num">21 / 25</div><h5>Crash Revision Plans</h5><p>1 / 3 / 7-day intensives built for last-mile mastery.</p></div>
+      <div class="fg-card"><div class="fg-num">22 / 25</div><h5>Friend Duels</h5><p>Challenge friends on the same learning targets.</p></div>
+      <div class="fg-card"><div class="fg-num">23 / 25</div><h5>Knowledge Credits</h5><p>Earn through streaks and redeem for upgrades.</p></div>
+      <div class="fg-card"><div class="fg-num">24 / 25</div><h5>Voice-Only Mode</h5><p>Hands-free learning for commutes and chores.</p></div>
+      <div class="fg-card"><div class="fg-num">25 / 25</div><h5>Custom Learning Styles</h5><p>Build your preferred coaching tone and structure.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="left"><div class="num">— 08 / Connectivity</div><h2>One learning<br/><em>system</em>.</h2></div>
+      <div class="right"><span class="eyebrow">Cross-environment progress</span><p style="margin-top:14px">XP, practice, and mastery carry forward across environments—so your training stays consistent and your effort compounds over time.</p></div>
+    </div>
+
+    <div class="conn reveal">
+      <div class="conn-hero">
+        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1400&q=80&auto=format&fit=crop" alt="Connected memory mesh"/>
+        <div class="ch-in">
+          <span class="kicker" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.8)"><span class="dot"></span> Progress · Continues</span>
+          <div>
+            <h3>One journey. <em style="color:#fff">Six environments.</em></h3>
+            <p>Each environment has its own experience style—yet your progress flows through the same learning map.</p>
+          </div>
+          <div class="ch-tags">
+            <span>Main</span><span>Test</span><span>Game</span><span>Workspace</span><span>Resources</span><span>Career</span>
+          </div>
+        </div>
+      </div>
+      <div class="conn-side">
+        <div class="conn-card">
+          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&q=80&auto=format&fit=crop" alt="Learning memory"/>
+          <div class="cc"><div class="t">Recall · Built-in</div><h4>Every lesson returns when you need it</h4></div>
+        </div>
+        <div class="conn-card">
+          <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=900&q=80&auto=format&fit=crop" alt="Cinematic transitions"/>
+          <div class="cc"><div class="t">Switch · Smooth</div><h4>Environment transitions feel premium</h4></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" style="background:var(--paper-2)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="left"><div class="num">— 09 / Pricing</div><h2>Plans that respect<br/>your momentum.</h2></div>
+      <div class="right"><span class="eyebrow">Clear, branded value</span><p style="margin-top:14px">Choose the plan that matches your stage—then grow within the same premium DRONA learning experience.</p></div>
+    </div>
+
+    <div class="pricing reveal">
+      <div class="plan">
+        <div class="ptag">Plan / 01</div><h3>Seeker</h3>
+        <p style="margin-bottom:18px;font-size:.9rem">Free experience</p>
+        <div class="price"><b>₹0</b><span>/ month</span></div>
+        <ul>
+          <li>Guided learning flow</li>
+          <li>Core practice loop</li>
+          <li>Starter progress radar</li>
+          <li>Basic resources studio</li>
+        </ul>
+        <a class="btn btn-ghost" href="#">Choose Seeker</a>
+      </div>
+
+      <div class="plan featured">
+        <span class="pop">Most Loved</span>
+        <div class="ptag">Plan / 02</div><h3>Scholar</h3>
+        <p style="margin-bottom:18px;font-size:.9rem">Best for active learners</p>
+        <div class="price"><b>₹499</b><span>/ month</span></div>
+        <ul>
+          <li>All environments unlocked</li>
+          <li>Full recall and practice loop</li>
+          <li>Expanded resources studio</li>
+          <li>Mock training + arena layer</li>
+        </ul>
+        <a class="btn btn-accent" href="#">Choose Scholar</a>
+      </div>
+
+      <div class="plan">
+        <div class="ptag">Plan / 03</div><h3>Acharya</h3>
+        <p style="margin-bottom:18px;font-size:.9rem">For serious preparation</p>
+        <div class="price"><b>₹1,299</b><span>/ month</span></div>
+        <ul>
+          <li>Advanced mock training</li>
+          <li>Targeted revision plans</li>
+          <li>Deep mastery tracking</li>
+          <li>Career environment preview</li>
+        </ul>
+        <a class="btn btn-ghost" href="#">Choose Acharya</a>
+      </div>
+
+      <div class="plan">
+        <div class="ptag">Plan / 04</div><h3>BYOK</h3>
+        <p style="margin-bottom:18px;font-size:.9rem">Use your own tools</p>
+        <div class="price"><b>₹199</b><span>/ month</span></div>
+        <ul>
+          <li>Bring your preferred providers</li>
+          <li>Unified DRONA experience</li>
+          <li>Priority support</li>
+          <li>For power learners</li>
+        </ul>
+        <a class="btn btn-ghost" href="#">Choose BYOK</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="left"><div class="num">— 10 / About</div><h2>Built in<br/><em>India</em> for India’s learners.</h2></div>
+      <div class="right"><span class="eyebrow">Brand mission</span><p style="margin-top:14px">DRONA AI is designed as a learning system—premium teaching that upgrades how students understand, practice, and retain. The goal is simple: replace anxiety with a structured mastery loop.</p></div>
+    </div>
+
+    <div class="about-grid">
+      <div class="reveal">
+        <p style="font-size:1.15rem;color:var(--ink);margin-bottom:18px">Every student deserves a learning faculty that feels personal—built for the way competitive exams reward consistency and clarity.</p>
+        <p>DRONA connects teaching, practice, assessment, and progress reporting into one cohesive brand experience. The result: learning becomes calmer, more guided, and measurable.</p>
+        <div class="about-stat">
+          <div class="as"><b>6</b><span>Environments</span></div>
+          <div class="as"><b>3</b><span>Teaching Modes</span></div>
+          <div class="as"><b>25+</b><span>Essential Capabilities</span></div>
+          <div class="as"><b>∞</b><span>Progress Loop</span></div>
+        </div>
+      </div>
+
+      <div class="reveal" style="background:var(--paper-2);border-radius:var(--r-xl);padding:50px;font-family:var(--ff-serif);font-style:italic;font-size:1.4rem;line-height:1.5;color:var(--ink-80)">
+        “The best teacher is the one who turns the student into a question, not an answer.”
+        <div style="margin-top:24px;font-family:var(--ff-mono);font-style:normal;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-40)">— DRONA Brand Principle</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--paper-2)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="left"><div class="num">— 11 / Help</div><h2>Quiet<br/><em>confidence</em>.</h2></div>
+      <div class="right"><span class="eyebrow">FAQ</span><p style="margin-top:14px">Questions learners and parents ask most often.</p></div>
+    </div>
+
+    <div class="faq reveal">
+      <div class="faq-item"><div class="faq-q">What makes DRONA different from generic learning tools?<span class="pm">+</span></div><div class="faq-a"><p>DRONA is built as a complete learning experience—structured teaching, environment-based practice, and progress that carries forward across your entire journey.</p></div></div>
+      <div class="faq-item"><div class="faq-q">Is the free experience really usable?<span class="pm">+</span></div><div class="faq-a"><p>Yes—Seeker is designed for genuine practice. You get core learning flow and progress visibility without pressure or setup complexity.</p></div></div>
+      <div class="faq-item"><div class="faq-q">Can I customize how the learning feels?<span class="pm">+</span></div><div class="faq-a"><p>Yes. DRONA supports different coaching styles and lesson depth preferences so the experience matches the way you learn.</p></div></div>
+      <div class="faq-item"><div class="faq-q">How does the test experience help me?<span class="pm">+</span></div><div class="faq-a"><p>After every mock, you receive targeted breakdown insights and next-step practice guidance—so attempts become smarter and outcomes improve.</p></div></div>
+      <div class="faq-item"><div class="faq-q">Is my learning private?<span class="pm">+</span></div><div class="faq-a"><p>DRONA is designed with privacy in mind. Your learning experience stays under your control, and you can manage what’s stored in your learning workspace.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-brand">
+        <a class="brand"><span class="brand-mark">D</span><span>DRONA<sup style="font-size:.5em;color:var(--accent)">AI</sup></span></a>
+        <p>India’s first multi-environment education experience. One journey. Six worlds. Premium mastery loop.</p>
+      </div>
+      <div><h6>Platform</h6><a>Main Learning</a><a>Test Arena</a><a>Game Arena</a><a>Workspace</a><a>Resources</a><a>Career</a></div>
+      <div><h6>Resources</h6><a>Documentation</a><a>API Reference</a><a>Free Experience</a><a>BYOK Guide</a><a>Changelog</a></div>
+      <div><h6>Company</h6><a>About</a><a>Mission</a><a>Roadmap</a><a>Press</a><a>Careers</a></div>
+      <div><h6>Legal</h6><a>Privacy</a><a>Terms</a><a>Data Policy</a><a>Refund</a><a>Contact</a></div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 DRONA AI · Premium Learning System</span><span>Brand Landing v2</span></div>
+  </div>
+</footer>
+</div>
+
+<div class="page" id="page-env-main">
+  <div class="wrap">
+    <a class="page-back" data-nav="home">← Back to home</a>
+    <div class="page-hero">
+      <div class="env-icon" style="font-size:32px;width:64px;height:64px;border-radius:16px">🎓</div>
+      <span class="eyebrow" style="display:block;margin:18px 0 8px">Where the faculty teaches.</span>
+      <h1 style="font-size:clamp(2.5rem,5vw,4.5rem)">Main Learning Environment</h1>
+      <p class="lead">Your default home for guided mastery—structured explanations, adaptive depth, and consistent progress across topics.</p>
+    </div>
+    <div class="page-section"><h3>The Teaching Experience</h3><div class="page-cards">
+      <div class="pc"><div class="pic">●</div><h4>Always guided</h4><p>Lesson flow stays structured and easy to follow.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Smart planning</h4><p>Practice plans update based on your learning rhythm.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Depth controls</h4><p>Short summaries or detailed coaching—whenever you need.</p></div>
+    </div></div>
+
+    <div class="page-section"><h3>Specialized Learning Rooms</h3><div class="page-cards">
+      <div class="pc"><div class="pic">●</div><h4>Physics</h4><p>Diagrams + step-by-step understanding.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Chemistry</h4><p>Mechanism-first explanations and structured recall.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Mathematics</h4><p>Multiple methods with clear reasoning.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Biology</h4><p>Memory-friendly concepts and diagram clarity.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Socratic Coaching</h4><p>Discovery-first guidance that builds ownership.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Strategic Planning</h4><p>A long-range learning approach that stays on track.</p></div>
+    </div></div>
+
+    <div class="viz">
+      <svg viewBox="0 0 1200 360">
+        <rect x="40" y="40" width="1120" height="280" rx="16" fill="#fff" stroke="#e4e3de"/>
+        <rect x="60" y="60" width="220" height="240" rx="10" fill="#f4f4f0"/>
+        <text x="170" y="180" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#6a6a7a">SIDEBAR</text>
+        <rect x="300" y="60" width="840" height="60" rx="10" fill="#f4f4f0"/>
+        <text x="720" y="96" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#6a6a7a">HEADER · 6 ENVS · PROFILE</text>
+        <rect x="300" y="140" width="540" height="160" rx="10" fill="#fafaf8" stroke="#e4e3de"/>
+        <text x="570" y="225" text-anchor="middle" font-family="Playfair Display" font-style="italic" font-size="22" fill="#0a0a0f">Main Learning workspace</text>
+        <rect x="860" y="140" width="280" height="160" rx="10" fill="#0a0a0f"/>
+        <text x="1000" y="225" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#fff">Learning · Chat</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-env-test">
+  <div class="wrap">
+    <a class="page-back" data-nav="home">← Back to home</a>
+    <div class="page-hero">
+      <div class="env-icon" style="font-size:32px;width:64px;height:64px;border-radius:16px">📝</div>
+      <span class="eyebrow" style="display:block;margin:18px 0 8px">Where preparation becomes performance.</span>
+      <h1 style="font-size:clamp(2.5rem,5vw,4.5rem)">Test Environment</h1>
+      <p class="lead">Mock training with realistic flow and a breakdown that turns every attempt into a learning upgrade.</p>
+    </div>
+    <div class="page-section"><h3>Mock Preparation</h3><div class="page-cards">
+      <div class="pc"><div class="pic">●</div><h4>Shadow-Sim Practice</h4><p>Exam-style conditions with adaptive patterns.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Step-aware feedback</h4><p>Understand what worked and why.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Confidence capture</h4><p>Track certainty vs accuracy for smarter decisions.</p></div>
+    </div></div>
+    <div class="page-section"><h3>After the Exam</h3><div class="page-cards">
+      <div class="pc"><div class="pic">●</div><h4>Breakdown clarity</h4><p>Concept vs careless split for targeted improvement.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Smart next practice</h4><p>Automatically curated revision plan.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Crash revision</h4><p>1 / 3 / 7-day intensive readiness plans.</p></div>
+    </div></div>
+    <div class="viz">
+      <svg viewBox="0 0 1200 360">
+        <rect x="40" y="40" width="1120" height="280" rx="16" fill="#fff" stroke="#e4e3de"/>
+        <rect x="60" y="60" width="220" height="240" rx="10" fill="#f4f4f0"/>
+        <text x="170" y="180" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#6a6a7a">SIDEBAR</text>
+        <rect x="300" y="60" width="840" height="60" rx="10" fill="#f4f4f0"/>
+        <text x="720" y="96" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#6a6a7a">HEADER · 6 ENVS · PROFILE</text>
+        <rect x="300" y="140" width="540" height="160" rx="10" fill="#fafaf8" stroke="#e4e3de"/>
+        <text x="570" y="225" text-anchor="middle" font-family="Playfair Display" font-style="italic" font-size="22" fill="#0a0a0f">Test Environment workspace</text>
+        <rect x="860" y="140" width="280" height="160" rx="10" fill="#0a0a0f"/>
+        <text x="1000" y="225" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#fff">Learning · Chat</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-env-game">
+  <div class="wrap">
+    <a class="page-back" data-nav="home">← Back to home</a>
+    <div class="page-hero">
+      <div class="env-icon" style="font-size:32px;width:64px;height:64px;border-radius:16px">🎮</div>
+      <span class="eyebrow" style="display:block;margin:18px 0 8px">Lobby · Arena · Leaderboard</span>
+      <h1 style="font-size:clamp(2.5rem,5vw,4.5rem)">Game Environment</h1>
+      <p class="lead">A competition layer that turns practice into momentum—leaderboards, quests, achievements, and friendly challenges.</p>
+    </div>
+    <div class="page-section"><h3>Play to Progress</h3><div class="page-cards">
+      <div class="pc"><div class="pic">●</div><h4>Boss Matches</h4><p>Timed practice arenas with strong motivation.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Friend Duels</h4><p>Challenge friends on the same learning targets.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Reverse Practice</h4><p>Learn by flipping the thinking—find the question.</p></div>
+    </div></div>
+    <div class="page-section"><h3>Rewards & Progress</h3><div class="page-cards">
+      <div class="pc"><div class="pic">●</div><h4>XP & Levels</h4><p>Earn progress in a calm, readable way.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Streak Moments</h4><p>Maintain continuity for better retention.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Achievement tiers</h4><p>Common to legendary milestone journeys.</p></div>
+    </div></div>
+    <div class="viz">
+      <svg viewBox="0 0 1200 360">
+        <rect x="40" y="40" width="1120" height="280" rx="16" fill="#fff" stroke="#e4e3de"/>
+        <rect x="60" y="60" width="220" height="240" rx="10" fill="#f4f4f0"/>
+        <text x="170" y="180" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#6a6a7a">SIDEBAR</text>
+        <rect x="300" y="60" width="840" height="60" rx="10" fill="#f4f4f0"/>
+        <text x="720" y="96" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#6a6a7a">HEADER · 6 ENVS · PROFILE</text>
+        <rect x="300" y="140" width="540" height="160" rx="10" fill="#fafaf8" stroke="#e4e3de"/>
+        <text x="570" y="225" text-anchor="middle" font-family="Playfair Display" font-style="italic" font-size="22" fill="#0a0a0f">Game Environment workspace</text>
+        <rect x="860" y="140" width="280" height="160" rx="10" fill="#0a0a0f"/>
+        <text x="1000" y="225" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#fff">Learning · Chat</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-env-workspace">
+  <div class="wrap">
+    <a class="page-back" data-nav="home">← Back to home</a>
+    <div class="page-hero">
+      <div class="env-icon" style="font-size:32px;width:64px;height:64px;border-radius:16px">🗂️</div>
+      <span class="eyebrow" style="display:block;margin:18px 0 8px">A personal dashboard for learners.</span>
+      <h1 style="font-size:clamp(2.5rem,5vw,4.5rem)">Workspace Environment</h1>
+      <p class="lead">Schedule, notes, focus sessions, and progress reporting in one premium space.</p>
+    </div>
+    <div class="page-section"><h3>Your Second Brain</h3><div class="page-cards">
+      <div class="pc"><div class="pic">●</div><h4>Notes & Media</h4><p>Organize what you learn and revisit it fast.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Agent-ready organization</h4><p>Your workspace structure stays usable for learning.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Clean recall</h4><p>Find context quickly when it matters.</p></div>
+    </div></div>
+    <div class="page-section"><h3>Planning & Reporting</h3><div class="page-cards">
+      <div class="pc"><div class="pic">●</div><h4>Calendar + tasks</h4><p>Daily and weekly learning structure.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Focus timers</h4><p>Pomodoro-style sessions tuned for consistency.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Parent weekly reports</h4><p>Simple updates that reflect progress.</p></div>
+    </div></div>
+    <div class="viz">
+      <svg viewBox="0 0 1200 360">
+        <rect x="40" y="40" width="1120" height="280" rx="16" fill="#fff" stroke="#e4e3de"/>
+        <rect x="60" y="60" width="220" height="240" rx="10" fill="#f4f4f0"/>
+        <text x="170" y="180" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#6a6a7a">SIDEBAR</text>
+        <rect x="300" y="60" width="840" height="60" rx="10" fill="#f4f4f0"/>
+        <text x="720" y="96" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#6a6a7a">HEADER · 6 ENVS · PROFILE</text>
+        <rect x="300" y="140" width="540" height="160" rx="10" fill="#fafaf8" stroke="#e4e3de"/>
+        <text x="570" y="225" text-anchor="middle" font-family="Playfair Display" font-style="italic" font-size="22" fill="#0a0a0f">Workspace Environment workspace</text>
+        <rect x="860" y="140" width="280" height="160" rx="10" fill="#0a0a0f"/>
+        <text x="1000" y="225" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#fff">Learning · Chat</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-env-resources">
+  <div class="wrap">
+    <a class="page-back" data-nav="home">← Back to home</a>
+    <div class="page-hero">
+      <div class="env-icon" style="font-size:32px;width:64px;height:64px;border-radius:16px">🛠️</div>
+      <span class="eyebrow" style="display:block;margin:18px 0 8px">Studios for learning assets.</span>
+      <h1 style="font-size:clamp(2.5rem,5vw,4.5rem)">Resources Environment</h1>
+      <p class="lead">Transform topics into learning assets—diagrams, flashcards, audio explainers, and structured tools.</p>
+    </div>
+    <div class="page-section"><h3>Generation Studios</h3><div class="page-cards">
+      <div class="pc"><div class="pic">●</div><h4>Image to Insight</h4><p>Convert questions into structured guidance.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Audio Explain</h4><p>Podcast-style teaching for calm understanding.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Video Micro-lessons</h4><p>Short teaching snapshots for quick revision.</p></div>
+    </div></div>
+    <div class="page-section"><h3>Learning Tools</h3><div class="page-cards">
+      <div class="pc"><div class="pic">●</div><h4>Flow Canvas</h4><p>Mermaid-style diagrams and concept linking.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Formula Vault</h4><p>Searchable formulas with fast recall access.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Flashcards</h4><p>Spaced repetition aligned to mastery progress.</p></div>
+    </div></div>
+    <div class="viz">
+      <svg viewBox="0 0 1200 360">
+        <rect x="40" y="40" width="1120" height="280" rx="16" fill="#fff" stroke="#e4e3de"/>
+        <rect x="60" y="60" width="220" height="240" rx="10" fill="#f4f4f0"/>
+        <text x="170" y="180" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#6a6a7a">SIDEBAR</text>
+        <rect x="300" y="60" width="840" height="60" rx="10" fill="#f4f4f0"/>
+        <text x="720" y="96" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#6a6a7a">HEADER · 6 ENVS · PROFILE</text>
+        <rect x="300" y="140" width="540" height="160" rx="10" fill="#fafaf8" stroke="#e4e3de"/>
+        <text x="570" y="225" text-anchor="middle" font-family="Playfair Display" font-style="italic" font-size="22" fill="#0a0a0f">Resources Environment workspace</text>
+        <rect x="860" y="140" width="280" height="160" rx="10" fill="#0a0a0f"/>
+        <text x="1000" y="225" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#fff">Learning · Chat</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-env-career">
+  <div class="wrap">
+    <a class="page-back" data-nav="home">← Back to home</a>
+    <div class="page-hero">
+      <div class="env-icon" style="font-size:32px;width:64px;height:64px;border-radius:16px">🚀</div>
+      <span class="eyebrow" style="display:block;margin:18px 0 8px">From aspirant to professional.</span>
+      <h1 style="font-size:clamp(2.5rem,5vw,4.5rem)">Career Environment</h1>
+      <p class="lead">A coming environment for long-term growth—roadmaps, interview practice, skill alignment, and professional progress planning.</p>
+    </div>
+    <div class="page-section"><h3>Roadmaps</h3><div class="page-cards">
+      <div class="pc"><div class="pic">●</div><h4>Career Map</h4><p>Aligned growth plan for your goals.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Skill Gap</h4><p>Clear difference between today and target.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Industry Pulse</h4><p>Trend-aware guidance for decision-making.</p></div>
+    </div></div>
+    <div class="page-section"><h3>Practice & Apply</h3><div class="page-cards">
+      <div class="pc"><div class="pic">●</div><h4>Interview Practice</h4><p>Structured voice + text mock interviews.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Resume Guidance</h4><p>Application-focused improvement tips.</p></div>
+      <div class="pc"><div class="pic">●</div><h4>Internship Discovery</h4><p>Curated opportunities matched to your path.</p></div>
+    </div></div>
+    <div class="viz">
+      <svg viewBox="0 0 1200 360">
+        <rect x="40" y="40" width="1120" height="280" rx="16" fill="#fff" stroke="#e4e3de"/>
+        <rect x="60" y="60" width="220" height="240" rx="10" fill="#f4f4f0"/>
+        <text x="170" y="180" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#6a6a7a">SIDEBAR</text>
+        <rect x="300" y="60" width="840" height="60" rx="10" fill="#f4f4f0"/>
+        <text x="720" y="96" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#6a6a7a">HEADER · 6 ENVS · PROFILE</text>
+        <rect x="300" y="140" width="540" height="160" rx="10" fill="#fafaf8" stroke="#e4e3de"/>
+        <text x="570" y="225" text-anchor="middle" font-family="Playfair Display" font-style="italic" font-size="22" fill="#0a0a0f">Career Environment workspace</text>
+        <rect x="860" y="140" width="280" height="160" rx="10" fill="#0a0a0f"/>
+        <text x="1000" y="225" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#fff">Learning · Chat</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT FORM MODAL -->
+<div class="contact-modal" id="contactModal" aria-hidden="true">
+  <button class="close-btn" id="closeContact" aria-label="Close contact form">×</button>
+  <div class="contact-form-wrap" role="dialog" aria-modal="true" aria-label="Contact form">
+    <h3>Contact DRONA AI</h3>
+    <p class="desc">Send a message to get professional support. This page will open your email client with details pre-filled.</p>
+
+    <form id="contactForm">
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" name="name" placeholder="John Doe" required autocomplete="name" />
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" placeholder="you@example.com" required autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label>Subject</label>
+        <input type="text" name="subject" placeholder="Tell us what you need" required />
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea name="message" placeholder="Write your message..." required></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-dark">Send via Email</button>
+        <button type="button" class="btn btn-ghost" id="cancelContact">Cancel</button>
+      </div>
+      <div class="form-success" id="formSuccess">✓ Draft ready in your email client.</div>
+    </form>
+  </div>
+</div>
+
+<script>
+// nav scroll
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>{nav.classList.toggle('scrolled',scrollY>40)});
+
+// rotor — auto-populate film-strip cards (duplicated for seamless loop)
+const rotorData=[
+  {tag:'PTR',t:'Next-paper guidance',d:"Smarter mock training with realistic difficulty patterns.",img:'1606326608606-aa0b62935f2b'},
+  {tag:'ACA',t:'Smart academic search',d:'Find the right concept fast—without generic noise.',img:'1456513080510-7bf3a84b82f8'},
+  {tag:'FLS',t:'Flashcards that stick',d:'Spaced revision tied to your mastery progress.',img:'1532153975070-2e9ab71f1b14'},
+  {tag:'AUD',t:'Audio micro-lessons',d:'Podcast-style explainers for calm, repeatable learning.',img:'1478737270239-2f02b77fc618'},
+  {tag:'VID',t:'Video studio snippets',d:'Short micro-lessons for fast revision cycles.',img:'1574717024653-61fd2cf4d44d'},
+  {tag:'MAP',t:'Concept mapping',d:'Interactive connections to strengthen your mental model.',img:'1635070041078-e363dbe005cb'},
+  {tag:'DSP',t:'Diagram clarity',d:'Turn complexity into structured visuals you can revisit.',img:'1499209974431-9dddcece7f88'},
+  {tag:'TONE',t:'Coaching tone options',d:'Choose the learning style that suits your mindset.',img:'1456735190827-d1262f71b8a3'},
+  {tag:'NOTE',t:'Knowledge vault',d:'Organize what you learn and retrieve it quickly.',img:'1509228468518-180dd4864904'},
+  {tag:'PLAN',t:'Personal learning plans',d:'A consistent schedule that supports your goals.',img:'1506784983877-45594efa4cbe'},
+];
+const rotorEl=document.getElementById('rotorTrack');
+if(rotorEl){
+  const card=(c,i)=>`<div class="rotor-card"><img loading="lazy" src="https://images.unsplash.com/photo-${c.img}?w=560&q=70&auto=format&fit=crop" alt="${c.t}"/><span class="rc-num">${String(i+1).padStart(2,'0')}</span><div class="rotor-inner"><span class="rc-tag">${c.tag}</span><div><h5>${c.t}</h5><div class="rc-desc">${c.d}</div></div></div></div>`;
+  rotorEl.innerHTML=[...rotorData,...rotorData].map((c,i)=>card(c,i%rotorData.length)).join('');
+}
+
+// reveal
+const io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('in')),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// faq
+document.querySelectorAll('.faq-q').forEach(q=>q.addEventListener('click',()=>q.parentElement.classList.toggle('open')));
+
+// SPA-ish env routing
+const pages=document.querySelectorAll('.page, #page-home');
+function go(target){
+  document.getElementById('page-home').style.display = (target==='home'?'block':'none');
+  pages.forEach(p=>{if(p.id!=='page-home')p.style.display='none'});
+  if(target==='home'){pages.forEach(p=>p.classList.remove('active'));window.scrollTo({top:0,behavior:'smooth'});return;}
+  const t=document.getElementById('page-'+target);
+  if(t){t.style.display='block';t.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+}
+
+document.addEventListener('click',e=>{
+  const a=e.target.closest('[data-nav]');
+  if(!a)return;
+  e.preventDefault();
+  go(a.dataset.nav);
+});
+
+// menu dropdown
+const menuToggle=document.getElementById('menuToggle');
+const navDropdown=document.getElementById('navDropdown');
+if(menuToggle){
+  menuToggle.addEventListener('click',()=>{menuToggle.classList.toggle('open');navDropdown.classList.toggle('active')});
+  document.addEventListener('click',e=>{
+    if(!e.target.closest('#menuToggle')&&!e.target.closest('#navDropdown')){menuToggle.classList.remove('open');navDropdown.classList.remove('active');}
+  });
+}
+
+// contact form (mailto-based: works without backend)
+const contactLink=document.getElementById('contactLink');
+const contactModal=document.getElementById('contactModal');
+const closeContact=document.getElementById('closeContact');
+const cancelContact=document.getElementById('cancelContact');
+const contactForm=document.getElementById('contactForm');
+const formSuccess=document.getElementById('formSuccess');
+
+function openContact(){
+  contactModal.classList.add('open');
+  contactModal.setAttribute('aria-hidden','false');
+}
+function closeContactModal(){
+  contactModal.classList.remove('open');
+  contactModal.setAttribute('aria-hidden','true');
+}
+
+if(contactLink){contactLink.addEventListener('click',e=>{e.preventDefault();openContact();});}
+if(closeContact){closeContact.addEventListener('click',closeContactModal);}
+if(cancelContact){cancelContact.addEventListener('click',closeContactModal);}
+contactModal.addEventListener('click',e=>{if(e.target===contactModal)closeContactModal();});
+
+if(contactForm){
+  contactForm.addEventListener('submit',e=>{
+    e.preventDefault();
+    const formData=new FormData(contactForm);
+    const name=(formData.get('name')||'').toString();
+    const email=(formData.get('email')||'').toString();
+    const subject=(formData.get('subject')||'').toString();
+    const message=(formData.get('message')||'').toString();
+
+    const to='anshulrathod999@gmail.com';
+    const fullSubject=`${subject} — from ${name}`;
+    const body=`Name: ${name}\nEmail: ${email}\n\n${message}`;
+    const mailto=`mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(fullSubject)}&body=${encodeURIComponent(body)}`;
+
+    // UI feedback (no backend required)
+    formSuccess.classList.add('show');
+    setTimeout(()=>{formSuccess.classList.remove('show');},2500);
+
+    // Open mail client
+    window.location.href = mailto;
+
+    // close modal after brief moment
+    setTimeout(()=>{closeContactModal();},350);
+    contactForm.reset();
+  });
+}
+</script>
+</body>
+</html>
+

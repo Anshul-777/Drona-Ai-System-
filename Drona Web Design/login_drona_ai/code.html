@@ -1,0 +1,189 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>DRONA.AI - Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "secondary-container": "#e2e0fc",
+                    "on-tertiary-fixed": "#380d00",
+                    "tertiary-container": "#c34100",
+                    "surface-dim": "#d9dadb",
+                    "on-primary-fixed-variant": "#0037ba",
+                    "primary-fixed": "#dde1ff",
+                    "on-primary-container": "#efefff",
+                    "tertiary-fixed": "#ffdbcf",
+                    "surface-container-highest": "#e1e3e4",
+                    "on-error": "#ffffff",
+                    "outline": "#747688",
+                    "on-secondary-fixed-variant": "#45455b",
+                    "secondary": "#5d5c74",
+                    "inverse-on-surface": "#f0f1f2",
+                    "on-secondary-container": "#63627a",
+                    "secondary-fixed": "#e2e0fc",
+                    "background": "#f8f9fa",
+                    "on-primary-fixed": "#001454",
+                    "error": "#ba1a1a",
+                    "on-surface": "#191c1d",
+                    "surface-tint": "#074af0",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#edeeef",
+                    "secondary-fixed-dim": "#c6c4df",
+                    "primary-fixed-dim": "#b8c4ff",
+                    "on-secondary-fixed": "#1a1a2e",
+                    "outline-variant": "#c4c5d9",
+                    "on-error-container": "#93000a",
+                    "surface": "#f8f9fa",
+                    "on-background": "#191c1d",
+                    "surface-container-high": "#e7e8e9",
+                    "primary": "#0042dc",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb59b",
+                    "tertiary": "#9a3200",
+                    "surface-container-low": "#f3f4f5",
+                    "surface-bright": "#f8f9fa",
+                    "primary-container": "#2a5cff",
+                    "on-surface-variant": "#434656",
+                    "inverse-primary": "#b8c4ff",
+                    "surface-variant": "#e1e3e4",
+                    "inverse-surface": "#2e3132",
+                    "on-tertiary-container": "#ffede8",
+                    "on-tertiary-fixed-variant": "#812800",
+                    "error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {},
+            "fontFamily": {
+                    "headline": ["Playfair Display"],
+                    "display": ["Playfair Display"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            },
+            "fontSize": {}
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom input autofill styling to match theme */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active{
+            -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
+            -webkit-text-fill-color: #191c1d !important;
+        }
+    </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface font-body antialiased selection:bg-primary-container selection:text-on-primary-container h-screen overflow-hidden">
+<div class="flex h-full w-full">
+<!-- Left Column: Visual -->
+<div class="hidden lg:block lg:w-[55%] relative h-full bg-surface-container-low overflow-hidden">
+<img alt="A high-fidelity, cinematic 3D abstract visual representing futuristic AI-powered education and learning." class="absolute inset-0 w-full h-full object-cover opacity-90" data-alt="A high-fidelity, cinematic 3D abstract visual representing futuristic AI-powered education and learning. The composition features elegant, flowing crystalline ribbons and glowing neural data pathways intertwining, symbolizing a 'Scholar's Journey' and intelligence. The aesthetic is Premium Minimalist, using the design system's palette of crisp whites, ethereal translucent glass textures, and a signature vibrant blue (#2a5cff) as the primary energy source." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOmIf2T0fo2e9r5I5zKIceu9t7T_wLKhpn5eS3PZTQ2rVAi7ap0BdeyaCeMpR2DGqNqwn4NYOhSpXG9ni15tB8VWjG5JYMz-WTNKQPHblTsMakr0OWdUvqu5WCUVEkcuMGu0fkAK8W9xVCV9GqE7HPcSGJMrAlxgKoTEsowbsf8HPGSawk03mDQ_5JTASitPvOpmxrj4sVTen38lQvlTB1hdo9zrxQ_i4DYvdJKraoWRTyh6RYgXN3rVmp0yj7QsL-rca_t0FgLng">
+<!-- Gradient Overlay for depth -->
+<div class="absolute inset-0 bg-gradient-to-r from-surface-container-lowest/10 to-surface-container-lowest border-r border-outline-variant/20 mix-blend-overlay"></div>
+<!-- Floating Brand Anchor -->
+<div class="absolute top-12 left-12 z-10">
+<span class="font-display font-black text-2xl tracking-tighter text-on-surface drop-shadow-sm">DRONA.AI</span>
+</div>
+</div>
+<!-- Right Column: Form -->
+<div class="w-full lg:w-[45%] flex flex-col h-full bg-surface-container-lowest overflow-y-auto">
+<div class="flex-1 flex flex-col justify-center px-8 sm:px-16 md:px-24 py-12 max-w-2xl mx-auto w-full">
+<!-- Mobile Brand (Hidden on Desktop) -->
+<div class="block lg:hidden mb-12">
+<span class="font-display font-black text-2xl tracking-tighter text-primary">DRONA.AI</span>
+</div>
+<!-- Header -->
+<div class="mb-10">
+<h1 class="font-display text-4xl md:text-5xl font-bold tracking-tight text-on-surface mb-3 leading-tight">
+                        Welcome back,<br><span class="text-primary italic">Scholar.</span>
+</h1>
+<p class="font-body text-on-surface-variant text-base">Enter your credentials to access your workspace.</p>
+</div>
+<!-- Form -->
+<form action="#" class="space-y-8" method="POST">
+<div class="space-y-6">
+<!-- Email Input -->
+<div class="relative group">
+<label class="block text-sm font-medium text-on-surface-variant mb-1 group-focus-within:text-primary transition-colors" for="email">Academic Email</label>
+<input autocomplete="email" class="block w-full border-0 border-b border-outline-variant bg-transparent py-2.5 px-0 text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 text-base font-body transition-colors outline-none" id="email" name="email" placeholder="Enter Your Email" required="" type="email">
+</div>
+<!-- Password Input -->
+<div class="relative group">
+<div class="flex justify-between items-baseline mb-1">
+<label class="block text-sm font-medium text-on-surface-variant group-focus-within:text-primary transition-colors" for="password">Password<br></label>
+<a class="text-sm font-medium text-primary hover:text-primary-container transition-colors" href="#">Forgot key?</a>
+</div>
+<input autocomplete="current-password" class="block w-full border-0 border-b border-outline-variant bg-transparent py-2.5 px-0 text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 text-base font-body transition-colors outline-none" id="password" name="password" placeholder="••••••••" required="" type="password">
+</div>
+</div>
+<!-- Submit Action -->
+<div>
+<button class="w-full flex justify-center items-center gap-2 bg-primary text-on-primary py-3.5 px-4 rounded-lg font-body font-semibold text-sm tracking-wide shadow-sm hover:-translate-y-[1px] hover:shadow-md active:translate-y-0 transition-all duration-200" type="submit">
+                            Initialize Session
+                            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</form>
+<!-- Divider -->
+<div class="mt-10 mb-8">
+<div class="relative">
+<div class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-outline-variant/40"></div>
+</div>
+<div class="relative flex justify-center text-sm">
+<span class="px-4 bg-surface-container-lowest text-outline font-medium tracking-wide text-xs uppercase">Federated Access</span>
+</div>
+</div>
+</div>
+<!-- Social Logins (Ghost Buttons) -->
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-2 w-full px-4 py-2.5 border border-outline-variant/60 rounded-lg bg-transparent text-on-surface font-medium text-sm hover:bg-surface-container-low transition-colors duration-200" type="button">
+<svg aria-hidden="true" class="h-4 w-4" viewBox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+</svg>
+                        Google
+                    </button>
+<button class="flex items-center justify-center gap-2 w-full px-4 py-2.5 border border-outline-variant/60 rounded-lg bg-transparent text-on-surface font-medium text-sm hover:bg-surface-container-low transition-colors duration-200" type="button">
+<svg aria-hidden="true" class="h-4 w-4 text-on-surface" fill="currentColor" viewBox="0 0 24 24">
+<path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z"></path>
+</svg>
+                        SSO
+                    </button>
+</div>
+<!-- Footer Link -->
+<div class="mt-12 text-center">
+<p class="text-sm text-on-surface-variant font-body">
+                        Not a registered scholar yet? 
+                        <a class="font-medium text-primary hover:text-primary-container hover:underline underline-offset-4 transition-all" href="#">Request Admittance</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+
+
+</body></html>

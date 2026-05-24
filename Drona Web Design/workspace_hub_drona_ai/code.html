@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Workspace Hub - DRONA AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed": "#001454",
+                    "on-background": "#191c1d",
+                    "surface-tint": "#074af0",
+                    "surface-container-highest": "#e1e3e4",
+                    "primary": "#0042dc",
+                    "on-error": "#ffffff",
+                    "surface": "#f8f9fa",
+                    "surface-container-high": "#e7e8e9",
+                    "primary-container": "#2a5cff",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed-dim": "#ffb59b",
+                    "on-secondary": "#ffffff",
+                    "inverse-primary": "#b8c4ff",
+                    "secondary-container": "#e2e0fc",
+                    "on-tertiary-fixed-variant": "#812800",
+                    "primary-fixed": "#dde1ff",
+                    "on-secondary-fixed-variant": "#45455b",
+                    "inverse-surface": "#2e3132",
+                    "on-error-container": "#93000a",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f3f4f5",
+                    "outline": "#747688",
+                    "on-primary-fixed-variant": "#0037ba",
+                    "surface-bright": "#f8f9fa",
+                    "surface-container": "#edeeef",
+                    "surface-variant": "#e1e3e4",
+                    "surface-dim": "#d9dadb",
+                    "secondary": "#5d5c74",
+                    "on-primary-container": "#efefff",
+                    "tertiary-fixed": "#ffdbcf",
+                    "on-tertiary": "#ffffff",
+                    "on-tertiary-container": "#ffede8",
+                    "inverse-on-surface": "#f0f1f2",
+                    "on-tertiary-fixed": "#380d00",
+                    "on-secondary-fixed": "#1a1a2e",
+                    "secondary-fixed-dim": "#c6c4df",
+                    "secondary-fixed": "#e2e0fc",
+                    "on-primary": "#ffffff",
+                    "on-surface-variant": "#434656",
+                    "tertiary": "#9a3200",
+                    "outline-variant": "#c4c5d9",
+                    "primary-fixed-dim": "#b8c4ff",
+                    "on-surface": "#191c1d",
+                    "error-container": "#ffdad6",
+                    "background": "#f8f9fa",
+                    "tertiary-container": "#c34100",
+                    "on-secondary-container": "#63627a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {},
+            "fontFamily": {
+                    "headline": ["Playfair Display"],
+                    "display": ["Playfair Display"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            },
+            "fontSize": {}
+    },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col antialiased">
+<!-- TopNavBar -->
+<header class="bg-surface/80 dark:bg-surface-container/80 backdrop-blur-xl border-b border-outline-variant/30 docked full-width top-0 sticky z-50 shadow-sm">
+<div class="flex justify-between items-center w-full px-8 h-16">
+<div class="font-display font-black text-2xl tracking-tighter text-primary dark:text-primary-fixed">DRONA.AI</div>
+<nav class="hidden md:flex gap-8 h-full items-center">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors h-full flex items-center hover:bg-surface-container-high/50 px-3 cursor-pointer active:scale-95 transition-transform duration-200" href="#">Learning</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors h-full flex items-center hover:bg-surface-container-high/50 px-3 cursor-pointer active:scale-95 transition-transform duration-200" href="#">Test</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors h-full flex items-center hover:bg-surface-container-high/50 px-3 cursor-pointer active:scale-95 transition-transform duration-200" href="#">Game</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 h-full flex items-center hover:bg-surface-container-high/50 px-3 cursor-pointer active:scale-95 transition-transform duration-200" href="#">Workspace</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors h-full flex items-center hover:bg-surface-container-high/50 px-3 cursor-pointer active:scale-95 transition-transform duration-200" href="#">Resources</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors h-full flex items-center hover:bg-surface-container-high/50 px-3 cursor-pointer active:scale-95 transition-transform duration-200" href="#">Career</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:bg-surface-container-high/50 p-2 rounded-full cursor-pointer active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined">military_tech</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-high/50 p-2 rounded-full cursor-pointer active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined">monetization_on</span>
+</button>
+<img alt="Student Profile Avatar" class="w-8 h-8 rounded-full border border-outline-variant cursor-pointer" data-alt="A close-up portrait of a young professional student with a neutral, focused expression. The background is soft and slightly blurred, emphasizing the subject. High-quality editorial style lighting with a bright, clean aesthetic matching the modern interface. The palette leans towards soft neutrals and professional tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuQTQN5eWJj5hZ7IoeZlAqml3PL2OKLMRNpJwqWP0qrfA6_yrmVMkrkVSi2Xro5_zEdyeE-NyBxiQjLQiLADVPl4Js5ZhlQugf5l9E8qeQfr3M2j8l_S6XHc4eL6Pe6sEKoWteqlZYodAh_4Q1BxvfbNbHF-Jv-ZOn13fhsEYQRxUdJHO20D5WKcPv9JZRV-y17BfnWVjjP0Ya7Fnl486HBEhz2UmsEQXtGskO2utkdi_0IdGpnes7MDaMy9atfwW3spHB_dUR_6o"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar -->
+<aside class="hidden lg:flex flex-col p-4 gap-2 bg-surface-container-low dark:bg-surface-dim border-r border-outline-variant/20 w-64 flex-shrink-0 overflow-y-auto">
+<div class="mb-6 px-4 pt-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+</div>
+<div>
+<h2 class="font-display text-xl font-bold text-on-surface">DRONA AI</h2>
+<p class="text-xs text-on-surface-variant">Workspace Hub</p>
+</div>
+</div>
+<!-- Database Category -->
+<div class="mb-4">
+<p class="px-4 text-xs font-bold text-outline uppercase tracking-wider mb-2">Database</p>
+<a class="flex items-center gap-3 px-4 py-2 bg-primary-container text-on-primary-container rounded-xl font-bold shadow-sm mb-1 group-hover:opacity-100 transition-opacity hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-lg">description</span>
+<span class="font-body text-sm">My Notes</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary hover:bg-surface-container-high rounded-xl mb-1 group-hover:opacity-100 transition-opacity hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-lg">cloud_upload</span>
+<span class="font-body text-sm font-medium">Uploads</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary hover:bg-surface-container-high rounded-xl mb-1 group-hover:opacity-100 transition-opacity hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-lg">link</span>
+<span class="font-body text-sm font-medium">Saved Links</span>
+</a>
+</div>
+<!-- Planner Category -->
+<div class="mb-4">
+<p class="px-4 text-xs font-bold text-outline uppercase tracking-wider mb-2">Planner</p>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary hover:bg-surface-container-high rounded-xl mb-1 group-hover:opacity-100 transition-opacity hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-lg">calendar_month</span>
+<span class="font-body text-sm font-medium">Calendar</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary hover:bg-surface-container-high rounded-xl mb-1 group-hover:opacity-100 transition-opacity hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-lg">checklist</span>
+<span class="font-body text-sm font-medium">To-Do Lists</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary hover:bg-surface-container-high rounded-xl mb-1 group-hover:opacity-100 transition-opacity hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-lg">timer</span>
+<span class="font-body text-sm font-medium">Focus Timer</span>
+</a>
+</div>
+<!-- Reports Category -->
+<div class="mb-auto">
+<p class="px-4 text-xs font-bold text-outline uppercase tracking-wider mb-2">Reports</p>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary hover:bg-surface-container-high rounded-xl mb-1 group-hover:opacity-100 transition-opacity hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-lg">bar_chart</span>
+<span class="font-body text-sm font-medium">Weekly Report</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary hover:bg-surface-container-high rounded-xl mb-1 group-hover:opacity-100 transition-opacity hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-lg">family_history</span>
+<span class="font-body text-sm font-medium">Parent Report</span>
+</a>
+</div>
+<div class="mt-4 border-t border-outline-variant/20 pt-4">
+<button class="w-full py-3 bg-primary text-on-primary rounded-xl font-bold shadow-sm hover:-translate-y-0.5 transition-transform duration-200 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">smart_toy</span>
+                    Open Agent Dock
+                </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col bg-surface overflow-hidden relative">
+<!-- Editor Header -->
+<div class="px-12 pt-12 pb-6 flex justify-between items-end border-b border-outline-variant/10">
+<div>
+<div class="flex items-center gap-2 text-sm text-outline mb-3">
+<span>Workspace</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span>Database</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-primary font-medium">Quantum Computing Basics</span>
+</div>
+<input class="font-headline text-4xl font-bold text-on-surface bg-transparent border-none p-0 focus:ring-0 placeholder-outline-variant w-full" placeholder="Untitled Note" type="text" value="Quantum Computing Basics"/>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 border border-outline-variant rounded-lg text-sm font-medium hover:bg-surface-container-low transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">share</span>
+                        Share
+                    </button>
+<button class="p-2 border border-outline-variant rounded-lg text-outline hover:bg-surface-container-low transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- Note Editor Area (Simulated) -->
+<div class="flex-1 overflow-y-auto px-12 py-8 max-w-4xl">
+<p class="text-on-surface-variant leading-relaxed mb-6 text-lg">
+                    Quantum computing is a rapidly-emerging technology that harnesses the laws of quantum mechanics to solve problems too complex for classical computers.
+                </p>
+<h2 class="font-headline text-2xl font-bold text-on-surface mt-10 mb-4 flex items-center gap-2 group cursor-pointer">
+                    Key Concepts
+                    <span class="material-symbols-outlined opacity-0 group-hover:opacity-100 text-outline transition-opacity text-[20px]">link</span>
+</h2>
+<div class="bg-surface-container-low border border-outline-variant/20 rounded-xl p-6 mb-8 shadow-sm">
+<ul class="space-y-4">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-0.5">adjust</span>
+<div>
+<strong class="text-on-surface font-medium block">Superposition</strong>
+<span class="text-on-surface-variant text-sm">Unlike classical bits that are 0 or 1, qubits can exist in a state of superposition where they represent both 0 and 1 simultaneously.</span>
+</div>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-0.5">link</span>
+<div>
+<strong class="text-on-surface font-medium block">Entanglement</strong>
+<span class="text-on-surface-variant text-sm">When qubits become entangled, the state of one qubit instantly influences the state of another, no matter how far apart they are.</span>
+</div>
+</li>
+</ul>
+</div>
+<div class="flex items-center gap-2 text-outline-variant py-2">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span class="text-sm font-medium">Type '/' for commands</span>
+</div>
+<!-- Floating AI Action -->
+<div class="mt-12 p-4 bg-primary/5 border border-primary/20 rounded-xl flex items-center justify-between shadow-sm cursor-pointer hover:bg-primary/10 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-[18px]">auto_awesome</span>
+</div>
+<span class="text-primary font-medium text-sm">Ask AI Tutor to summarize this note</span>
+</div>
+<span class="material-symbols-outlined text-primary/50">arrow_forward</span>
+</div>
+</div>
+<!-- Quick Stats Bar (Bottom) -->
+<div class="border-t border-outline-variant/20 bg-surface/90 backdrop-blur px-8 py-3 flex items-center justify-between text-xs font-medium text-on-surface-variant">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>4/7 Tasks Done</span>
+</div>
+<div class="w-px h-4 bg-outline-variant/50"></div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-[18px]">timer</span>
+<span>2h 15m Focus Time</span>
+</div>
+<div class="w-px h-4 bg-outline-variant/50"></div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[18px]">local_fire_department</span>
+<span>5 Day Streak</span>
+</div>
+</div>
+<div class="flex items-center gap-2 text-outline">
+                    Last edited 5 mins ago
+                </div>
+</div>
+</main>
+</div>
+</body></html>
