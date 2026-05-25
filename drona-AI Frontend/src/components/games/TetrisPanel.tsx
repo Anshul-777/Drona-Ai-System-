@@ -36,6 +36,7 @@ function randomPiece() {
 export default function TetrisPanel() {
   const ref = useRef<HTMLCanvasElement>(null);
   const nextRef = useRef<HTMLCanvasElement>(null);
+  const bgRef = useRef<HTMLCanvasElement>(null);
 
   const gridRef = useRef(emptyGrid());
   const pieceRef = useRef(randomPiece());
@@ -215,6 +216,71 @@ export default function TetrisPanel() {
     return () => window.removeEventListener("keydown", handler);
   }, [movePiece, rotatePiece]);
 
+  // Background Particles
+  useEffect(() => {
+    const canvas = bgRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let w = canvas.width = canvas.offsetWidth;
+    let h = canvas.height = canvas.offsetHeight;
+    
+    const particles: {x: number, y: number, vx: number, vy: number, r: number, color: string}[] = [];
+    const colors = ["rgba(42, 92, 255, 0.6)", "rgba(124, 58, 237, 0.6)", "rgba(16, 185, 129, 0.6)", "rgba(236, 72, 153, 0.6)"];
+    
+    for (let i = 0; i < 50; i++) {
+      particles.push({
+        x: Math.random() * w, y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 1.5, vy: (Math.random() - 0.5) * 1.5,
+        r: Math.random() * 2 + 1,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      });
+    }
+
+    let frameId: number;
+    const drawBg = () => {
+      ctx.clearRect(0, 0, w, h);
+      
+      const grad = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, w*0.8);
+      grad.addColorStop(0, "rgba(42, 92, 255, 0.08)");
+      grad.addColorStop(1, "rgba(255, 255, 255, 0)");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+          if (dist < 150) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(124, 58, 237, ${0.2 - (dist / 150) * 0.2})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+      frameId = requestAnimationFrame(drawBg);
+    };
+    drawBg();
+
+    const resize = () => { w = canvas.width = canvas.offsetWidth; h = canvas.height = canvas.offsetHeight; };
+    window.addEventListener("resize", resize);
+    return () => { cancelAnimationFrame(frameId); window.removeEventListener("resize", resize); };
+  }, []);
+
   const startGame = () => {
     startedRef.current = true;
     setStarted(true);
@@ -235,10 +301,13 @@ export default function TetrisPanel() {
   };
 
   return (
-    <div className="relative w-full h-full overflow-hidden flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="relative w-full h-full overflow-hidden flex flex-col items-center justify-center bg-gradient-to-br from-[#f8fafc] to-[#e2e8f0]">
+      {/* Interactive Particle Background */}
+      <canvas ref={bgRef} className="absolute inset-0 w-full h-full z-0" />
+      
       {/* Animated subtle background blobs for visual flair */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-primary/10 rounded-full blur-[100px] animate-[spin_10s_linear_infinite]" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] animate-[spin_15s_linear_infinite_reverse]" />
+      <div className="absolute top-0 left-0 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-[spin_10s_linear_infinite]" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/20 rounded-full blur-[120px] animate-[spin_15s_linear_infinite_reverse]" />
       
       {/* Floating Header */}
       <div className="absolute top-8 left-10 z-20 pointer-events-none animate-[fadeSlideUp_0.8s_ease]">
@@ -258,21 +327,21 @@ export default function TetrisPanel() {
         <span className="text-4xl font-black text-black tabular-nums drop-shadow-sm">{score}</span>
       </div>
 
-      {/* Main Container: Game on left, Controls on right */}
-      <div className="relative z-10 flex flex-row items-center gap-10 xl:gap-20">
+      {/* Main Arcade Console Container */}
+      <div className="relative z-10 mt-16 flex flex-row items-stretch bg-white/40 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-white/70 p-6 xl:p-10 gap-8 xl:gap-14 h-[85vh] max-h-[800px] animate-[fadeSlideUp_0.6s_ease]">
+        
         {/* Main Game Canvas */}
-        <div className="relative animate-[fadeSlideUp_0.6s_ease]">
+        <div className="relative h-full aspect-[1/2] rounded-2xl overflow-hidden shadow-2xl border-4 border-white/80 bg-white/50">
           <canvas 
             ref={ref} 
             width={CW} 
             height={CH} 
-            className="bg-white border-4 border-gray-200 rounded-xl shadow-2xl transition-all duration-500" 
-            style={{ maxHeight: "calc(100vh - 160px)", width: "auto" }} 
+            className="w-full h-full block"
           />
           
           {/* Start / Game Over Overlays */}
           {!started && !over && (
-            <div className="absolute inset-0 bg-white/70 flex flex-col items-center justify-center backdrop-blur-sm z-30 rounded-xl">
+            <div className="absolute inset-0 bg-white/70 flex flex-col items-center justify-center backdrop-blur-sm z-30">
               <button onClick={startGame} className="px-10 py-4 bg-black text-white rounded-2xl text-xl font-black tracking-widest shadow-2xl hover:scale-110 hover:shadow-[0_10px_40px_rgba(0,0,0,0.3)] transition-all cursor-pointer">
                 START
               </button>
@@ -280,8 +349,8 @@ export default function TetrisPanel() {
           )}
 
           {over && (
-            <div className="absolute inset-0 bg-white/80 flex flex-col items-center justify-center backdrop-blur-md z-30 rounded-xl">
-              <span className="text-black font-black text-4xl tracking-widest mb-2">GAME OVER</span>
+            <div className="absolute inset-0 bg-white/80 flex flex-col items-center justify-center backdrop-blur-md z-30">
+              <span className="text-black font-black text-4xl tracking-widest mb-2 text-center">GAME<br/>OVER</span>
               <span className="text-gray-600 font-bold mb-8 font-mono uppercase tracking-widest text-lg">Score: {score}</span>
               <button onClick={reset} className="px-10 py-4 bg-primary text-white rounded-2xl text-lg font-bold shadow-xl hover:scale-110 hover:shadow-[0_10px_40px_rgba(0,0,0,0.2)] transition-all cursor-pointer">
                 Retry
@@ -290,29 +359,31 @@ export default function TetrisPanel() {
           )}
         </div>
         
-        {/* Right side controls panel */}
-        <div className="flex flex-col items-center gap-12 bg-white/70 p-10 rounded-[2rem] shadow-2xl backdrop-blur-xl border border-white animate-[fadeSlideUp_0.8s_ease]">
+        {/* Right side controls panel (Integrated) */}
+        <div className="flex flex-col items-center justify-between py-6 w-40 xl:w-48">
           {/* Next Block */}
-          <div className="flex flex-col items-center group">
-            <span className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-4 transition-colors group-hover:text-black">Next Piece</span>
-            <div className="w-36 h-36 bg-white rounded-3xl shadow-inner flex items-center justify-center border-4 border-gray-50 group-hover:border-primary/20 transition-all duration-300">
-              <canvas ref={nextRef} width={140} height={140} className="w-full h-full object-contain" />
+          <div className="flex flex-col items-center group w-full">
+            <span className="text-sm font-bold uppercase tracking-widest text-gray-600 mb-4 transition-colors group-hover:text-black">Next Piece</span>
+            <div className="w-full aspect-square bg-white/80 rounded-3xl shadow-inner flex items-center justify-center border-4 border-white group-hover:border-primary/30 transition-all duration-300">
+              <canvas ref={nextRef} width={140} height={140} className="w-[80%] h-[80%] object-contain" />
             </div>
           </div>
           
           {/* Arrow Controls */}
-          <div className="flex flex-col items-center gap-3">
-            <button onClick={rotatePiece} className="w-14 h-12 bg-white text-gray-700 rounded-xl font-bold text-xl shadow-md hover:bg-black hover:text-white hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-95 transition-all border border-gray-100">↑</button>
-            <div className="flex gap-3">
-              <button onClick={() => movePiece(-1, 0)} className="w-14 h-12 bg-white text-gray-700 rounded-xl font-bold text-xl shadow-md hover:bg-black hover:text-white hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-95 transition-all border border-gray-100">←</button>
-              <button onClick={() => movePiece(0, 1)} className="w-14 h-12 bg-white text-gray-700 rounded-xl font-bold text-xl shadow-md hover:bg-black hover:text-white hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-95 transition-all border border-gray-100">↓</button>
-              <button onClick={() => movePiece(1, 0)} className="w-14 h-12 bg-white text-gray-700 rounded-xl font-bold text-xl shadow-md hover:bg-black hover:text-white hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-95 transition-all border border-gray-100">→</button>
+          <div className="flex flex-col items-center gap-3 w-full">
+            <button onClick={rotatePiece} className="w-full h-14 bg-white/80 text-gray-700 rounded-2xl shadow-md hover:bg-black hover:text-white hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-95 transition-all border border-white flex items-center justify-center">
+              <span className="material-symbols-outlined text-[28px] font-bold">rotate_right</span>
+            </button>
+            <div className="flex gap-3 w-full">
+              <button onClick={() => movePiece(-1, 0)} className="flex-1 h-14 bg-white/80 text-gray-700 rounded-2xl font-bold text-2xl shadow-md hover:bg-black hover:text-white hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-95 transition-all border border-white">←</button>
+              <button onClick={() => movePiece(0, 1)} className="flex-1 h-14 bg-white/80 text-gray-700 rounded-2xl font-bold text-2xl shadow-md hover:bg-black hover:text-white hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-95 transition-all border border-white">↓</button>
+              <button onClick={() => movePiece(1, 0)} className="flex-1 h-14 bg-white/80 text-gray-700 rounded-2xl font-bold text-2xl shadow-md hover:bg-black hover:text-white hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-95 transition-all border border-white">→</button>
             </div>
           </div>
 
           {/* Fallback Restart */}
           {started && (
-            <button onClick={reset} className="mt-4 px-6 py-2 border-2 border-gray-300 text-gray-600 rounded-full text-sm font-bold hover:bg-gray-100 transition-colors">
+            <button onClick={reset} className="w-full py-4 border-2 border-gray-400/30 bg-white/30 text-gray-700 rounded-2xl text-sm font-bold hover:bg-black hover:text-white hover:border-black transition-all shadow-sm">
               Restart Game
             </button>
           )}
