@@ -2,7 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   // Enable SWR caching for API routes
   onDemandEntries: {
     maxInactiveAge: 60 * 60 * 1000,

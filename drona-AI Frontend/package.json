@@ -1,9 +1,8 @@
 {
   "name": "drona-ai-frontend",
   "version": "1.0.0",
-  "description": "",
-  "private": true,
   "description": "DRONA AI - Multi-Agent AI Education Platform Frontend",
+  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,7 +10,14 @@
     "lint": "next lint",
     "type-check": "tsc --noEmit"
   },
-  "keywords": ["ai", "education", "jee", "neet", "personalized-learning", "gamification"],
+  "keywords": [
+    "ai",
+    "education",
+    "jee",
+    "neet",
+    "personalized-learning",
+    "gamification"
+  ],
   "author": "DRONA AI Team",
   "license": "Proprietary",
   "dependencies": {
@@ -19,8 +25,9 @@
     "@pinecone-database/pinecone": "^7.2.0",
     "@radix-ui/react-slot": "^1.2.4",
     "@supabase/ssr": "^0.10.3",
-    "@supabase/supabase-js": "^2.105.4",
+    "@supabase/supabase-js": "^2.106.1",
     "@tanstack/react-query": "^5.100.9",
+    "@types/nodemailer": "^8.0.0",
     "@upstash/qstash": "^2.10.1",
     "@upstash/redis": "^1.38.0",
     "ai": "^6.0.177",
@@ -33,6 +40,7 @@
     "lucide-react": "^1.14.0",
     "mermaid": "^11.14.0",
     "next": "^16.2.6",
+    "nodemailer": "^8.0.8",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-hook-form": "^7.75.0",
@@ -42,6 +50,7 @@
     "zustand": "^5.0.13"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.0",
     "@types/node": "^25.6.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",

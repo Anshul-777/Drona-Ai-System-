@@ -1,4 +1,4 @@
-"""
+/*
 Resources Environment Layout
 
 Route group: (resources)
@@ -23,7 +23,7 @@ Sidebar pages:
 Theme: Apply purple color scheme
 
 TODO: Implement
-"""
+*/
 
 export default function ResourcesLayout({
   children,
