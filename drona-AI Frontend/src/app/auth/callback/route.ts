@@ -21,12 +21,12 @@ export async function GET(request: Request) {
     if (!error && user) {
       // Determine if it's a brand new user (created within the last 10 seconds)
       const isNewUser = new Date(user.last_sign_in_at!).getTime() - new Date(user.created_at).getTime() < 10000;
-      
+
       // If the URL provided a specific 'next' param, use it.
       // Otherwise, auto-route new users to /begin and returning users to /success
       const defaultRoute = isNewUser ? "/begin" : "/success";
       const finalNext = searchParams.get("next") || defaultRoute;
-      
+
       return NextResponse.redirect(`${origin}${finalNext}`);
     }
   }

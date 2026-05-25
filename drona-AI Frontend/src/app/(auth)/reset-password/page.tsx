@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Logo from "@/components/ui/Logo";
 import { createClient } from "@/lib/supabase/client";
 
 export default function ResetPasswordPage() {
@@ -69,7 +70,7 @@ export default function ResetPasswordPage() {
       <div className="w-full flex flex-col justify-center items-center px-8 sm:px-14 py-12 max-w-lg mx-auto">
         <div className="w-full animate-[fadeSlideUp_0.5s_ease] space-y-8">
           <div className="text-center">
-            <Link href="/" className="inline-block font-display font-black text-2xl tracking-tighter text-primary mb-8">DRONA.AI</Link>
+            <Logo className="inline-block mb-8" />
             <h1 className="font-display text-3xl font-bold tracking-tight mb-2">Create new password</h1>
             <p className="text-on-surface-variant text-base">Your new password must be different from previous used passwords.</p>
           </div>

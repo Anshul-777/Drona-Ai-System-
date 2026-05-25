@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Logo from "@/components/ui/Logo";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { createClient } from "@/lib/supabase/client";
@@ -157,7 +158,7 @@ export default function SignupPage() {
         <div className="flex-1 flex flex-col justify-center px-8 sm:px-14 lg:px-24 max-w-2xl mx-auto w-full">
 
           <div className="block lg:hidden mb-4">
-            <Link href="/" className="font-display font-black text-2xl tracking-tighter text-primary">DRONA.AI</Link>
+            <Logo />
           </div>
 
           {step === "credentials" && (

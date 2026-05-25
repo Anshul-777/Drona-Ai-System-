@@ -2064,3 +2064,14 @@ footer {
   box-shadow: none;
   border-bottom: 2px solid #2a5cff;
 }
+
+/* Marquee animation for assessment protocol ticker */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Utility animations for assessment engine */
+.animate-fadeIn {
+  animation: fadeIn 0.35s ease-out;
+}

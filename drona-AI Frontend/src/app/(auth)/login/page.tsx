@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Logo from "@/components/ui/Logo";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { createClient } from "@/lib/supabase/client";
@@ -155,7 +156,7 @@ export default function LoginPage() {
 
           {/* Mobile brand */}
           <div className="block lg:hidden mb-6">
-            <Link href="/" className="font-display font-black text-2xl tracking-tighter text-primary">DRONA.AI</Link>
+            <Logo />
           </div>
 
           {step === "credentials" && (
