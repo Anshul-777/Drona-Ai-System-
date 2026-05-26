@@ -51,7 +51,7 @@ export default function OnboardingPage() {
       </header>
 
       {/* Full-height Assessment */}
-      <main className="flex-1 flex flex-col w-full max-w-3xl mx-auto px-6 relative z-10 min-h-0">
+      <main className="flex-1 flex flex-col w-full mx-auto relative z-10 min-h-0">
         <AssessmentEngine />
       </main>
     </div>

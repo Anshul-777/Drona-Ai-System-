@@ -1,13 +1,10 @@
-import React from "react";
+import { ReactNode } from "react";
+import PlatformShell from "@/components/platform/PlatformShell";
 
-export default function PlatformLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function PlatformLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="platform-layout min-h-screen bg-background">
+    <PlatformShell>
       {children}
-    </div>
+    </PlatformShell>
   );
 }

@@ -11,6 +11,21 @@ const FlappyPanel = dynamic(() => import("@/components/games/FlappyPanel"), { ss
 
 type Step = "credentials" | "otp" | "success";
 type ExamTarget = "Class 10" | "Class 11" | "Class 12" | "JEE" | "NEET" | "CET";
+type BoardType = "CBSE" | "ICSE" | "State Board" | "IB";
+
+const INDIAN_STATES = [
+  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+  "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand",
+  "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur",
+  "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
+  "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura",
+  "Uttar Pradesh", "Uttarakhand", "West Bengal",
+  "Delhi", "Chandigarh", "Jammu & Kashmir", "Ladakh", "Puducherry"
+];
+
+const BOARDS: BoardType[] = ["CBSE", "ICSE", "State Board", "IB"];
+const CLASS_TARGETS: ExamTarget[] = ["Class 10", "Class 11", "Class 12"];
+
 const CONFETTI_COLORS = ["#2a5cff", "#7c3aed", "#10b981", "#f59e0b", "#ef4444", "#f97316", "#ec4899"];
 
 export default function SignupPage() {
@@ -26,6 +41,8 @@ export default function SignupPage() {
   const [confirmPw, setConfirmPw] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [examTarget, setExamTarget] = useState<ExamTarget | null>(null);
+  const [studentState, setStudentState] = useState("");
+  const [boardType, setBoardType] = useState<BoardType | null>(null);
 
   // OTP
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -92,6 +109,8 @@ export default function SignupPage() {
   const handleSignup = async () => {
     vName(fullName); vEmail(email); vPhone(phone); vPw(password); vCpw(confirmPw);
     if (!examTarget) { setFormErr("Select your exam target."); return; }
+    if (!studentState) { setFormErr("Select your state."); return; }
+    if (CLASS_TARGETS.includes(examTarget) && !boardType) { setFormErr("Select your board type."); return; }
     setFormErr("");
     if (nameErr || emailErr || phoneErr || pwErr || cpwErr || !fullName || !email || !password || !confirmPw) return;
 
@@ -100,7 +119,7 @@ export default function SignupPage() {
       email,
       password,
       options: {
-        data: { full_name: fullName, phone, exam_target: examTarget },
+        data: { full_name: fullName, phone, exam_target: examTarget, state: studentState, board_type: boardType || "N/A" },
       },
     });
     setLoading(false);
@@ -227,8 +246,34 @@ export default function SignupPage() {
                       </button>
                     ))}
                   </div>
-                  {formErr && <p className="text-xs text-error mt-2 flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">error</span>{formErr}</p>}
                 </div>
+
+                {/* State */}
+                <div className="group">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2 group-focus-within:text-primary transition-colors" htmlFor="su-state">State</label>
+                  <select id="su-state" required value={studentState} onChange={e => { setStudentState(e.target.value); setFormErr(""); }}
+                    className={`block w-full border-0 border-b bg-transparent py-2.5 px-0 text-on-surface focus:ring-0 text-base outline-none transition-colors cursor-pointer appearance-none ${!studentState ? "text-outline/50" : ""} ${formErr && !studentState ? "border-error" : "border-outline-variant focus:border-primary"}`}>
+                    <option value="" disabled>Select your state</option>
+                    {INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                </div>
+
+                {/* Board Type — only for Class 10/11/12 */}
+                {examTarget && CLASS_TARGETS.includes(examTarget) && (
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-3">Board Type</label>
+                    <div className="grid grid-cols-4 gap-2">
+                      {BOARDS.map(b => (
+                        <button key={b} type="button" onClick={() => { setBoardType(b); setFormErr(""); }}
+                          className={`py-3 rounded-xl text-xs font-bold transition-all cursor-pointer border ${boardType === b ? "bg-primary text-on-primary border-primary shadow-md" : "bg-surface-container-low text-on-surface-variant border-outline-variant/30 hover:border-primary/40 hover:bg-surface-container"}`}>
+                          {b}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {formErr && <p className="text-xs text-error mt-2 flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">error</span>{formErr}</p>}
 
                 {/* Submit */}
                 <button disabled={loading} type="submit"

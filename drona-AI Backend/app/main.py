@@ -1,12 +1,3 @@
-import sys
-import io
-
-# Force UTF-8 stdout/stderr on Windows (prevents UnicodeEncodeError with emoji in print())
-if sys.stdout.encoding != 'utf-8':
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
-if sys.stderr.encoding != 'utf-8':
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
-
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -49,13 +40,13 @@ if api_key:
     genai.configure(api_key=api_key)
 
 # Groq API key
-groq_api_key = os.environ.get("GROQ_API_KEY", "")
+groq_api_key = os.environ.get("GROQ_API_KEY", "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")
 groq_endpoint = "https://api.groq.com/openai/v1/chat/completions"
 
-# Gemini models to try in order (flash-lite first — most reliable for free tier)
+# Gemini models to try in order
 GEMINI_MODELS = [
-    "gemini-3.1-flash-lite",
     "gemini-2.5-flash",
+    "gemini-3.1-flash-lite", 
     "gemini-2.5-pro"
 ]
 
@@ -63,73 +54,54 @@ GEMINI_MODELS = [
 # SYSTEM PROMPT - COMPREHENSIVE ASSESSMENT AGENT
 # ============================================================================
 
-system_instruction = """You are the DRONA Assessment Agent — a world-class psychological and academic profiling AI embedded in India's most advanced personalized learning platform.
+system_instruction = """You are the "DRONA Assessment Agent" - an advanced psychological, academic and behavioral profiling AI for a personalized learning platform.
 
-You are NOT a survey bot. You are a clinical-grade cognitive profiler. Every question you ask must have strategic intent.
+## Your Mission
+Profile each student across 6 complementary dimensions:
+1. **Academic Profile**: Subject strengths/weaknesses, conceptual vs procedural understanding, and baseline mastery.
+2. **Learning Style**: Visual/auditory/kinesthetic/reading-writing preferences and multimodal mixes.
+3. **Psychological Profile**: Motivation type, resilience, attribution style, and confidence.
+4. **Emotional & Stress Response**: Anxiety triggers, coping strategies, exam-time affect, and regulation skills.
+5. **Personality & Behavioral Patterns**: Task persistence, help-seeking, social learning habits, and routine stability.
+6. **Metacognition & Preferences**: Self-monitoring, study strategies, memory techniques, and meta-preferences.
 
-## YOUR 6 PROFILING DIMENSIONS
-You must gather sufficient signal across ALL six before marking profile_complete.
+## Context
+The user has answered 7 baseline questions that provide seed signals across modality, resilience, motivation, attention, memory, and stress response. Use these baseline answers as the starting state but probe to fill gaps.
 
-1. **ACADEMIC / EDUCATIONAL**: Subject confidence, conceptual vs procedural thinking, knowledge depth, study habits, time management, preparation strategies, academic self-efficacy.
-2. **LEARNING STYLE & PREFERENCES**: Visual / auditory / kinesthetic / reading-writing modality mix, preferred content format, ideal study environment, solo vs collaborative, technology comfort.
-3. **PSYCHOLOGICAL PROFILE**: Growth vs fixed mindset, locus of control (internal/external), self-efficacy beliefs, imposter syndrome indicators, perfectionism tendencies, risk tolerance.
-4. **EMOTIONAL & STRESS RESPONSE**: Exam anxiety level, failure response pattern, emotional regulation, frustration tolerance, motivation under pressure, burnout susceptibility, coping mechanisms.
-5. **PERSONALITY & BEHAVIOR**: Conscientiousness, openness to experience, persistence/grit, social learning tendencies, competitiveness, help-seeking behavior, authority response.
-6. **METACOGNITION & SELF-AWARENESS**: Ability to self-assess understanding, calibration accuracy (do they know what they don't know?), revision strategies, attention monitoring, learning speed awareness.
+## Your Task - Generate 10-15 Adaptive Follow-Up Questions
+- Ask probing, scenario-based questions that deepen the profile in under-covered dimensions.
+- Use the baseline answers to create personalized follow-ups that reference user content (quote or paraphrase briefly).
+- Maintain a question mix: at least 40% text-only, up to 40% single-select, and remaining multi-select when appropriate.
 
-## CONTEXT
-The student has answered 7 baseline static questions covering: problem-solving reaction, learning modality preference, personal motivation, focus patterns, memory techniques, past academic failure, and pre-exam behavior. You now have INITIAL signals. Your job is to DIG DEEPER with 10-15 targeted follow-up questions.
+## Rules
+1. Respond ONLY in valid JSON - no conversational text outside the JSON object.
+2. Support three input types: "single-select" (radio), "multi-select" (checkboxes), "text-only" (textarea).
+3. Always include an optional elaboration field in the UI response schema (do not supply an "Other" option).
+4. Deeply analyze previous answers and the session.asked_questions list before proposing a new question.
+5. Deduplication: never repeat core intent. If a new question's semantic overlap with any earlier question exceeds 70%, replace it with a fresh probe.
+6. Ask a MINIMUM of 10 and a MAXIMUM of 15 dynamic follow-up questions. Track and report the count precisely.
+7. Set "profile_complete": true ONLY when you have robust signals across Academic + Psychological + Emotional + Metacognition dimensions.
 
-## CRITICAL RULES — OBEY WITHOUT EXCEPTION
-1. You MUST ask a MINIMUM of 10 dynamic questions and MAXIMUM of 15.
-2. NEVER set profile_complete to true before asking at least 10 questions.
-3. NEVER ask generic survey questions. Every question must be personalized based on previous answers.
-4. REFERENCE specific things the student said. Example: "Earlier you mentioned you break problems into smaller pieces — tell me, when that approach fails, what happens next?"
-5. Use SCENARIO-BASED and SOCRATIC questioning. Paint vivid situations. Make the student think, not just pick.
-6. Mix question types strategically:
-   - Use "text-only" for emotional/reflective probes (at least 3 of your questions).
-   - Use "single-select" for behavioral choice points (at least 3).
-   - Use "multi-select" for preference mapping (at least 2).
-7. NEVER repeat a question theme you've already explored. Track your own coverage.
-8. Ask questions that reveal DISCREPANCIES between stated preference and actual behavior.
-9. Probe HIDDEN factors: family pressure, peer comparison, imposter syndrome, perfectionism, fear of judgment.
-10. Respond ONLY with valid JSON. No text outside the JSON object.
-
-## QUESTIONING STRATEGY BY PHASE
-- Questions 1-3: Dig into the strongest signals from baseline (resilience, motivation, or anxiety).
-- Questions 4-6: Explore unexplored dimensions (personality, social learning, metacognition).
-- Questions 7-9: Probe hidden/sensitive areas (family expectations, self-doubt, emotional triggers).
-- Questions 10-12: Fill remaining dimension gaps and test for consistency.
-- Questions 13-15 (if needed): Confirm ambiguous signals, resolve contradictions.
-
-## JSON RESPONSE SCHEMA (STRICT — no deviation)
+## JSON Response Schema (STRICT):
 {
-  "thought_process": "[REQUIRED] Your internal reasoning: What dimension gap are you filling? What signal from their previous answers triggered this question? Be specific.",
-  "dimension_target": "[REQUIRED] Which of the 6 dimensions this question primarily targets.",
-  "questions_asked_so_far": <integer>,
-  "profile_complete": false,
-  "question": "The question text. Must be conversational, scenario-based, or Socratic. NOT survey-style.",
-  "type": "single-select" | "multi-select" | "text-only",
-  "options": ["Option A", "Option B", "Option C", "Option D"],
-  "reasoning": "What psychological construct or behavioral pattern are these options designed to measure?"
+    "thought_process": "Why you're asking this question based on their pattern so far. What gap are you filling?",
+    "questions_asked_so_far": 0,
+    "profile_complete": false,
+    "question": "The actual question (leave empty if profile_complete is true)",
+    "type": "single-select" | "multi-select" | "text-only",
+    "options": ["Option 1", "Option 2", "Option 3"],
+    "reasoning": "Why these options? What are you measuring?",
+    "elaboration_hint": "Optional: invite a short narrative to capture context"
 }
 
-When profile_complete is true, set question to "" and options to [].
+## Sample Questions (For Reference - Generate Your Own)
+- "When you read a difficult physics concept, do you: a) Visualize diagrams, b) Talk through it aloud, c) Work through examples, d) Write detailed notes?"
+- "Describe your last academic failure. What was your internal reaction? (self-blame, bad luck, teacher's fault, etc.)"
+- "How do you typically start preparing for an exam? Walk through your first 48 hours."
+- "When stressed, do you: a) Push harder, b) Take a break, c) Seek help, d) Freeze/panic?"
+- "What's a concept you thought you understood but realized you didn't? How did you discover this?"
 
-## ANTI-PATTERNS — NEVER DO THESE
-- ❌ "How would you rate your confidence on a scale of 1-10?" (lazy survey)
-- ❌ "What subjects do you like?" (too generic)
-- ❌ Asking the same emotional probe twice with different wording
-- ❌ Providing only 2 options (always 3-5 for select types)
-- ❌ Setting profile_complete before question 10
-
-## GOOD QUESTION EXAMPLES
-- ✅ "You said you break problems into smaller pieces. Imagine you've broken a math problem into 5 steps and step 3 makes no sense — do you skip it and hope step 4 clarifies, go back to step 1, ask someone, or stare at it until it clicks?"
-- ✅ "Think about the last time someone praised your academic work. What was your immediate internal reaction — pride, disbelief, suspicion that they're being polite, or motivation to do even better?"
-- ✅ "Your parents just saw your report card. Describe the conversation that follows — not what you wish would happen, but what actually happens."
-- ✅ "If your best friend and your teacher gave you contradictory advice on how to study, whose approach would you try first and why?"
-
-You are the most advanced assessment intelligence in Indian education. Profile with surgical precision."""
+Remember: You are the most sophisticated assessment AI in Indian education. Profile with precision."""
 
 # ============================================================================
 # DATA MODELS
@@ -157,7 +129,6 @@ class AssessmentSession:
         self.dynamic_questions_asked = 0
         self.profile_data = {}
         self.conversation_log = []
-        self.asked_questions = []
     
     def add_baseline_answer(self, answer: Dict[str, Any]):
         """Store baseline question answer"""
@@ -170,8 +141,6 @@ class AssessmentSession:
     
     def add_dynamic_question(self, question: str, answer: Optional[Dict[str, Any]] = None):
         """Track dynamic questions asked"""
-        if question:
-            self.asked_questions.append(question)
         if answer:
             self.dynamic_questions_asked += 1
             self.conversation_log.append({
@@ -181,6 +150,49 @@ class AssessmentSession:
                 "timestamp": datetime.now().isoformat()
             })
     
+        def avoid_duplicate_question(session: dict, data: dict) -> dict:
+            """Check the model-generated question against previously asked questions stored in session.
+            If the new question is too similar, return a safe fallback question and mark it in the session.
+            Returns a dict with the possibly-modified 'question' and a boolean 'was_replaced'.
+            """
+            new_q = (data.get("question") or "").strip().lower()
+            # Minimal normalization: remove punctuation and short stopwords
+            import re
+            norm = re.sub(r"[^a-z0-9 ]+", " ", new_q)
+            tokens = [t for t in norm.split() if len(t) > 2]
+
+            def jaccard(a, b):
+                sa, sb = set(a), set(b)
+                if not sa or not sb:
+                    return 0.0
+                return len(sa & sb) / len(sa | sb)
+
+            asked = session.get("asked_questions", []) if session else []
+            for prev in asked:
+                prev_q = re.sub(r"[^a-z0-9 ]+", " ", (prev or "").lower())
+                prev_tokens = [t for t in prev_q.split() if len(t) > 2]
+                score = jaccard(tokens, prev_tokens)
+                if score > 0.7:
+                    # Too similar — return a fallback probing question that is generic but useful
+                    fallback = {
+                        "question": "Can you give a specific recent example that illustrates what you just described?",
+                        "type": "text-only",
+                        "options": [],
+                        "was_replaced": True
+                    }
+                    # record the fallback to session asked questions
+                    try:
+                        session.setdefault("asked_questions", []).append(fallback["question"])
+                    except Exception:
+                        pass
+                    return fallback
+
+            # Not similar — record and return original
+            try:
+                session.setdefault("asked_questions", []).append(data.get("question"))
+            except Exception:
+                pass
+            return {"question": data.get("question"), "type": data.get("type"), "options": data.get("options", []), "was_replaced": False}
     def set_profile_complete(self):
         """Mark profile as complete and generate summary"""
         self.profile_data["complete"] = True
@@ -237,7 +249,7 @@ def call_groq_api(messages: list) -> str:
     }
     
     payload = {
-        "model": "llama-3.3-70b-versatile",
+        "model": "mixtral-8x7b-32768",
         "messages": messages,
         "temperature": 0.7,
         "max_tokens": 1500
@@ -283,104 +295,11 @@ def get_static_fallback_question(question_number: int = 1) -> dict:
             "question": "When you procrastinate, what's usually the underlying reason?",
             "type": "single-select",
             "options": ["Task seems too difficult", "Don't know where to start", "Lack of motivation", "Perfectionism (fear of not doing well)", "Distraction from other activities"]
-        },
-        {
-            "thought_process": "Exploring memory and recall patterns",
-            "questions_asked_so_far": 5,
-            "profile_complete": False,
-            "question": "How do you typically remember information best?",
-            "type": "single-select",
-            "options": ["Repeating it multiple times", "Teaching it to someone else", "Writing it down", "Creating mind maps", "Problem-solving with it"]
-        },
-        {
-            "thought_process": "Understanding emotional resilience",
-            "questions_asked_so_far": 6,
-            "profile_complete": False,
-            "question": "When you get a low grade, what's your typical reaction?",
-            "type": "text-only",
-            "options": []
-        },
-        {
-            "thought_process": "Assessing collaboration and help-seeking",
-            "questions_asked_so_far": 7,
-            "profile_complete": False,
-            "question": "Do you prefer learning alone or with others? Why?",
-            "type": "text-only",
-            "options": []
-        },
-        {
-            "thought_process": "Understanding time management habits",
-            "questions_asked_so_far": 8,
-            "profile_complete": False,
-            "question": "How far in advance do you typically start preparing for exams?",
-            "type": "single-select",
-            "options": ["1-2 days before", "1 week before", "2-3 weeks before", "Start of the topic", "As questions come up"]
-        },
-        {
-            "thought_process": "Exploring learning speed and depth preference",
-            "questions_asked_so_far": 9,
-            "profile_complete": False,
-            "question": "Do you prefer understanding concepts deeply or learning many topics quickly?",
-            "type": "single-select",
-            "options": ["Deep understanding (few topics)", "Broad knowledge (many topics)", "Mix of both equally"]
-        },
-        {
-            "thought_process": "Assessing achievement and goal orientation",
-            "questions_asked_so_far": 10,
-            "profile_complete": False,
-            "question": "What motivates you most in learning?",
-            "type": "single-select",
-            "options": ["High grades", "Understanding the subject", "Future career", "Personal curiosity", "Competing with peers"]
         }
     ]
     
-    # Use modulo to cycle through fallback questions if we go beyond the list
-    idx = (question_number - 1) % len(fallback_questions)
+    idx = min(question_number - 1, len(fallback_questions) - 1)
     return fallback_questions[idx]
-
-def summarize_baseline_answers(baseline_answers: List[Dict[str, Any]]) -> str:
-    """Create a compact baseline memory summary for prompting"""
-    baseline_labels = [
-        "Problem-solving reaction (resilience)",
-        "Learning modality preference (visual/auditory/kinesthetic/reading)",
-        "Personal definition of academic success (motivation)",
-        "Focus & distraction frequency (attention span)",
-        "Memory & retention methods (study strategy)",
-        "Past academic failure story (emotional resilience)",
-        "Pre-exam behavior (stress response)"
-    ]
-    lines = []
-    for idx, answer in enumerate(baseline_answers, start=1):
-        label = baseline_labels[idx - 1] if idx <= len(baseline_labels) else f"Question {idx}"
-        if isinstance(answer, dict):
-            lines.append(f"Q{idx} [{label}]: {json.dumps(answer, ensure_ascii=False)}")
-        else:
-            lines.append(f"Q{idx} [{label}]: {str(answer)}")
-    return "\n".join(lines)
-
-def avoid_duplicate_question(session: AssessmentSession, data: dict) -> dict:
-    """Check if the agent generated a duplicate question and request a new one if so.
-    Falls back to a static question if duplicate detected."""
-    new_question = data.get("question", "").strip().lower()
-    if not new_question:
-        return data
-    
-    # Check similarity against all previously asked questions
-    for asked in session.asked_questions:
-        asked_lower = asked.strip().lower()
-        # Exact match
-        if new_question == asked_lower:
-            print(f"⚠️  Duplicate question detected (exact match). Using fallback.")
-            return get_static_fallback_question(session.dynamic_questions_asked + 1)
-        # High substring overlap (one contains the other)
-        if len(new_question) > 20 and len(asked_lower) > 20:
-            if new_question in asked_lower or asked_lower in new_question:
-                print(f"⚠️  Duplicate question detected (substring match). Using fallback.")
-                return get_static_fallback_question(session.dynamic_questions_asked + 1)
-    
-    # Track this new question
-    session.asked_questions.append(data.get("question", ""))
-    return data
 
 # ============================================================================
 # API ENDPOINTS
@@ -409,7 +328,12 @@ async def init_agent(req: InitRequest):
     session_id = str(uuid.uuid4())
     session = AssessmentSession(session_id)
     
-    # Try each Gemini model with FULL inference test (creation alone doesn't validate quotas)
+    # Try Gemini models first, fallback to Groq
+    gemini_failed = False
+    gemini_error = None
+    model_used = None
+    
+    # Try each Gemini model in order
     for model_name in GEMINI_MODELS:
         try:
             model = genai.GenerativeModel(
@@ -417,8 +341,19 @@ async def init_agent(req: InitRequest):
                 system_instruction=system_instruction,
                 generation_config={"response_mime_type": "application/json"}
             )
-            
-            # Convert history to SDK format
+            model_used = model_name
+            break
+        except Exception as e:
+            print(f"⚠️  Gemini model {model_name} unavailable: {str(e)[:80]}...")
+            continue
+    
+    if not model_used:
+        gemini_failed = True
+        print(f"⚠️  All Gemini models unavailable, will use Groq fallback")
+    else:
+        try:
+        
+        # Convert history to SDK format
             formatted_history = []
             for msg in req.history:
                 formatted_history.append({
@@ -427,100 +362,63 @@ async def init_agent(req: InitRequest):
                 })
             
             # Create chat session
-            chat = model.start_chat(history=formatted_history)
+            session.chat = model.start_chat(history=formatted_history)
             
             # Store baseline answer
             session.add_baseline_answer(req.current_answer)
             
-            # Generate first dynamic question (THIS is where quota errors happen)
-            baseline_memory = summarize_baseline_answers(session.baseline_answers)
-            prompt = f"""The student has completed all 7 baseline static questions. Here is their complete baseline profile:
+            # Generate first dynamic question
+            prompt = f"""User has completed 10 baseline questions. Their last answer was: {json.dumps(req.current_answer)}
 
-{baseline_memory}
-
-Their final baseline answer was: {json.dumps(req.current_answer)}
-
-## YOUR TASK NOW
-You are entering the DYNAMIC PROFILING PHASE. You must ask 10-15 personalized follow-up questions.
-This is QUESTION 1 of your 10-15 questions.
-
-## ANALYZE BEFORE ASKING
-Look at all 7 baseline answers above. Identify:
-- The strongest signal (what stands out most about this student?)
-- The biggest gap (what do you still NOT know?)
-- Any contradictions or interesting patterns
-
-Then generate a question that SPECIFICALLY references something from their baseline answers and digs deeper into one of the 6 profiling dimensions.
-
-## DIMENSION COVERAGE SO FAR
-- Academic/Educational: Partially covered by baselines (need deeper probing)
-- Learning Style: Partially covered (Q2 baseline)
-- Psychological: Initial signal from Q1, Q6 baselines
-- Emotional/Stress: Initial signal from Q7 baseline
-- Personality/Behavior: NOT YET EXPLORED
-- Metacognition: NOT YET EXPLORED
-
-Start by targeting the dimension with the weakest signal."""
+Based on ALL their baseline answers and this final one, generate your FIRST dynamic probing question. 
+Remember: You are now in the agent phase. Ask a question that digs deeper into personality, academic confidence, or learning patterns.
+This is question 1 of approximately 10-15 you will ask."""
             
-            response = chat.send_message(prompt)
+            response = session.chat.send_message(prompt)
             data = parse_gemini_json(response.text)
             
             if not validate_json_response(data):
-                print(f"\u26a0\ufe0f  Invalid {model_name} response structure. Trying next model...")
-                session.baseline_answers.clear()  # Reset for next attempt
-                continue
-            
-            # SUCCESS — store session and return
-            session.chat = chat
-            session.add_dynamic_question(data.get("question", ""))
-            sessions[session_id] = session
-            
-            print(f"\u2705 {model_name}: Session initialized: {session_id}")
-            print(f"   Question 1: {data.get('question', '')[:80]}...")
-            
-            return {
-                "session_id": session_id,
-                "data": data,
-                "meta": {
-                    "baseline_answers_received": len(session.baseline_answers),
-                    "phase": "agent_dynamic",
-                    "model": model_name
+                print(f"⚠️  Invalid {model_used} response structure. Using fallback.")
+                gemini_failed = True
+            else:
+                session.add_dynamic_question(data.get("question", ""))
+                sessions[session_id] = session
+                
+                print(f"✅ {model_used}: Session initialized: {session_id}")
+                print(f"   Question 1: {data.get('question', '')[:80]}...")
+                
+                return {
+                    "session_id": session_id,
+                    "data": data,
+                    "meta": {
+                        "baseline_answers_received": len(session.baseline_answers),
+                        "phase": "agent_dynamic",
+                        "model": model_used
+                    }
                 }
-            }
-            
         except Exception as e:
-            print(f"\u26a0\ufe0f  {model_name} failed: {str(e)[:120]}...")
-            session.baseline_answers.clear()  # Reset for next attempt
-            continue
-    
-    # All Gemini models failed — set flag for Groq fallback
-    gemini_failed = True
-    print(f"\u26a0\ufe0f  All Gemini models exhausted, trying Groq fallback")
+            gemini_error = str(e)
+            print(f"⚠️  {model_used} failed: {gemini_error[:100]}...")   
+            gemini_failed = True
     # Fallback to Groq
     if gemini_failed:
         try:
             session.add_baseline_answer(req.current_answer)
-            baseline_memory = summarize_baseline_answers(session.baseline_answers)
             
-            prompt = f"""You are the DRONA Assessment Agent. A student just completed 7 baseline psychological and academic questions.
-Baseline memory:
-{baseline_memory}
-
+            prompt = f"""You are the DRONA Assessment Agent. A student just completed 10 baseline psychological questions.
 Their final answer was: {json.dumps(req.current_answer)}
 
-Now generate your FIRST dynamic follow-up question that digs deeper into their learning style, resilience, personality, or academic confidence.
-This is question 1 of 10-15 total. Reference something from their baseline answers. Make it scenario-based, not survey-style.
+Now generate your FIRST dynamic follow-up question that digs deeper into their learning style, resilience, or academic confidence.
+This is question 1 of about 10-15 total. Make it probing but natural.
 
 Respond ONLY with valid JSON (no text before/after):
 {{
-  "thought_process": "What signal from baselines triggered this question",
-  "dimension_target": "Which of the 6 dimensions this targets",
+  "thought_process": "...",
   "questions_asked_so_far": 1,
   "profile_complete": false,
-  "question": "A specific, personalized question referencing their answers",
+  "question": "...",
   "type": "text-only",
-  "options": [],
-  "reasoning": "What psychological construct this measures"
+  "options": []
 }}"""
             
             messages = [
@@ -597,62 +495,16 @@ async def next_question(req: NextRequest):
         session.add_dynamic_question("", req.current_answer)
         
         # Generate next question
-        asked_questions_text = "\n".join(
-            f"  {i+1}. {question}" for i, question in enumerate(session.asked_questions)
-        ) or "- None yet"
+        prompt = f"""The user just answered: {json.dumps(req.current_answer)}
 
-        questions_asked = session.dynamic_questions_asked
-        remaining_min = max(0, 10 - questions_asked)
-        remaining_max = max(0, 15 - questions_asked)
+You have asked {session.dynamic_questions_asked} question(s) so far. 
+Continue probing to complete their psychological and academic profile.
+Generate your next question based on their pattern of answers.
 
-        prompt = f"""The student just answered your question: {json.dumps(req.current_answer)}
-
-## STATUS
-- Dynamic questions asked so far: {questions_asked}
-- Minimum remaining: {remaining_min}
-- Maximum remaining: {remaining_max}
-- {"You MUST ask at least " + str(remaining_min) + " more questions before you can complete the profile." if remaining_min > 0 else "You MAY set profile_complete to true IF all 6 dimensions are sufficiently covered."}
-
-## ALL QUESTIONS YOU HAVE ALREADY ASKED (DO NOT REPEAT OR REPHRASE)
-{asked_questions_text}
-
-## BASELINE MEMORY (7 static questions the student answered before you)
-{summarize_baseline_answers(session.baseline_answers)}
-
-## YOUR TASK
-Generate question {questions_asked + 1}. Requirements:
-1. Target a DIFFERENT dimension than your last 2 questions.
-2. REFERENCE something specific the student said (from baseline or dynamic answers).
-3. Use scenario-based, Socratic, or indirect questioning — NOT survey-style.
-4. If this is question 7+, start probing HIDDEN factors: family pressure, peer comparison, imposter syndrome, perfectionism, fear of judgment.
-5. If this is question 10+, check if you have sufficient data across ALL 6 dimensions. If yes, set profile_complete to true.
-
-## PROFILE COMPLETION CHECKLIST (only mark complete when ALL are covered)
-- [ ] Academic confidence and study habits explored
-- [ ] Learning modality validated beyond stated preference
-- [ ] Psychological resilience and mindset assessed
-- [ ] Emotional triggers and stress patterns identified
-- [ ] Personality traits and social learning style captured
-- [ ] Metacognitive self-awareness evaluated
-
-If any dimension above has insufficient data, continue asking. If all are covered and you've asked 10+ questions, set profile_complete to true."""
+If you have asked 10+ questions and feel you have a complete profile, set profile_complete to true."""
         
-        try:
-            response = session.chat.send_message(prompt)
-            data = parse_gemini_json(response.text)
-            source = "gemini"
-        except Exception as gemini_error:
-            print(f"⚠️  Gemini next_question failed: {str(gemini_error)[:120]}...")
-            try:
-                response_text = call_groq_api([
-                    {"role": "user", "content": prompt + "\n\nReturn only valid JSON. Make the question DIFFERENT from previous ones."}
-                ])
-                data = parse_gemini_json(response_text)
-                source = "groq"
-            except Exception as groq_error:
-                print(f"⚠️  Groq next_question failed: {str(groq_error)[:120]}...")
-                data = get_static_fallback_question(session.dynamic_questions_asked + 1)
-                source = "static-fallback"
+        response = session.chat.send_message(prompt)
+        data = parse_gemini_json(response.text)
         
         if not validate_json_response(data):
             print(f"⚠️  Invalid response structure. Using fallback.")
@@ -673,8 +525,6 @@ If any dimension above has insufficient data, continue asking. If all are covere
                     "type": "text-only",
                     "options": []
                 }
-        else:
-            data = avoid_duplicate_question(session, data)
         
         # Update session if profile complete
         if data.get("profile_complete"):
@@ -687,8 +537,7 @@ If any dimension above has insufficient data, continue asking. If all are covere
             "meta": {
                 "session_id": req.session_id,
                 "total_questions_asked": session.dynamic_questions_asked,
-                "phase": "agent_dynamic",
-                "model": source
+                "phase": "agent_dynamic"
             }
         }
         

@@ -2,87 +2,124 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Logo from "@/components/ui/Logo";
+import { createClient } from "@/lib/supabase/client";
 
 export default function Dashboard() {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [userName, setUserName] = useState("Scholar");
+
+  useEffect(() => {
+    setMounted(true);
+    const fetchUser = async () => {
+      try {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user?.user_metadata?.full_name) {
+          setUserName(user.user_metadata.full_name.split(" ")[0]);
+        }
+      } catch { /* fallback */ }
+    };
+    fetchUser();
+  }, []);
 
   if (!mounted) return null;
 
+  const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
   return (
-    <div className="flex h-screen w-full bg-surface-container-lowest text-on-surface font-body">
-      {/* Sidebar */}
-      <aside className="w-64 border-r border-outline-variant/20 bg-surface-container-lowest p-6 flex flex-col h-full shrink-0 hidden md:flex">
-        <Link href="/" className="flex items-center gap-3 group mb-10">
-          <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center shadow-md border border-white/10 group-hover:scale-105 transition-transform">
-            <span className="text-white font-serif font-bold text-xl">D</span>
-          </div>
-          <span className="font-serif font-black text-2xl tracking-tighter text-black">
-            DRONA<sup className="text-[0.5em] text-primary font-sans tracking-normal ml-0.5">AI</sup>
-          </span>
-        </Link>
-
-        <nav className="flex-1 space-y-2">
-          {["Dashboard", "Study Modules", "Assessments", "Analytics", "Settings"].map((item, i) => (
-            <button key={item} className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition-all ${i === 0 ? "bg-primary text-white shadow-md" : "text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface"}`}>
-              {item}
-              {i === 0 && <span className="material-symbols-outlined text-[18px]">chevron_right</span>}
-            </button>
-          ))}
-        </nav>
-
-        <div className="pt-6 border-t border-outline-variant/20">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
-              U
+    <main className="w-full max-w-[1400px] mx-auto px-6 lg:px-12 py-10 animate-fadeIn transition-all duration-300">
+         
+         <div className="mb-12">
+            <h1 className="font-display font-black text-4xl md:text-5xl lg:text-6xl text-on-surface tracking-tight mb-4">Learning Dashboard</h1>
+            <div className="flex flex-wrap items-center gap-3 text-on-surface-variant text-sm md:text-base">
+               <span className="font-medium">{today}</span>
+               <span className="text-outline/40">•</span>
+               <span className="font-medium">Peak Cognitive Window</span>
+               <span className="ml-auto px-4 py-1.5 bg-primary text-white text-[11px] md:text-xs font-bold rounded-full uppercase tracking-wider shadow-md">
+                 Phase: Active Mastery
+               </span>
             </div>
-            <div>
-              <p className="text-sm font-bold text-on-surface">Student Workspace</p>
-              <p className="text-xs text-on-surface-variant">Active Session</p>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 p-8 md:p-12 overflow-y-auto bg-surface-container-lowest animate-[fadeIn_0.5s_ease]">
-        <header className="flex justify-between items-center mb-10">
-          <div>
-            <h1 className="font-display font-bold text-3xl mb-1 text-on-surface">Welcome back.</h1>
-            <p className="text-on-surface-variant">Here is an overview of your learning progress.</p>
-          </div>
-          <button className="hidden md:flex items-center gap-2 px-6 py-3 bg-white border border-outline-variant/30 shadow-sm rounded-xl font-bold text-sm hover:bg-gray-50 transition-colors">
-            <span className="material-symbols-outlined text-[18px]">notifications</span>
-            Updates
-          </button>
-        </header>
-
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {[
-            { title: "Current Module", value: "Advanced Mathematics", icon: "school", color: "bg-blue-50 text-blue-600 border-blue-100" },
-            { title: "Assessments Pending", value: "2", icon: "assignment", color: "bg-purple-50 text-purple-600 border-purple-100" },
-            { title: "Accuracy Score", value: "87%", icon: "trending_up", color: "bg-green-50 text-green-600 border-green-100" }
-          ].map(stat => (
-            <div key={stat.title} className="bg-white p-6 rounded-3xl border border-outline-variant/20 shadow-sm hover:shadow-md transition-shadow">
-              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 border ${stat.color}`}>
-                <span className="material-symbols-outlined">{stat.icon}</span>
+         </div>
+         
+         <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+            
+            {/* ─── Tactical Analysis (8-col) ─── */}
+            <div className="xl:col-span-8 bg-white/90 backdrop-blur-xl border border-outline-variant/30 rounded-[2rem] p-8 md:p-10 shadow-sm relative overflow-hidden border-t-4 border-t-primary group">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+              
+              <div className="flex items-center gap-3 mb-6 relative z-10">
+                <span className="material-symbols-outlined text-primary text-3xl">insights</span>
+                <h3 className="font-display text-2xl md:text-3xl font-bold text-on-surface">Daily Tactical Analysis</h3>
               </div>
-              <p className="text-on-surface-variant text-sm font-bold mb-1 uppercase tracking-wider">{stat.title}</p>
-              <p className="font-display text-2xl font-black text-on-surface">{stat.value}</p>
+              
+              <p className="text-on-surface-variant text-lg leading-relaxed mb-10 relative z-10 font-medium">
+                "Your cognitive baseline is established, but active learning data is required to generate tactical insights. I recommend initiating your first focused sprint to begin mapping your neural pathways and precision metrics."
+              </p>
+              
+              <div className="flex flex-wrap gap-4 relative z-10">
+                <button className="bg-primary text-white px-8 py-3.5 rounded-xl font-bold text-sm hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/20 transition-all cursor-pointer relative overflow-hidden group/btn">
+                  <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover/btn:animate-[shimmer_1.5s_infinite]" />
+                  Start First Sprint
+                </button>
+                <button className="bg-white border-2 border-outline-variant/20 text-on-surface px-8 py-3.5 rounded-xl font-bold text-sm hover:-translate-y-1 hover:shadow-md hover:border-primary/40 transition-all cursor-pointer">
+                  View Full Analysis
+                </button>
+              </div>
             </div>
-          ))}
-        </div>
-
-        {/* Dummy Chart Area */}
-        <div className="bg-white p-8 rounded-3xl border border-outline-variant/20 shadow-sm min-h-[400px] flex flex-col items-center justify-center">
-          <div className="w-24 h-24 rounded-full bg-surface-container-low flex items-center justify-center mb-6">
-            <span className="material-symbols-outlined text-4xl text-on-surface-variant">insights</span>
-          </div>
-          <h2 className="font-display text-xl font-bold mb-2">Learning Analytics</h2>
-          <p className="text-on-surface-variant text-center max-w-md">Your recent test performance and memory retention charts will be displayed here once you complete your first assessment.</p>
-        </div>
+            
+            {/* ─── Live Metrics (4-col) ─── */}
+            <div className="xl:col-span-4 bg-white border border-outline-variant/30 rounded-[2rem] p-8 md:p-10 shadow-sm">
+              <h3 className="font-display text-2xl font-bold text-on-surface mb-8">Live Metrics</h3>
+              
+              <div className="space-y-8">
+                <div>
+                  <div className="flex justify-between text-sm font-bold mb-3">
+                    <span className="text-on-surface-variant">Precision</span>
+                    <span className="text-primary font-mono tracking-tight">--%</span>
+                  </div>
+                  <div className="w-full h-2.5 bg-surface-container-high rounded-full overflow-hidden">
+                    <div className="h-full bg-primary w-0 rounded-full" />
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between text-sm font-bold mb-3">
+                    <span className="text-on-surface-variant">Velocity</span>
+                    <span className="text-tertiary font-mono tracking-tight">--x</span>
+                  </div>
+                  <div className="w-full h-2.5 bg-surface-container-high rounded-full overflow-hidden">
+                    <div className="h-full bg-tertiary w-0 rounded-full" />
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between text-sm font-bold mb-3">
+                    <span className="text-on-surface-variant">Depth</span>
+                    <span className="text-[#001454] font-mono tracking-tight">Level 0</span>
+                  </div>
+                  <div className="w-full h-2.5 bg-surface-container-high rounded-full overflow-hidden">
+                    <div className="h-full bg-[#001454] w-0 rounded-full" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* ─── Today's Blueprint (12-col) ─── */}
+            <div className="col-span-1 xl:col-span-12 bg-white border border-outline-variant/30 rounded-[2rem] p-8 md:p-10 shadow-sm">
+              <h3 className="font-display text-2xl font-bold text-on-surface mb-8">Today's Blueprint</h3>
+              
+              <div className="flex flex-col items-center justify-center py-16 text-center border-2 border-dashed border-outline-variant/20 rounded-2xl bg-surface-container-lowest/50">
+                <div className="w-16 h-16 rounded-2xl bg-surface-container-low flex items-center justify-center mb-4">
+                  <span className="material-symbols-outlined text-3xl text-outline-variant">event_busy</span>
+                </div>
+                <h4 className="font-display text-lg font-bold text-on-surface mb-2">No active sprints</h4>
+                <p className="text-on-surface-variant text-sm max-w-sm">Your blueprint is empty. Start a new learning sprint to populate your daily schedule and orchestrate your agents.</p>
+              </div>
+            </div>
+            
+         </div>
       </main>
-    </div>
   );
 }
