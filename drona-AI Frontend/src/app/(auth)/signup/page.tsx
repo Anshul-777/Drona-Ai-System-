@@ -43,6 +43,7 @@ export default function SignupPage() {
   const [examTarget, setExamTarget] = useState<ExamTarget | null>(null);
   const [studentState, setStudentState] = useState("");
   const [boardType, setBoardType] = useState<BoardType | null>(null);
+  const [acceptTerms, setAcceptTerms] = useState(false);
 
   // OTP
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -111,6 +112,7 @@ export default function SignupPage() {
     if (!examTarget) { setFormErr("Select your exam target."); return; }
     if (!studentState) { setFormErr("Select your state."); return; }
     if (CLASS_TARGETS.includes(examTarget) && !boardType) { setFormErr("Select your board type."); return; }
+    if (!acceptTerms) { setFormErr("You must accept the Terms & Conditions."); return; }
     setFormErr("");
     if (nameErr || emailErr || phoneErr || pwErr || cpwErr || !fullName || !email || !password || !confirmPw) return;
 
@@ -274,6 +276,16 @@ export default function SignupPage() {
                 )}
 
                 {formErr && <p className="text-xs text-error mt-2 flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">error</span>{formErr}</p>}
+
+                {/* Terms Checkbox */}
+                <label className="flex items-start gap-3 mt-6 mb-2 cursor-pointer group">
+                  <div className="pt-0.5">
+                    <input type="checkbox" required checked={acceptTerms} onChange={e => { setAcceptTerms(e.target.checked); setFormErr(""); }} className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20 transition-colors cursor-pointer" />
+                  </div>
+                  <span className="text-xs text-on-surface-variant group-hover:text-on-surface transition-colors leading-relaxed">
+                    I agree to the <Link href="/terms" className="font-bold text-primary hover:underline">Terms of Service</Link> and <Link href="/privacy" className="font-bold text-primary hover:underline">Privacy Policy</Link>.
+                  </span>
+                </label>
 
                 {/* Submit */}
                 <button disabled={loading} type="submit"

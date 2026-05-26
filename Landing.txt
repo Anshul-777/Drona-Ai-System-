@@ -1,0 +1,2016 @@
+// MyComponent.tsx
+//import React, { useState } from 'react';
+import React, { useEffect } from "react";
+import './MyStyle.css'; // CSS yahan import hogi
+import { Link } from "react-router-dom";
+
+const Landing = () => {
+ useEffect(() => {
+
+    // nav scroll
+    const nav = document.getElementById("nav");
+
+    window.addEventListener("scroll", () => {
+      nav?.classList.toggle("scrolled", window.scrollY > 40);
+    });
+
+    // rotor
+    const rotorData = [
+      {
+        tag: "PYQ",
+        t: "Predictor",
+        d: "Predicts next year's paper from 20-yr trends + global news patterns.",
+        img: "1606326608606-aa0b62935f2b",
+      },
+      {
+        tag: "RAG",
+        t: "Smart-Search",
+        d: "Searches only verified academic sources — NCERT, Resnick, Cengage.",
+        img: "1456513080510-7bf3a84b82f8",
+      },
+    ];
+
+    const rotorEl = document.getElementById("rotorTrack");
+
+    if (rotorEl) {
+      const card = (c: any, i: number) => `
+        <div class="rotor-card">
+          <img 
+            loading="lazy" 
+            src="https://images.unsplash.com/photo-${c.img}?w=560&q=70&auto=format&fit=crop" 
+            alt="${c.t}"
+          />
+          <span class="rc-num">
+            ${String(i + 1).padStart(2, "0")}
+          </span>
+
+          <div class="rotor-inner">
+            <span class="rc-tag">${c.tag}</span>
+
+            <div>
+              <h5>${c.t}</h5>
+              <div class="rc-desc">${c.d}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      rotorEl.innerHTML = [...rotorData, ...rotorData]
+        .map((c, i) => card(c, i % rotorData.length))
+        .join("");
+    }
+
+    // reveal
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("in");
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+    // faq
+    document.querySelectorAll(".faq-q").forEach((q) => {
+      q.addEventListener("click", () => {
+        q.parentElement?.classList.toggle("open");
+      });
+    });
+
+    // pages
+    const pages = document.querySelectorAll(".page, #page-home");
+
+    const go = (target: string) => {
+      pages.forEach((p) => p.classList.remove("active"));
+
+      if (target === "home") {
+        const home = document.getElementById("page-home");
+
+        if (home) {
+          home.style.display = "block";
+        }
+
+        pages.forEach((p) => {
+          if (p.id !== "page-home") {
+            (p as HTMLElement).style.display = "none";
+          }
+        });
+
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+
+        return;
+      }
+
+      const home = document.getElementById("page-home");
+
+      if (home) {
+        home.style.display = "none";
+      }
+
+      const t = document.getElementById("page-" + target);
+
+      if (t) {
+        pages.forEach((p) => {
+          if (p.id !== "page-home") {
+            (p as HTMLElement).style.display = "none";
+          }
+        });
+
+        t.style.display = "block";
+        t.classList.add("active");
+
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+    };
+
+    document.addEventListener("click", (e: any) => {
+      const a = e.target.closest("[data-nav]");
+
+      if (!a) return;
+
+      e.preventDefault();
+
+      go(a.dataset.nav);
+    });
+
+    // menu dropdown
+    const menuToggle = document.getElementById("menuToggle");
+    const navDropdown = document.getElementById("navDropdown");
+
+    if (menuToggle && navDropdown) {
+      menuToggle.addEventListener("click", () => {
+        menuToggle.classList.toggle("open");
+        navDropdown.classList.toggle("active");
+      });
+
+      document.addEventListener("click", (e: any) => {
+        if (
+          !e.target.closest('[id="menuToggle"]') &&
+          !e.target.closest('[id="navDropdown"]')
+        ) {
+          menuToggle.classList.remove("open");
+          navDropdown.classList.remove("active");
+        }
+      });
+    }
+
+    // contact form
+    const contactLink = document.getElementById("contactLink");
+    const contactModal = document.getElementById("contactModal");
+    const closeContact = document.getElementById("closeContact");
+    const contactForm = document.getElementById(
+      "contactForm"
+    ) as HTMLFormElement | null;
+
+    if (contactLink && contactModal) {
+      contactLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        contactModal.classList.add("open");
+      });
+    }
+
+    if (closeContact && contactModal) {
+      closeContact.addEventListener("click", () => {
+        contactModal.classList.remove("open");
+      });
+    }
+
+    if (contactModal) {
+      contactModal.addEventListener("click", (e: any) => {
+        if (e.target === contactModal) {
+          contactModal.classList.remove("open");
+        }
+      });
+    }
+
+    if (contactForm) {
+      contactForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(contactForm);
+
+        const data = {
+          name: formData.get("name"),
+          email: formData.get("email"),
+          subject: formData.get("subject"),
+          message: formData.get("message"),
+          to: "anshulrathod999@gmail.com",
+        };
+
+        try {
+          const res = await fetch("/api/send-email", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+
+          if (res.ok) {
+            document
+              .getElementById("formSuccess")
+              ?.classList.add("show");
+
+            contactForm.reset();
+
+            setTimeout(() => {
+              contactModal?.classList.remove("open");
+
+              document
+                .getElementById("formSuccess")
+                ?.classList.remove("show");
+            }, 2500);
+          } else {
+            throw new Error("Failed");
+          }
+        } catch (err) {
+          console.error("Email send failed", err);
+
+          alert(
+            "Failed to send. Please try again or email us directly."
+          );
+        }
+      });
+    }
+
+  }, []);
+
+
+
+  return (
+  <div className="container"   style={{
+    width: "100%",
+    overflowX: "hidden",
+    margin: 0,
+    padding: 0,
+    maxWidth: "100%",
+  }}>
+
+    <nav className="nav" id="nav">
+      <div className="wrap nav-row">
+
+        <a className="brand" data-nav="home">
+          <span className="brand-mark">D</span>
+          <span>
+            DRONA
+            <sup style={{ fontSize: ".5em", color: "var(--accent)" }}>
+              AI
+            </sup>
+          </span>
+        </a>
+
+        <div className="nav-links">
+          <a data-nav="home">Overview</a>
+          <a href="#features">Features</a>
+          <a href="#environments">Environments</a>
+          <a href="#agents">Agents</a>
+          <a href="#journey">Journey</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#about">About</a>
+        </div>
+
+        <div className="nav-cta">
+
+          <button className="nav-menu-btn" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          <div className="nav-dropdown" id="navDropdown">
+
+            <div className="nav-dropdown-group">
+              <div className="nav-dropdown-title">Environments</div>
+
+              <a className="nav-dropdown-item" data-nav="env-main">
+                🎓 Main Learning
+              </a>
+
+              <a className="nav-dropdown-item" data-nav="env-test">
+                📝 Test &amp; Exams
+              </a>
+
+              <a className="nav-dropdown-item" data-nav="env-game">
+                🎮 Game Arena
+              </a>
+
+              <a className="nav-dropdown-item" data-nav="env-workspace">
+                🗂️ Workspace
+              </a>
+
+              <a className="nav-dropdown-item" data-nav="env-resources">
+                🛠️ Resources
+              </a>
+
+              <a className="nav-dropdown-item" data-nav="env-career">
+                🚀 Career Path
+              </a>
+            </div>
+
+            <div className="nav-dropdown-group">
+              <div className="nav-dropdown-title">Account</div>
+
+              <a className="nav-dropdown-item">Log In</a>
+
+              <a className="nav-dropdown-item" id="contactLink">
+                Get in Touch
+              </a>
+            </div>
+          </div>
+<Link to="/login" className="btn btn-ghost">
+  Log In
+</Link>
+            <Link to="/RegisterPage" className="btn btn-dark">
+            Begin Assessment
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M5 12h14M13 5l7 7-7 7"></path>
+            </svg>
+          </Link>
+        </div>
+      </div>
+    </nav>
+
+    <div id="page-home">
+
+      <section className="hero">
+
+        <div className="hero-bg">
+          <div className="hero-grid"></div>
+
+          <div className="hero-orb orb-1"></div>
+          <div className="hero-orb orb-2"></div>
+          <div className="hero-orb orb-3"></div>
+
+          <svg
+            viewBox="0 0 1600 900"
+            preserveAspectRatio="xMidYMid slice"
+            style={{ position: "absolute", inset: 0 }}
+          >
+            <defs>
+              <linearGradient id="lg1" x1="0" x2="1" y1="0" y2="1">
+                <stop
+                  offset="0"
+                  stopColor="#2a5cff"
+                  stopOpacity=".06"
+                ></stop>
+
+                <stop
+                  offset="1"
+                  stopColor="#9b5de5"
+                  stopOpacity=".02"
+                ></stop>
+              </linearGradient>
+            </defs>
+
+            <path
+              d="M0,650 Q400,500 800,600 T1600,580 L1600,900 L0,900 Z"
+              fill="url(#lg1)"
+            ></path>
+
+            <path
+              d="M0,720 Q400,620 800,700 T1600,680"
+              stroke="#2a5cff"
+              strokeWidth=".5"
+              fill="none"
+              opacity=".2"
+            ></path>
+          </svg>
+        </div>
+
+        <div className="hero-inner wrap">
+
+          <div className="hero-grid-2">
+
+            <div>
+
+              <span className="kicker">
+                <span className="dot"></span>
+                India's Complete Learning Platform
+              </span>
+
+              <h1 className="hero-title">
+
+                <span className="line">
+                  <span className="word">Your</span>
+
+                  <span
+                    className="word"
+                    style={{ animationDelay: ".06s" }}
+                  >
+                    <em>personal</em>
+                  </span>
+                </span>
+
+                <span className="line">
+                  <span
+                    className="word"
+                    style={{ animationDelay: ".12s" }}
+                  >
+                    teaching
+                  </span>
+
+                  <span
+                    className="word"
+                    style={{ animationDelay: ".18s" }}
+                  >
+                    faculty,
+                  </span>
+                </span>
+
+                <span className="line">
+                  <span
+                    className="word"
+                    style={{ animationDelay: ".24s" }}
+                  >
+                    available
+                  </span>
+
+                  <span
+                    className="word"
+                    style={{ animationDelay: ".30s" }}
+                  >
+                    <em>always.</em>
+                  </span>
+                </span>
+
+              </h1>
+
+              <p className="hero-sub">
+                Learn from an extraordinary team of AI tutors who remember every concept you master, every doubt you ask, and personalize every lesson just for you. Six powerful environments. 100+ transformative features. Your learning journey, reimagined.
+              </p>
+
+              <div className="hero-cta">
+
+                <a className="btn btn-dark">
+                  Begin Your Transformation
+
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M5 12h14M13 5l7 7-7 7"></path>
+                  </svg>
+                </a>
+
+                <a className="btn btn-ghost">
+                  Explore Features
+                </a>
+
+              </div>
+
+              <div className="hero-meta">
+
+                <div className="m">
+                  <b>100+</b>
+                  <span>Interconnected Features</span>
+                </div>
+
+                <div className="m">
+                  <b>06</b>
+                  <span>Specialized Environments</span>
+                </div>
+
+                <div className="m">
+                  <b>25+</b>
+                  <span>Expert AI Agents</span>
+                </div>
+
+                <div className="m">
+                  <b>∞</b>
+                  <span>Adaptive Learning</span>
+                </div>
+
+              </div>
+            </div>
+
+            <div className="hero-visual" aria-hidden="true">
+
+              <div className="hero-photo">
+
+                <div className="hp-main">
+
+                  <img
+                    src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=900&q=80&auto=format&fit=crop"
+                    alt="Students learning with AI"
+                  />
+
+                  <div className="hp-badge">
+                    <span className="d"></span>
+                    Live · 12,400 learners
+                  </div>
+                </div>
+
+                <div className="hp-sub hp-sub-1">
+                  <img
+                    src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=500&q=80&auto=format&fit=crop"
+                    alt="AI workspace"
+                  />
+                </div>
+
+                <div className="hp-sub hp-sub-2">
+                  <img
+                    src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=500&q=80&auto=format&fit=crop"
+                    alt="Library"
+                  />
+                </div>
+
+                <div className="hp-card">
+
+                  <div className="hp-row">
+                    <span
+                      className="hp-dot"
+                      style={{ background: "#2a5cff" }}
+                    ></span>
+
+                    Physics · momentum doubt resolved
+                  </div>
+
+                  <div className="hp-row">
+                    <span
+                      className="hp-dot"
+                      style={{ background: "#00c896" }}
+                    ></span>
+
+                    Maths · 7-day mastery curve +12%
+                  </div>
+
+                  <div className="hp-row">
+                    <span
+                      className="hp-dot"
+                      style={{ background: "#ff4d2a" }}
+                    ></span>
+
+                    Mock JEE · predicted rank 4,820
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+    <div className="marquee">
+  <div className="marquee-track">
+    <span>Personalized</span><span>·</span><span><em>Adaptive</em></span><span>·</span><span><em>Intelligent</em></span><span>·</span><span>Multi-agent</span><span>·</span><span>Memory-rich</span><span>·</span><span>Your data, your control</span><span>·</span><span><em>Always learning</em></span><span>·</span><span>Results-driven</span><span>·</span>
+    <span>Personalized</span><span>·</span><span><em>Adaptive</em></span><span>·</span><span><em>Intelligent</em></span><span>·</span><span>Multi-agent</span><span>·</span><span>Memory-rich</span><span>·</span><span>Your data, your control</span><span>·</span><span><em>Always learning</em></span><span>·</span><span>Results-driven</span><span>·</span>
+  </div>
+</div>
+
+  </div>
+<section>
+  <div className="wrap">
+    <div className="sec-head reveal in">
+      <div className="left">
+        <div className="num">— 01 / Mastery</div>
+        <h2>The core <em>capabilities</em><br />that deliver results.</h2>
+      </div>
+
+      <div className="right"><span className="eyebrow">10 Transformative Features</span><p style={{ marginTop: "14px"}}>Every core capability is engineered to accelerate learning while making the experience personal, engaging, and memorable. Use them in conversation, or let our intelligent system invoke them automatically.</p></div>
+    </div>
+    <div className="top-feat reveal in"><div className="card tf-1 tf-big"><div><span className="num">01</span><div className="tag">CORE</div><h3>Multi-Agent Tutor System</h3><p>A Head Agent and specialised subject agents collaborate in a backend ‘Teachers Lounge’ — debating, planning, and adapting your curriculum in real-time.</p></div>
+   <div
+  style={{
+    marginTop: "auto",
+    fontFamily: "var(--ff-mono)",
+    fontSize: ".7rem",
+    letterSpacing: ".16em",
+    color: "var(--ink-40)",
+    textTransform: "uppercase",
+  }}
+>Learn more →</div></div><div className="card tf-2"><div><span className="num">02</span><div className="tag">MEMORY</div>
+<h3>Complete Learning Memory</h3>
+<p>Every question you ask, every mistake you make, every concept you master — remembered perfectly. Your tutors recall exactly what you struggled with and build on it.</p></div>
+<div
+  style={{
+    marginTop: "auto",
+    fontFamily: "var(--ff-mono)",
+    fontSize: ".7rem",
+    letterSpacing: ".16em",
+    color: "var(--ink-40)",
+    textTransform: "uppercase",
+  }}
+>Learn more →</div></div><div className="card tf-3"><div><span className="num">03</span><div className="tag">RESOURCES</div>
+<h3>Instant Problem Solver</h3><p>Stuck on a Physics problem or complex calculation? Snap a photo and get a detailed, step-by-step solution with formula explanations instantly.</p></div>
+<div
+  style={{
+    marginTop: "auto",
+    fontFamily: "var(--ff-mono)",
+    fontSize: ".7rem",
+    letterSpacing: ".16em",
+    color: "var(--ink-40)",
+    textTransform: "uppercase",
+  }}
+>Learn more →</div></div><div className="card tf-4"><div><span className="num">04</span><div className="tag">FLOW</div>
+<h3>Your Personal Knowledge Canvas</h3>
+<p>Draw, write, and connect ideas on your digital whiteboard. AI transforms your sketches into organized notes, diagrams, and concept maps.</p></div>
+<div
+  style={{
+    marginTop: "auto",
+    fontFamily: "var(--ff-mono)",
+    fontSize: ".7rem",
+    letterSpacing: ".16em",
+    color: "var(--ink-40)",
+    textTransform: "uppercase",
+  }}
+>Learn more →</div></div><div className="card tf-5"><div><span className="num">05</span><div className="tag">TEST</div><h3>Real Exam Predictor</h3><p>Take realistic mock tests that evolve with your preparation. See your predicted rank, identify weak spots, and master the exact question types that appear in actual exams.</p></div>
+<div
+  style={{
+    marginTop: "auto",
+    fontFamily: "var(--ff-mono)",
+    fontSize: ".7rem",
+    letterSpacing: ".16em",
+    color: "var(--ink-40)",
+    textTransform: "uppercase",
+  }}
+>Learn more →</div></div><div className="card tf-6"><div><span className="num">06</span><div className="tag">STATS</div><h3>Your Learning Dashboard</h3><p>See exactly how you're progressing across six key dimensions: accuracy, speed, understanding depth, memory retention, stamina, and how concepts connect.</p></div>
+<div
+  style={{
+    marginTop: "auto",
+    fontFamily: "var(--ff-mono)",
+    fontSize: ".7rem",
+    letterSpacing: ".16em",
+    color: "var(--ink-40)",
+    textTransform: "uppercase",
+  }}
+>Learn more →</div></div><div className="card tf-7"><div><span className="num">07</span><div className="tag">GAME</div><h3>Live Learning Competitions</h3><p>Challenge other students in real-time quiz battles. Compete, learn from the scoreboard, and join a community of serious learners pushing each other higher.</p></div>
+<div
+  style={{
+    marginTop: "auto",
+    fontFamily: "var(--ff-mono)",
+    fontSize: ".7rem",
+    letterSpacing: ".16em",
+    color: "var(--ink-40)",
+    textTransform: "uppercase",
+  }}
+>Learn more →</div></div><div className="card tf-8"><div><span className="num">08</span><div className="tag">BYOK</div><h3>Your Preferred AI, Your Rules</h3><p>Connect your own ChatGPT, Claude, or Gemini account. Your data stays yours. Your AI tutor learns your preferences and memories.</p></div>
+<div
+  style={{
+    marginTop: "auto",
+    fontFamily: "var(--ff-mono)",
+    fontSize: ".7rem",
+    letterSpacing: ".16em",
+    color: "var(--ink-40)",
+    textTransform: "uppercase",
+  }}
+>Learn more →</div></div><div className="card tf-9"><div><span className="num">09</span>
+<div className="tag">WORKSPACE</div><h3>Your Complete Study Command Center</h3><p>Organize all your study notes, schedules, and resources in one intelligent workspace. Your tutors understand your study system and help you stay organized.</p></div>
+<div
+  style={{
+    marginTop: "auto",
+    fontFamily: "var(--ff-mono)",
+    fontSize: ".7rem",
+    letterSpacing: ".16em",
+    color: "var(--ink-40)",
+    textTransform: "uppercase",
+  }}
+>Learn more →</div></div><div className="card tf-10"><div><span className="num">10</span>
+<div className="tag">SOCRATIC</div><h3>Discovery Through Questioning</h3><p>Meet your Socratic tutor who never gives you answers directly. Instead, they ask the right questions that guide you to discover the concept yourself.</p></div>
+<div
+  style={{
+    marginTop: "auto",
+    fontFamily: "var(--ff-mono)",
+    fontSize: ".7rem",
+    letterSpacing: ".16em",
+    color: "var(--ink-40)",
+    textTransform: "uppercase",
+  }}
+>Learn more →</div></div></div>
+  </div>
+  </section>
+    <section style={{ paddingTop: "40px" }}>
+  <div className="wrap">
+    <div className="sec-head reveal in">
+      <div className="left">
+        <div className="num">— 02 / Rotor</div>
+        <h2>
+          Twenty-five
+          <br />
+          <em>more essential</em> features.
+        </h2>
+      </div>
+
+      <div className="right">
+        <span className="eyebrow">Beyond The Top 10</span>
+
+        <p style={{ marginTop: "14px" }}>
+          A complete arsenal of learning tools. From adaptive depth and
+          memory-powered recall to game modes, personalized quests, and
+          expert-driven content — everything works seamlessly together to
+          accelerate your mastery.
+        </p>
+      </div>
+    </div>
+
+    <div className="rotor reveal in">
+      <div className="rotor-track" id="rotorTrack"></div>
+    </div>
+  </div>
+</section>
+
+<section id="agents">
+  <div className="wrap">
+    <div className="sec-head reveal in">
+      <div className="left">
+        <div className="num">— 03 / Tutors</div>
+
+        <h2>
+          Your <em>personalized faculty</em>.
+        </h2>
+      </div>
+
+      <div className="right">
+        <span className="eyebrow">AI Tutoring Excellence</span>
+
+        <p style={{ marginTop: "14px" }}>
+          Each tutor specializes in one subject and adapts to your unique
+          learning style. They work together invisibly, creating one seamless,
+          supportive learning experience just for you.
+        </p>
+      </div>
+    </div>
+
+    <div className="agent-mosaic reveal in">
+      <div className="am-tile big">
+        <img
+          src="https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=900&q=80&auto=format&fit=crop"
+          alt="Head Agent"
+        />
+
+        <div className="am-cap">
+          <div className="t">Head · Orchestrator</div>
+
+          <h4>The principal who never sleeps.</h4>
+        </div>
+      </div>
+
+      <div className="am-tile">
+        <img
+          src="https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?w=700&q=80&auto=format&fit=crop"
+          alt="Physics"
+        />
+
+        <div className="am-cap">
+          <div className="t">Subject · 01</div>
+
+          <h4>Physics Tutor</h4>
+        </div>
+      </div>
+
+      <div className="am-tile">
+        <img
+          src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=700&q=80&auto=format&fit=crop"
+          alt="Chemistry"
+        />
+
+        <div className="am-cap">
+          <div className="t">Subject · 02</div>
+
+          <h4>Chemistry Tutor</h4>
+        </div>
+      </div>
+
+      <div className="am-tile">
+        <img
+          src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=700&q=80&auto=format&fit=crop"
+          alt="Mathematics"
+        />
+
+        <div className="am-cap">
+          <div className="t">Subject · 03</div>
+
+          <h4>Mathematics Tutor</h4>
+        </div>
+      </div>
+
+      <div className="am-tile">
+        <img
+          src="https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=700&q=80&auto=format&fit=crop"
+          alt="Biology"
+        />
+
+        <div className="am-cap">
+          <div className="t">Subject · 04</div>
+
+          <h4>Biology Tutor</h4>
+        </div>
+      </div>
+
+      <div className="am-tile wide">
+        <img
+          src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80&auto=format&fit=crop"
+          alt="Specialists"
+        />
+
+        <div className="am-cap">
+          <div className="t">+ Six specialist agents</div>
+
+          <h4>
+            Socratic · Stats · Scheduler · Quest · Invigilator · Architect
+          </h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="environments" style={{ background: "var(--paper-2)" }}>
+  <div className="wrap">
+    <div className="sec-head reveal in">
+      <div className="left">
+        <div className="num">— 04 / Environments</div>
+
+        <h2>
+          Six powerful
+          <br />
+          <em>learning spaces.</em>
+        </h2>
+      </div>
+
+      <div className="right">
+        <span className="eyebrow">Explore Your World</span>
+
+        <p style={{ marginTop: "14px" }}>
+          Each environment serves a different purpose in your learning journey —
+          from personalized teaching to competitive testing to strategic
+          planning. Your progress, memory, and tutors stay with you everywhere
+          you go.
+        </p>
+      </div>
+    </div>
+    <div className="envs reveal in">
+  <div className="env env-1" data-env="main">
+    <div className="env-cover">
+      <img
+        src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=700&q=80&auto=format&fit=crop"
+        alt="Main Learning"
+      />
+      <div className="env-icon">🎓</div>
+      <div className="env-num">Env / 01</div>
+    </div>
+
+    <div className="env-body">
+      <h3>Main Learning</h3>
+
+      <div className="env-tag">
+        Your personal tutor is always available. Learn at your own pace
+        with adaptive lessons, real-time help with doubts, and intelligent
+        memory of everything you've learned.
+      </div>
+
+      <a className="env-link" data-nav="env-main">
+        Enter
+      </a>
+    </div>
+
+    <div className="env-pop">
+      <ul>
+        <li>Head Agent + 6 specialised tutors</li>
+        <li>Slash commands /detailed /short /eli10</li>
+        <li>Adaptive depth + mood-aware tone</li>
+        <li>Live memory-mesh recall</li>
+      </ul>
+    </div>
+  </div>
+
+  <div className="env env-2" data-env="test">
+    <div className="env-cover">
+      <img
+        src="https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=700&q=80&auto=format&fit=crop"
+        alt="Test"
+      />
+      <div className="env-icon">📝</div>
+      <div className="env-num">Env / 02</div>
+    </div>
+
+    <div className="env-body">
+      <h3>Test</h3>
+
+      <div className="env-tag">
+        Master exam technique with realistic mock tests that predict your
+        rank and reveal your exact weak spots. Learn like the real exam
+        works.
+      </div>
+
+      <a className="env-link" data-nav="env-test">
+        Enter
+      </a>
+    </div>
+
+    <div className="env-pop">
+      <ul>
+        <li>AI mock generator + step marking</li>
+        <li>Viva + interview simulators</li>
+        <li>Confidence vs accuracy graph</li>
+        <li>Crash revision 1/3/7-day</li>
+      </ul>
+    </div>
+  </div>
+
+  <div className="env env-3" data-env="game">
+    <div className="env-cover">
+      <img
+        src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=700&q=80&auto=format&fit=crop"
+        alt="Game"
+      />
+      <div className="env-icon">🎮</div>
+      <div className="env-num">Env / 03</div>
+    </div>
+
+    <div className="env-body">
+      <h3>Game</h3>
+
+      <div className="env-tag">
+        Transform learning into a competitive sport. Battle other students
+        live, climb the leaderboard, earn achievements, and keep learning
+        fun.
+      </div>
+
+      <a className="env-link" data-nav="env-game">
+        Enter
+      </a>
+    </div>
+
+    <div className="env-pop">
+      <ul>
+        <li>Boss-Battle arenas (10–50 players)</li>
+        <li>Yearly leaderboard + real prizes</li>
+        <li>100 achievement badges</li>
+        <li>Reward marketplace</li>
+      </ul>
+    </div>
+  </div>
+
+  <div className="env env-4" data-env="workspace">
+    <div className="env-cover">
+      <img
+        src="https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=700&q=80&auto=format&fit=crop"
+        alt="Workspace"
+      />
+      <div className="env-icon">🗂️</div>
+      <div className="env-num">Env / 04</div>
+    </div>
+
+    <div className="env-body">
+      <h3>Workspace</h3>
+
+      <div className="env-tag">
+        Organize your entire study life in one place. Plans, notes,
+        schedules, focus timers, and daily goals — all connected to your
+        learning progress.
+      </div>
+
+      <a className="env-link" data-nav="env-workspace">
+        Enter
+      </a>
+    </div>
+
+    <div className="env-pop">
+      <ul>
+        <li>Databases like Notion</li>
+        <li>Schedules · timers · checklists</li>
+        <li>Parent weekly report</li>
+        <li>Personalised daily message</li>
+      </ul>
+    </div>
+  </div>
+
+  <div className="env env-5" data-env="resources">
+    <div className="env-cover">
+      <img
+        src="https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=700&q=80&auto=format&fit=crop"
+        alt="Resources"
+      />
+      <div className="env-icon">🛠️</div>
+      <div className="env-num">Env / 05</div>
+    </div>
+
+    <div className="env-body">
+      <h3>Resources</h3>
+
+      <div className="env-tag">
+        Find exactly what you need, exactly when you need it. Millions of
+        verified resources, solved problems, formulas, and past exam
+        questions all organized for your subjects.
+      </div>
+
+      <a className="env-link" data-nav="env-resources">
+        Enter
+      </a>
+    </div>
+
+    <div className="env-pop">
+      <ul>
+        <li>Image · Video · Audio studios</li>
+        <li>Multi-Modal Flow canvas</li>
+        <li>Smart-Search (academic only)</li>
+        <li>Formula Vault + Flashcards</li>
+      </ul>
+    </div>
+  </div>
+
+  <div className="env env-6" data-env="career">
+    <div className="env-cover">
+      <img
+        src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=700&q=80&auto=format&fit=crop"
+        alt="Career"
+      />
+      <div className="env-icon">🚀</div>
+      <div className="env-num">Env / 06</div>
+    </div>
+
+    <div className="env-body">
+      <h3>Career</h3>
+
+      <div className="env-tag">
+        Roadmaps, resume builder, interview practice, internships.{" "}
+        <em>Coming soon.</em>
+      </div>
+
+      <a className="env-link" data-nav="env-career">
+        Enter
+      </a>
+    </div>
+
+    <div className="env-pop">
+      <ul>
+        <li>AI roadmap + skill-gap</li>
+        <li>Resume + portfolio builder</li>
+        <li>Voice interview practice</li>
+        <li>Salary predictor</li>
+      </ul>
+    </div>
+  </div>
+</div>
+  </div>
+</section>
+
+<section id="journey">
+  <div className="wrap">
+    <div className="sec-head reveal in">
+      <div className="left">
+        <div className="num">— 05 / Journey</div>
+
+        <h2>
+          From sign-up
+          <br />
+          to <em>self-mastery</em>.
+        </h2>
+      </div>
+
+      <div className="right">
+        <span className="eyebrow">Your Learning Journey</span>
+
+        <p style={{ marginTop: "14px" }}>
+          From the moment you sign up to the day you master your subjects, we
+          guide you through a transformative experience. Every step is carefully
+          designed to build your confidence, knowledge, and success in real
+          exams.
+        </p>
+      </div>
+    </div>
+    <div className="journey-track reveal in">
+  <div className="j-step">
+    <div className="j-dot">I</div>
+    <h5>Register</h5>
+    <p>Email · Google · phone OAuth</p>
+  </div>
+
+  <div className="j-step">
+    <div className="j-dot">II</div>
+    <h5>Assessment</h5>
+    <p>Adaptive interview + 100-mark test</p>
+  </div>
+
+  <div className="j-step">
+    <div className="j-dot">III</div>
+    <h5>Profiling</h5>
+    <p>Agents wake up · profile compiled</p>
+  </div>
+
+  <div className="j-step">
+    <div className="j-dot">IV</div>
+    <h5>Cinematic Tour</h5>
+    <p>Story or interactive guided onboarding</p>
+  </div>
+
+  <div className="j-step">
+    <div className="j-dot">V</div>
+    <h5>Learn</h5>
+    <p>Multi-agent tutors · adaptive depth</p>
+  </div>
+
+  <div className="j-step">
+    <div className="j-dot">VI</div>
+    <h5>Master</h5>
+    <p>Stats grow · leaderboard climb</p>
+  </div>
+</div>            
+  </div>
+</section>
+
+<section className="philosophy">
+  <div className="wrap">
+    <div
+      className="sec-head reveal in"
+      style={{ marginBottom: "40px" }}
+    >
+      <div className="left">
+        <div className="eyebrow">— 06 / Philosophy</div>
+
+        <h2>
+          Built on three
+          <br />
+          <em>uncompromising</em> beliefs.
+        </h2>
+      </div>
+
+      <div className="right">
+        <p>
+          We refuse to be another wrapper around ChatGPT. We refuse to be
+          another quiz app. DRONA is engineered to be the{" "}
+          <em>complete teaching system</em> India has never had at scale.
+        </p>
+      </div>
+    </div>
+    <div className="philo-grid reveal in">
+  <div className="philo-card">
+    <div className="pn">i.</div>
+
+    <h4>The teacher must remember.</h4>
+
+    <p>
+      A vector memory-mesh records every doubt, every careless
+      error, every breakthrough. Tomorrow&apos;s lesson is built on
+      today&apos;s truth — not a forgotten yesterday.
+    </p>
+  </div>
+
+  <div className="philo-card">
+    <div className="pn">ii.</div>
+
+    <h4>
+      The student must <em>feel</em> the lesson.
+    </h4>
+
+    <p>
+      We layer story-mode, gamification and cinematic environment
+      transitions because emotion is the carrier wave of memory.
+      Learning that thrills, sticks.
+    </p>
+  </div>
+
+  <div className="philo-card">
+    <div className="pn">iii.</div>
+
+    <h4>One agent is never enough.</h4>
+
+    <p>
+      A Head Agent orchestrates Subject, Socratic, Stats, Quest,
+      Scheduler and Architect agents — the way a great school
+      orchestrates a great teacher.
+    </p>
+  </div>
+</div>
+  </div>
+</section>
+
+<section style={{ background: "var(--paper-2)" }}>
+  <div className="wrap">
+    <div className="sec-head reveal in">
+      <div className="left">
+        <div className="num">— 07 / Capabilities</div>
+
+        <h2>
+          Twenty-five
+          <br />
+          more <em>essentials</em>.
+        </h2>
+      </div>
+
+      <div className="right">
+        <span className="eyebrow">Beyond The Top 10</span>
+
+        <p style={{ marginTop: "14px" }}>
+          A full-stack of pedagogy primitives — every one of them callable from
+          chat, dashboard or via the autonomous Head Agent.
+        </p>
+      </div>
+    </div>
+    <div className="feat-grid reveal in">
+      <div className="fg-card">
+        <div className="fg-num">01 / 25</div>
+        <h5>Adaptive Depth</h5>
+        <p>Short ↔ detailed answers tuned to your reading speed.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">02 / 25</div>
+        <h5>Slash Commands</h5>
+        <p>/detailed /short /eli10 /different /db — even custom ones.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">03 / 25</div>
+        <h5>Heatmap</h5>
+        <p>Subject-wise weakness map updated per session.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">04 / 25</div>
+        <h5>Forgetting Curve</h5>
+        <p>Surprise tests recalibrate your retention curve daily.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">05 / 25</div>
+        <h5>Mistake Patterns</h5>
+        <p>Concept-vs-careless classification with corrective drills.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">06 / 25</div>
+        <h5>Auto Difficulty</h5>
+        <p>Pop-up questions scale up or down based on accuracy.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">07 / 25</div>
+        <h5>Predict Next Doubt</h5>
+        <p>Agent answers your question + the next likely follow-up.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">08 / 25</div>
+        <h5>Break Coach</h5>
+        <p>Detects fatigue from dwell-time, suggests a break.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">09 / 25</div>
+        <h5>Procrastination Sense</h5>
+        <p>Catches drift patterns before they harden into habits.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">10 / 25</div>
+        <h5>Why-Wrong Mode</h5>
+        <p>A dedicated explanation mode for incorrect answers.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">11 / 25</div>
+        <h5>5-Minute Topic</h5>
+        <p>‘Teach me X in 5 minutes’ — speed-summary on demand.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">12 / 25</div>
+        <h5>Personal Examples</h5>
+        <p>Analogies drawn from your hobbies and interests.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">13 / 25</div>
+        <h5>Mastery 0–100</h5>
+        <p>Per-concept score per subject, persistent forever.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">14 / 25</div>
+        <h5>Concept Map</h5>
+        <p>Interactive 3D dependency graph across grades.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">15 / 25</div>
+        <h5>Annotated PDF</h5>
+        <p>Highlight any line — agent explains in context.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">16 / 25</div>
+        <h5>What-If Scenarios</h5>
+        <p>Hypothetical case studies generated on the fly.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">17 / 25</div>
+        <h5>Handwriting Eval</h5>
+        <p>Upload a handwritten answer — get step marks.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">18 / 25</div>
+        <h5>Step Marking</h5>
+        <p>Real-exam grading rubric, not just right/wrong.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">19 / 25</div>
+        <h5>Confidence Graph</h5>
+        <p>Plot of certainty vs accuracy over time.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">20 / 25</div>
+        <h5>Exam-Day Sim</h5>
+        <p>Full 3-hour simulation with strict invigilation.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">21 / 25</div>
+        <h5>Crash Revision</h5>
+        <p>1, 3 or 7-day intensive plans for last-minute prep.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">22 / 25</div>
+        <h5>Friend Duels</h5>
+        <p>Send a topic challenge to any friend on the platform.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">23 / 25</div>
+        <h5>Knowledge Credits</h5>
+        <p>Earn through streaks → spend in marketplace.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">24 / 25</div>
+        <h5>Voice-Only Mode</h5>
+        <p>Learn hands-free during commute or chores.</p>
+      </div>
+
+      <div className="fg-card">
+        <div className="fg-num">25 / 25</div>
+        <h5>Custom Agents</h5>
+        <p>Prompt-build your own ‘strict coach’ or ‘gentle tutor’.</p>
+      </div>
+    </div>
+  
+  </div>
+</section>
+
+<section>
+  <div className="wrap">
+    <div className="sec-head reveal in">
+      <div className="left">
+        <div className="num">— 08 / Connectivity</div>
+
+        <h2>
+          One nervous
+          <br />
+          <em>system</em>.
+        </h2>
+      </div>
+
+      <div className="right">
+        <span className="eyebrow">Cross-Environment Memory</span>
+
+        <p style={{ marginTop: "14px" }}>
+          XP earned in Game flows to your Profile, drives Boss-Battle
+          eligibility in Test, unlocks Marketplace items, and influences Quest
+          Agent in Workspace. Everything is one graph.
+        </p>
+      </div>
+    </div>
+    <div className="conn reveal in">
+      <div className="conn-hero">
+        <img
+          src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1400&q=80&auto=format&fit=crop"
+          alt="Connected memory mesh"
+        />
+
+        <div className="ch-in">
+          <span
+            className="kicker"
+            style={{
+              background: "rgba(255,255,255,.1)",
+              borderColor: "rgba(255,255,255,.2)",
+              color: "rgba(255,255,255,.8)",
+            }}
+          >
+            <span className="dot"></span>
+            Memory · Mesh
+          </span>
+
+          <div>
+            <h3>
+              Six environments. <em style={{ color: "#fff" }}>One brain.</em>
+            </h3>
+            <p>
+              XP earned in Game flows to your Profile, drives Boss-Battle
+              eligibility in Test, unlocks Marketplace items, and shapes your
+              daily plan in Workspace. Everything is one continuous graph.
+            </p>
+          </div>
+
+          <div className="ch-tags">
+            <span>Main</span>
+            <span>Test</span>
+            <span>Game</span>
+            <span>Workspace</span>
+            <span>Resources</span>
+            <span>Career</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="conn-side">
+        <div className="conn-card">
+          <img
+            src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&q=80&auto=format&fit=crop"
+            alt="Vector memory"
+          />
+          <div className="cc">
+            <div className="t">Vector · Recall</div>
+            <h4>Every doubt remembered, instantly retrieved.</h4>
+          </div>
+        </div>
+
+        <div className="conn-card">
+          <img
+            src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=900&q=80&auto=format&fit=crop"
+            alt="Cinematic transitions"
+          />
+          <div className="cc">
+            <div className="t">Cinematic · Switch</div>
+            <h4>Environments fade between themes — never sessions.</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" style={{ background: "var(--paper-2)" }}>
+  <div className="wrap">
+    <div className="sec-head reveal in">
+      <div className="left">
+        <div className="num">— 09 / Pricing</div>
+
+        <h2>
+          Plans for
+          <br />
+          every <em>aspirant</em>.
+        </h2>
+      </div>
+
+      <div className="right">
+        <span className="eyebrow">No Hidden Tokens</span>
+
+        <p style={{ marginTop: "14px" }}>
+          Free tier is genuinely free, powered by Gemini, Groq and OpenRouter
+          free pools. Bring your own key to scale infinitely without paying us
+          per token.
+        </p>
+      </div>
+    </div>
+
+    <div className="pricing reveal in">
+      <div className="plan">
+        <div className="ptag">Plan / 01</div>
+
+        <h3>Seeker</h3>
+
+        <p style={{ marginBottom: "18px", fontSize: ".9rem" }}>
+          Free forever
+        </p>
+
+        <div className="price">
+          <b>₹0</b>
+          <span>/ month</span>
+        </div>
+
+        <ul>
+          <li>Head Agent + 1 Subject Agent</li>
+          <li>100 messages / day</li>
+          <li>Free models (Gemini Flash, Groq)</li>
+          <li>Basic Stats radar</li>
+          <li>Public leaderboard</li>
+          <li>Resources studio (limited)</li>
+        </ul>
+
+        <a className="btn btn-ghost">Choose Seeker</a>
+      </div>
+
+      <div className="plan featured">
+        <span className="pop">Most Loved</span>
+
+        <div className="ptag">Plan / 02</div>
+
+        <h3>Scholar</h3>
+
+        <p style={{ marginBottom: "18px", fontSize: ".9rem" }}>
+          Most popular
+        </p>
+
+        <div className="price">
+          <b>₹499</b>
+          <span>/ month</span>
+        </div>
+
+        <ul>
+          <li>All 6 Subject Agents</li>
+          <li>Unlimited chat (fair-use)</li>
+          <li>Memory-Mesh full recall</li>
+          <li>Image · Audio · Flow studios</li>
+          <li>Boss Arenas + Friend Duels</li>
+          <li>Parent weekly reports</li>
+        </ul>
+
+        <a className="btn btn-accent">Choose Scholar</a>
+      </div>
+
+      <div className="plan">
+        <div className="ptag">Plan / 03</div>
+
+        <h3>Acharya</h3>
+
+        <p style={{ marginBottom: "18px", fontSize: ".9rem" }}>
+          For serious aspirants
+        </p>
+
+        <div className="price">
+          <b>₹1,299</b>
+          <span>/ month</span>
+        </div>
+
+        <ul>
+          <li>Everything in Scholar</li>
+          <li>Predicted PYQ Analyzer</li>
+          <li>Shadow-Sim mocks (NTA-grade)</li>
+          <li>Crash revision plans 1/3/7-day</li>
+          <li>Career Env early access</li>
+          <li>Marketplace 2× credits</li>
+        </ul>
+
+        <a className="btn btn-ghost">Choose Acharya</a>
+      </div>
+
+      <div className="plan">
+        <div className="ptag">Plan / 04</div>
+
+        <h3>BYOK</h3>
+
+        <p style={{ marginBottom: "18px", fontSize: ".9rem" }}>
+          Bring your own key
+        </p>
+
+        <div className="price">
+          <b>₹199</b>
+          <span>/ month</span>
+        </div>
+
+        <ul>
+          <li>All Acharya features</li>
+          <li>Plug your GPT-4o / Claude / Gemini</li>
+          <li>Pay raw compute, we wrap persona</li>
+          <li>Unlimited tokens (your quota)</li>
+          <li>Priority support</li>
+          <li>For power users only</li>
+        </ul>
+
+        <a className="btn btn-ghost">Choose BYOK</a>
+      </div>
+    </div>
+  </div>
+</section>
+ <section id="about">
+        <div className="wrap">
+          <div className="sec-head reveal in">
+            <div className="left">
+              <div className="num">— 10 / About</div>
+              <h2>
+                Built in<br />
+                India. For <em>India</em>. Then the world.
+              </h2>
+            </div>
+
+            <div className="right">
+              <span className="eyebrow">Mission · $50M Net Evaluation</span>
+              <p style={{ marginTop: "14px" }}>
+                DRONA AI is being engineered as India's first multi-agent education system, with global scale targeted
+                post-MVP. Our goal: replace rote with mastery, replace anxiety with arena.
+              </p>
+            </div>
+          </div>
+
+          <div className="about-grid">
+            <div className="reveal in">
+              <p
+                style={{
+                  fontSize: "1.15rem",
+                  color: "var(--ink)",
+                  marginBottom: "18px",
+                }}
+              >
+                Great teaching scales personally, not en-masse. <em>DRONA is built on that single belief.</em> Not one
+                teacher for thousands — but a private faculty of agents for every learner, who never sleep, never
+                forget, and never give up.
+              </p>
+
+              <p>
+                We obsessively study the gaps in NotebookLM, Photomath, Chegg, ChatGPT and Gemini — and we close them,
+                one agent at a time. Where one tool gives notes, we give notes + voice + flow + flashcards + heatmap.
+                Where one tool answers, we ask back. Where one tool tests, we crown a champion.
+              </p>
+
+              <div className="about-stat">
+                <div className="as">
+                  <b>5</b>
+                  <span>Class Levels Covered</span>
+                </div>
+                <div className="as">
+                  <b>3</b>
+                  <span>Teaching Modes</span>
+                </div>
+                <div className="as">
+                  <b>20+</b>
+                  <span>Years PYQ Indexed</span>
+                </div>
+                <div className="as">
+                  <b>∞</b>
+                  <span>Memory Recall Depth</span>
+                </div>
+              </div>
+            </div>
+
+            <div
+              className="reveal in"
+              style={{
+                background: "var(--paper-2)",
+                borderRadius: "var(--r-xl)",
+                padding: "50px",
+                fontFamily: "var(--ff-serif)",
+                fontStyle: "italic",
+                fontSize: "1.4rem",
+                lineHeight: 1.5,
+                color: "var(--ink-80)",
+              }}
+            >
+              “The best teacher is the one who turns the student into a question, not an answer.”
+              <div
+                style={{
+                  marginTop: "24px",
+                  fontFamily: "var(--ff-mono)",
+                  fontStyle: "normal",
+                  fontSize: ".7rem",
+                  letterSpacing: ".16em",
+                  textTransform: "uppercase",
+                  color: "var(--ink-40)",
+                }}
+              >
+                — DRONA Operating Principle
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style={{ background: "var(--paper-2)" }}>
+        <div className="wrap">
+          <div className="sec-head reveal in">
+            <div className="left">
+              <div className="num">— 11 / Help</div>
+              <h2>
+                Quiet<br />
+                <em>answers</em>.
+              </h2>
+            </div>
+
+            <div className="right">
+              <span className="eyebrow">FAQ</span>
+              <p style={{ marginTop: "14px" }}>
+                The questions students, parents and teachers ask us most often.
+              </p>
+            </div>
+          </div>
+
+          <div className="faq reveal in">
+            <div className="faq-item">
+              <div className="faq-q">
+                What makes DRONA different from ChatGPT or Gemini?
+                <span className="pm">+</span>
+              </div>
+              <div className="faq-a">
+                <p>
+                  DRONA is not one model — it's a faculty. A Head Agent orchestrates specialised subject agents, a
+                  Socratic agent, a Stats agent, a Scheduler and a Quest agent. They share a vector memory-mesh of
+                  every interaction you've ever had. ChatGPT forgets you. DRONA refuses to.
+                </p>
+              </div>
+            </div>
+
+            <div className="faq-item">
+              <div className="faq-q">
+                Is the free plan really free?
+                <span className="pm">+</span>
+              </div>
+              <div className="faq-a">
+                <p>
+                  Yes. We route the Seeker plan through Gemini Flash, Groq Mixtral, OpenRouter free pools and Ollama
+                  local fallback. You get the Head Agent and one subject agent, 100 messages/day, and the basic Stats
+                  radar — forever, with no credit card.
+                </p>
+              </div>
+            </div>
+
+            <div className="faq-item">
+              <div className="faq-q">
+                Can I bring my own API key?
+                <span className="pm">+</span>
+              </div>
+              <div className="faq-a">
+                <p>
+                  Absolutely. The BYOK Engine wraps your GPT-4o, Claude 3.5 Sonnet or Gemini Pro key in our master
+                  Teacher Persona prompts. You pay raw compute to OpenAI/Anthropic; we charge ₹199/month for the
+                  orchestration.
+                </p>
+              </div>
+            </div>
+
+            <div className="faq-item">
+              <div className="faq-q">
+                How does the assessment work?
+                <span className="pm">+</span>
+              </div>
+              <div className="faq-a">
+                <p>
+                  An Assessment Agent conducts a personalised interview and offers an optional 100-mark, 90-minute test
+                  (75 MCQ + 25 written). A Grader Agent ruthlessly evaluates and a Profile Agent compiles your
+                  strengths/weaknesses. Skip it and the system will profile you live during your first 3-5 sessions.
+                </p>
+              </div>
+            </div>
+
+            <div className="faq-item">
+              <div className="faq-q">
+                Are my notes and chats private?
+                <span className="pm">+</span>
+              </div>
+              <div className="faq-a">
+                <p>
+                  Yes. Memory-mesh runs in your private vector namespace. We never train base models on your data. You
+                  can export or wipe everything at any time from Workspace → Settings.
+                </p>
+              </div>
+            </div>
+
+            <div className="faq-item">
+              <div className="faq-q">
+                When will Boss-Battle Arenas and Marketplace go live?
+                <span className="pm">+</span>
+              </div>
+              <div className="faq-a">
+                <p>
+                  Arenas launch in Phase 1 with the MVP. The physical Marketplace (MacBooks, books, stationery for
+                  Top-100 yearly leaderboard) activates once the platform crosses a defined active-user threshold.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+     <footer
+  style={{
+    width: "100%",
+    background: "#0a0a0f",
+    display: "flex",
+    justifyContent: "center",
+    padding: "80px 0 40px",
+  }}
+>
+  <div
+    className="wrap"
+    style={{
+      width: "100%",
+      maxWidth: "1400px",
+      padding: "0 40px",
+      margin: "0 auto",
+    }}
+  >
+    <div
+      className="foot"
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1.3fr 1fr 1fr 1fr 1fr",
+        gap: "50px",
+        width: "100%",
+        alignItems: "start",
+      }}
+    >
+      <div
+        className="foot-brand"
+        style={{
+          width: "100%",
+          maxWidth: "300px",
+        }}
+      >
+        <a
+          className="brand"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            color: "white",
+            marginBottom: "18px",
+          }}
+        >
+          <span className="brand-mark">D</span>
+
+          <span>
+            DRONA
+            <sup style={{ fontSize: ".5em", color: "var(--accent)" }}>
+              AI
+            </sup>
+          </span>
+        </a>
+
+        <p
+          style={{
+            color: "rgba(255,255,255,.6)",
+            lineHeight: "1.8",
+            fontSize: ".95rem",
+          }}
+        >
+          India's first multi-agent AI education system. Six environments.
+          One hundred features. A faculty that never sleeps.
+        </p>
+      </div>
+
+      <div>
+        <h6>Platform</h6>
+        <a>Main Learning</a>
+        <a>Test Arena</a>
+        <a>Game Arena</a>
+        <a>Workspace</a>
+        <a>Resources</a>
+        <a>Career</a>
+      </div>
+
+      <div>
+        <h6>Resources</h6>
+        <a>Documentation</a>
+        <a>API Reference</a>
+        <a>Free Models</a>
+        <a>BYOK Guide</a>
+        <a>Changelog</a>
+      </div>
+
+      <div>
+        <h6>Company</h6>
+        <a>About</a>
+        <a>Mission</a>
+        <a>Roadmap</a>
+        <a>Press</a>
+        <a>Careers</a>
+      </div>
+
+      <div>
+        <h6>Legal</h6>
+        <a>Privacy</a>
+        <a>Terms</a>
+        <a>Data Policy</a>
+        <a>Refund</a>
+        <a>Contact</a>
+      </div>
+    </div>
+
+    <div
+      className="foot-bottom"
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        marginTop: "50px",
+        paddingTop: "25px",
+        borderTop: "1px solid rgba(255,255,255,.1)",
+        color: "rgba(255,255,255,.5)",
+        fontSize: ".75rem",
+        flexWrap: "wrap",
+        gap: "10px",
+      }}
+    >
+      <span>© 2026 DRONA AI · Made in India</span>
+      <span>v0.1 — MVP Phase</span>
+    </div>
+  </div>
+</footer>
+
+      {/* ENV PAGES */}
+      <div className="page" id="page-env-main">
+        <div className="wrap">
+          <a className="page-back" data-nav="home">
+            ← Back to home
+          </a>
+
+          <div className="page-hero">
+            <div
+              className="env-icon"
+              style={{ fontSize: "32px", width: "64px", height: "64px", borderRadius: "16px" }}
+            >
+              🎓
+            </div>
+
+            <span className="eyebrow" style={{ display: "block", margin: "18px 0 8px" }}>
+              Where the faculty teaches.
+            </span>
+
+            <h1 style={{ fontSize: "clamp(2.5rem,5vw,4.5rem)" }}>
+              Main Learning Environment
+            </h1>
+
+            <p className="lead">
+              Your default home. The Head Agent leads, six subject specialists assist, and slash commands let you bend
+              depth, tone and style at will.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* CONTACT MODAL */}
+      <div className="contact-modal" id="contactModal">
+        <button
+          className="close-btn"
+          id="closeContact"
+          onClick={() =>
+            document.getElementById("contactModal")?.classList.remove("open")
+          }
+        >
+          ×
+        </button>
+
+        <div className="contact-form-wrap">
+          <h3>Get in Touch</h3>
+          <p className="desc">
+            Have questions about DRONA AI? We'd love to hear from you. Send us a message and we'll respond within 24
+            hours.
+          </p>
+
+          <form id="contactForm">
+            <div className="form-group">
+              <label>Your Name</label>
+              <input type="text" name="name" placeholder="John Doe" required />
+            </div>
+
+            <div className="form-group">
+              <label>Email Address</label>
+              <input type="email" name="email" placeholder="you@example.com" required />
+            </div>
+
+            <div className="form-group">
+              <label>Subject</label>
+              <input type="text" name="subject" placeholder="What can we help with?" required />
+            </div>
+
+            <div className="form-group">
+              <label>Message</label>
+              <textarea name="message" placeholder="Tell us more..." required />
+            </div>
+
+            <div className="form-actions">
+              <button type="submit" className="btn btn-dark">
+                Send Message
+              </button>
+
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={() =>
+                  document.getElementById("contactModal")?.classList.remove("open")
+                }
+              >
+                Cancel
+              </button>
+            </div>
+
+            <div className="form-success" id="formSuccess">
+              ✓ Message sent! We'll be in touch soon.
+            </div>
+          </form>
+        </div>
+      </div>
+</div>
+);
+};
+export default Landing;

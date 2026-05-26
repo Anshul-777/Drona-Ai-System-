@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Logo from "@/components/ui/Logo";
 import { createClient } from "@/lib/supabase/client";
 
@@ -11,6 +11,45 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userName, setUserName] = useState("Scholar");
   const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+    
+    const checkAuth = async () => {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        window.location.replace('/');
+      }
+    };
+
+    checkAuth();
+
+    // Aggressive BFCache (Back/Forward Cache) prevention
+    const handlePageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) checkAuth();
+    };
+    
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') checkAuth();
+    };
+
+    window.addEventListener('pageshow', handlePageShow);
+    window.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      window.removeEventListener('pageshow', handlePageShow);
+      window.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    // Force a hard reload to completely flush the Next.js client-side router cache
+    window.location.href = '/';
+  };
 
   const envTabs = [
     { id: 'learning', name: 'Learn', path: '/platform', hex: '#2a5cff', rgb: '42, 92, 255' },
@@ -432,6 +471,14 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
             <span className="material-symbols-outlined text-[20px] transition-transform group-hover:rotate-90">settings</span>
             Settings
           </Link>
+          <button 
+            onClick={handleLogout}
+            className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer group ${sidebarOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"} text-on-surface-variant hover:bg-red-500/10 hover:text-red-500`}
+            style={{ transitionDuration: '500ms', transitionDelay: sidebarOpen ? '750ms' : '0ms' }}
+          >
+            <span className="material-symbols-outlined text-[20px] transition-transform group-hover:-translate-x-1">logout</span>
+            Log Out
+          </button>
         </div>
         </div>
       </aside>

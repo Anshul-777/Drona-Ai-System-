@@ -162,6 +162,7 @@ export default function AssessmentEngine() {
   const [started, setStarted] = useState(false);
   const [history, setHistory] = useState<any[]>([]);
   const [currentQIndex, setCurrentQIndex] = useState(0);
+  const [questionQueue, setQuestionQueue] = useState<QuestionData[]>(BASELINE_QUESTIONS);
   const [currentQuestion, setCurrentQuestion] = useState<QuestionData>(BASELINE_QUESTIONS[0]);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [elaboration, setElaboration] = useState("");
@@ -206,8 +207,32 @@ export default function AssessmentEngine() {
       try {
         const supabase = createClient();
         const { data: { user } } = await supabase.auth.getUser();
-        if (user?.user_metadata?.full_name) {
-          setUserName(user.user_metadata.full_name.split(" ")[0]);
+        if (user) {
+          if (user.user_metadata?.full_name) {
+            setUserName(user.user_metadata.full_name.split(" ")[0]);
+          }
+          if (!user.user_metadata?.exam_target || !user.user_metadata?.class_level || !user.user_metadata?.board_type) {
+            const demoQuestions = [
+              {
+                question: "To accurately calibrate your curriculum, what class are you currently in?",
+                type: "single-select" as const,
+                options: ["Class 10", "Class 11", "Class 12", "Dropper"]
+              },
+              {
+                question: "Which educational board do you follow?",
+                type: "single-select" as const,
+                options: ["CBSE", "ICSE", "State Board", "IB"]
+              },
+              {
+                question: "What is your primary target exam?",
+                type: "single-select" as const,
+                options: ["JEE", "NEET", "CET", "Boards Only"]
+              }
+            ];
+            const newQueue = [...demoQuestions, ...BASELINE_QUESTIONS];
+            setQuestionQueue(newQueue);
+            setCurrentQuestion(newQueue[0]);
+          }
         }
       } catch { /* fallback to "Scholar" */ }
     };
@@ -320,12 +345,12 @@ export default function AssessmentEngine() {
     setHistory(newHistory);
 
     // ═══════════════════════════════════════════════════════════
-    // BASELINE PHASE: Show all 7 baseline questions first
+    // BASELINE PHASE: Show all baseline questions first
     // ═══════════════════════════════════════════════════════════
-    if (currentQIndex < BASELINE_QUESTIONS.length - 1) {
+    if (currentQIndex < questionQueue.length - 1) {
       const nextIdx = currentQIndex + 1;
       setCurrentQIndex(nextIdx);
-      simulateThinking(() => { transitionToQuestion(BASELINE_QUESTIONS[nextIdx]); });
+      simulateThinking(() => { transitionToQuestion(questionQueue[nextIdx]); });
     } else if (!isAgentPhase) {
       // ═══════════════════════════════════════════════════════════
       // TRANSITION TO AGENT PHASE: All 7 baselines are done
@@ -661,15 +686,16 @@ export default function AssessmentEngine() {
      MAIN ASSESSMENT UI
      ═══════════════════════════════════════════════════════════ */
 
-  const answeredQuestions = isAgentPhase ? TOTAL_BASELINE + agentQuestionCount : currentQIndex + 1;
-  const progressPct = isFinalQuestion ? 98 : Math.min((answeredQuestions / TOTAL_EXPECTED) * 95, 95);
+  const answeredQuestions = isAgentPhase ? questionQueue.length + agentQuestionCount : currentQIndex + 1;
+  const expectedTotal = questionQueue.length + EXPECTED_AGENT_QUESTIONS;
+  const progressPct = isFinalQuestion ? 98 : Math.min((answeredQuestions / expectedTotal) * 95, 95);
 
   const getStatusText = () => {
     if (isThinking && isFinalQuestion) return "Analysis complete — preparing recommendation...";
     if (isThinking) return "Analyzing your response...";
     if (isFinalQuestion) return "Profiling complete";
     if (isAgentPhase) return `Profiling · Question ${agentQuestionCount} of ~${EXPECTED_AGENT_QUESTIONS}`;
-    return `Baseline · ${currentQIndex + 1} of ${TOTAL_BASELINE}`;
+    return `Baseline · ${currentQIndex + 1} of ${questionQueue.length}`;
   };
 
   return (

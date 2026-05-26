@@ -111,7 +111,7 @@ export default function BeginPage() {
           </div>
           <span className="font-black text-sm tracking-tight" style={{ color: "#6b7280" }}>DRONA.AI</span>
         </div>
-        <button id="early-skip-btn" onClick={() => go("/")}
+        <button id="early-skip-btn" onClick={() => go("/platform")}
           className={`text-xs font-mono tracking-widest uppercase flex items-center gap-1.5 cursor-pointer transition-all duration-700 ${skipVis ? "opacity-100" : "opacity-0"}`}
           style={{ color: "#9ca3af" }}
           onMouseEnter={e => e.currentTarget.style.color = "#4b5563"}
@@ -182,7 +182,7 @@ export default function BeginPage() {
                 </button>
 
                 {/* Skip */}
-                <button id="skip-assessment-btn" onClick={() => go("/")}
+                <button id="skip-assessment-btn" onClick={() => go("/platform")}
                   className="flex items-center gap-2 px-6 py-4 rounded-2xl font-medium text-sm cursor-pointer transition-all duration-200"
                   style={{ border: "1.5px solid #e5e5e0", color: "#9ca3af" }}
                   onMouseEnter={e => { e.currentTarget.style.borderColor = "#d1d5db"; e.currentTarget.style.color = "#4b5563"; }}
