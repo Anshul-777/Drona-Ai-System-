@@ -125,29 +125,14 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
             ))}
           </div>
 
-          {/* Profile Component — Overflows header with tech-panel frame lines */}
-          <Link href="/profile"
-            className="flex items-center gap-0 cursor-pointer relative group transition-all duration-500 -my-3"
-            style={{
+          {/* Profile Component — Circular to Hexagonal Tech Design */}
+          <Link href="/profile" 
+            className="flex items-center gap-0 cursor-pointer relative group transition-all duration-500 min-w-[280px] -my-3"
+            style={{ 
               '--env-hex': activeTab.hex,
               '--env-rgb': activeTab.rgb
             } as React.CSSProperties}
           >
-            {/* ── Tech Panel Frame Lines (SVG) ── */}
-            {/* These create the beveled HUD-like frame around the profile area */}
-
-            {/* Outer frame — faintest, largest */}
-            <svg className="absolute -inset-x-5 -inset-y-4 w-[calc(100%+40px)] h-[calc(100%+32px)] pointer-events-none z-0 transition-opacity duration-500 opacity-[0.12] group-hover:opacity-[0.25]" viewBox="0 0 320 100" fill="none" preserveAspectRatio="none">
-              <path d="M 20,2 L 300,2 L 318,18 L 318,82 L 300,98 L 20,98 L 2,82 L 2,18 Z" stroke="currentColor" strokeWidth="0.8" style={{ color: 'var(--env-hex)' }} />
-            </svg>
-
-            {/* Mid frame — slightly more visible */}
-            <svg className="absolute -inset-x-3 -inset-y-2.5 w-[calc(100%+24px)] h-[calc(100%+20px)] pointer-events-none z-0 transition-opacity duration-500 opacity-[0.18] group-hover:opacity-[0.35]" viewBox="0 0 300 90" fill="none" preserveAspectRatio="none">
-              <path d="M 16,2 L 284,2 L 298,14 L 298,76 L 284,88 L 16,88 L 2,76 L 2,14 Z" stroke="currentColor" strokeWidth="0.7" style={{ color: 'var(--env-hex)' }} />
-            </svg>
-
-            {/* Inner frame — clearest line */}
-            <svg className="absolute -inset-x-1 -inset-y-1 w-[calc(100%+8px)] h-[calc(100%+8px)] pointer-events-none z-0 transition-opacity duration-500 opacity-[0.08] group-hover:opacity-[0.18]" viewBox="0 0 280 80" fill="none" preserveAspectRatio="none">
             {/* ── Hexagonal Background & Tech Lines ── */}
             <div className="absolute inset-y-0 right-0 left-[32px] z-0 pointer-events-none transition-all duration-500 group-hover:scale-[1.01] origin-left">
               <svg className="w-full h-full drop-shadow-sm" preserveAspectRatio="none" viewBox="0 0 250 60">
