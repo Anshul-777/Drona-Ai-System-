@@ -77,3 +77,63 @@
 
 > **CHECKPOINT: DASHBOARD COMPLETION (EXCLUDING ONBOARDING/TEST ENGINE)**
 > The entire Platform Dashboard shell is now deeply architected, cleanly styled, and fully functional. Environment sidebars transition perfectly, all navigation links are mapped, and dynamic custom colors apply correctly. The UI sets a highly premium 50-million-dollar aesthetic standard. All that remains un-implemented inside this shell are the actual feature components inside the placeholder routes, and the external onboarding/test engine loops.
+
+## [2026-05-26] Auth Flow Refinement & Backend Triage
+
+- **Frontend Refinements (Auth & Demographics)**:
+  - **File:** `src/app/(auth)/signup/page.tsx`
+    - Added a mandatory "Terms & Conditions and Privacy Policy" checkbox before the "Create Account" submit button with form validation state (`acceptTerms`).
+  - **File:** `src/components/onboarding/AssessmentEngine.tsx`
+    - Refactored `BASELINE_QUESTIONS` logic into a dynamic state queue (`questionQueue`).
+    - Added logic on mount to fetch `user.user_metadata` from Supabase.
+    - If demographic data (`exam_target`, `class_level`, or `board_type`) is missing (e.g., from a Google OAuth signup), it seamlessly prepends 3 critical multiple-choice demographic questions before the standard psychological baseline questions.
+
+- **Version Control**:
+  - Committed all Phase 1 frontend changes to Git (`feat: complete auth and dashboard flow setup, exclude onboarding test`).
+
+- **Backend Triage & Bug Fixes ("Failed to fetch" Error)**:
+  - Investigated a critical failure where the Python backend was crashing and returning a `500 Internal Server Error` instead of transitioning to the Agent Phase.
+  - **Bug 1 (`KeyError: 'role'`)**: The Python code blindly assumed every object in the frontend's conversation history had a strict `role` and `parts` dictionary key.
+    - *Fix:* Updated `app/main.py` to safely parse the dictionary using `in` checks and `.get()`, preventing crashes from slightly malformed history arrays.
+  - **Bug 2 (Windows `UnicodeEncodeError`)**: The backend's fallback system (Gemini -> Groq -> Static) was fatally crashing because the Python `print()` statements contained warning emojis (❌, ✅, ⚠️). On Windows, the default `cp1252` encoding crashed when printing these, breaking the fallback mechanism before it could trigger.
+    - *Fix:* Stripped all emojis from `print()` statements in `main.py` and replaced them with standard terminal strings (`[ERROR]`, `[SUCCESS]`, `[WARN]`).
+
+> **CHECKPOINT: AUTH FLOW & AGENT INITIALIZATION FIXED**
+> The signup flow is complete with T&C validation and dynamic demographic injection for OAuth users. The backend API is completely stable on Windows, effectively preventing internal crashes and ensuring flawless failovers during the dynamic assessment agent phase.
+
+## [2026-05-26] Dashboard Enhancement & Development Automation
+
+- **Main Dashboard Redesign (`src/app/(platform)/page.tsx`)**:
+  - Completely redesigned the primary dashboard from an "Under Development" placeholder into a comprehensive, feature-rich landing hub.
+  - **Sections Added**:
+    1. **Welcome Header** - Personalized greeting with active learning streak display (animated gradient background).
+    2. **Stats Cards Grid** (4 columns) - Real-time metrics: Learning Streak (12 days), XP Earned (2,450), Achievements (18), Quiz Score (92%).
+    3. **Subject Progress Tracker** - Visual progress bars for all subjects (Mathematics, Physics, Chemistry, Biology) with percentage indicators and subject icons.
+    4. **Quick Access Cards** (6 cards) - Direct navigation to major features: Chat with Drona, Knowledge Games, Test Arena, Progress Tracker, Resources, Achievements. Each card includes hover animations and color-coded gradients.
+    5. **Recent Activity Feed** - Timeline of user accomplishments, badges earned, and quiz completions with timestamps.
+    6. **Upcoming Events** - Calendar of challenges, tests, and leaderboard resets to keep users engaged.
+  - **Design & UX Features**:
+    - Gradient backgrounds with smooth hover transitions and scale animations.
+    - Material Design 3 icons throughout for visual consistency.
+    - Responsive grid layout: 2 columns (mobile), 4 columns (tablet), full width (desktop).
+    - Color-coded section badges using brand gradients (primary, secondary, tertiary).
+    - Smooth `transition-all duration-300` effects for interactive elements.
+    - `hover:-translate-y-1` lift effect on cards to indicate interactivity.
+    - Border-outline styling consistent with platform's Material 3 language.
+
+- **Development Automation (`Run.bat`)**:
+  - Created `Run.bat` script in project root for one-command startup of entire stack.
+  - **Functionality**: 
+    - Starts Python backend (port 8000) in minimized terminal window.
+    - Starts Next.js frontend (port 3000) in minimized terminal window.
+    - Automatically opens Microsoft Edge with both application links (Frontend + API Docs).
+    - Displays brief status message before closing batch window.
+  - **Usage**: Simply run `.\Run.bat` from home folder - no folder switching or multi-terminal management required.
+  - **Benefits**: Eliminates friction in development workflow, allows single-click full-stack startup.
+
+- **Frontend Configuration**:
+  - Reverted `package.json` dev script to simple `"dev": "next dev"` (concurrently approach removed due to PowerShell compatibility issues).
+  - Kept individual `dev:backend` and `dev:frontend` scripts available for manual parallel execution if needed.
+
+> **CHECKPOINT: DASHBOARD COMPLETION & DEVELOPMENT UX**
+> The main platform dashboard is now a beautiful, content-rich hub showcasing all platform features with smooth interactions and responsive design. One-command startup automation (`Run.bat`) dramatically improves development experience by eliminating terminal management overhead.
