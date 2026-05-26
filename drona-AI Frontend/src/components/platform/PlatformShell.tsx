@@ -81,17 +81,17 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
             return (
               <Link key={tab.name} href={tab.path}
                 className={`h-full flex items-center relative text-[15px] font-bold transition-all duration-300 group px-2 animate-fadeSlideUp`}
-                style={{ 
+                style={{
                   animationDelay: `${i * 40}ms`,
                   '--tab-hex': tab.hex,
                   '--tab-rgb': tab.rgb
                 } as React.CSSProperties}
               >
-                <span 
+                <span
                   className={`relative z-10 transition-colors duration-300 ${isActive ? '' : 'text-on-surface-variant group-hover:text-[var(--tab-hex)]'}`}
-                  style={{ 
+                  style={{
                     color: isActive ? 'var(--tab-hex)' : undefined,
-                    filter: isActive ? `drop-shadow(0 0 8px rgba(var(--tab-rgb), 0.3))` : undefined 
+                    filter: isActive ? `drop-shadow(0 0 8px rgba(var(--tab-rgb), 0.3))` : undefined
                   }}
                 >
                   {tab.name}
@@ -125,89 +125,104 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
             ))}
           </div>
 
-          {/* Profile Component — Overflows header with hexagonal tech-panel frame */}
-          <Link href="/profile" 
-            className="flex items-center gap-0 cursor-pointer relative group transition-all duration-500 -my-3 pr-8 pl-2"
-            style={{ 
+          {/* Profile Component — Overflows header with tech-panel frame lines */}
+          <Link href="/profile"
+            className="flex items-center gap-0 cursor-pointer relative group transition-all duration-500 -my-3"
+            style={{
               '--env-hex': activeTab.hex,
               '--env-rgb': activeTab.rgb
             } as React.CSSProperties}
           >
-            {/* ── Hexagonal Tech Panel Frame (SVG) ── */}
-            <svg className="absolute -inset-x-1 -inset-y-3 w-[calc(100%+8px)] h-[calc(100%+24px)] pointer-events-none z-0 transition-opacity duration-500 opacity-[0.25] group-hover:opacity-[0.45]" viewBox="0 0 400 100" fill="none" preserveAspectRatio="none">
-              {/* Outer Chamfered Box */}
-              <path d="M 25,2 L 375,2 L 398,25 L 398,75 L 375,98 L 25,98 L 2,75 L 2,25 Z" stroke="currentColor" strokeWidth="1" fill="rgba(255,255,255,0.05)" style={{ color: 'var(--env-hex)' }} />
-              {/* Inner Dashed Accent */}
-              <path d="M 27,6 L 373,6 L 392,25 L 392,75 L 373,94 L 27,94 L 8,75 L 8,25 Z" stroke="currentColor" strokeWidth="0.5" strokeDasharray="4 4" style={{ color: 'var(--env-hex)' }} />
-              {/* Corner Accents */}
-              <path d="M 25,2 L 40,2 M 375,2 L 360,2 M 25,98 L 40,98 M 375,98 L 360,98" stroke="currentColor" strokeWidth="2.5" style={{ color: 'var(--env-hex)' }} />
+            {/* ── Tech Panel Frame Lines (SVG) ── */}
+            {/* These create the beveled HUD-like frame around the profile area */}
+
+            {/* Outer frame — faintest, largest */}
+            <svg className="absolute -inset-x-5 -inset-y-4 w-[calc(100%+40px)] h-[calc(100%+32px)] pointer-events-none z-0 transition-opacity duration-500 opacity-[0.12] group-hover:opacity-[0.25]" viewBox="0 0 320 100" fill="none" preserveAspectRatio="none">
+              <path d="M 20,2 L 300,2 L 318,18 L 318,82 L 300,98 L 20,98 L 2,82 L 2,18 Z" stroke="currentColor" strokeWidth="0.8" style={{ color: 'var(--env-hex)' }} />
             </svg>
 
-            {/* Glowing background on hover */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-none z-0" style={{ background: 'var(--env-hex)', clipPath: 'polygon(15px 0%, calc(100% - 15px) 0%, 100% 15px, 100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0% calc(100% - 15px), 0% 15px)' }} />
+            {/* Mid frame — slightly more visible */}
+            <svg className="absolute -inset-x-3 -inset-y-2.5 w-[calc(100%+24px)] h-[calc(100%+20px)] pointer-events-none z-0 transition-opacity duration-500 opacity-[0.18] group-hover:opacity-[0.35]" viewBox="0 0 300 90" fill="none" preserveAspectRatio="none">
+              <path d="M 16,2 L 284,2 L 298,14 L 298,76 L 284,88 L 16,88 L 2,76 L 2,14 Z" stroke="currentColor" strokeWidth="0.7" style={{ color: 'var(--env-hex)' }} />
+            </svg>
 
-            {/* Avatar Container — large, circular, overflows header */}
+            {/* Inner frame — clearest line */}
+            <svg className="absolute -inset-x-1 -inset-y-1 w-[calc(100%+8px)] h-[calc(100%+8px)] pointer-events-none z-0 transition-opacity duration-500 opacity-[0.08] group-hover:opacity-[0.18]" viewBox="0 0 280 80" fill="none" preserveAspectRatio="none">
+            {/* ── Hexagonal Background & Tech Lines ── */}
+            <div className="absolute inset-y-0 right-0 left-[32px] z-0 pointer-events-none transition-all duration-500 group-hover:scale-[1.01] origin-left">
+              <svg className="w-full h-full drop-shadow-sm" preserveAspectRatio="none" viewBox="0 0 250 60">
+                {/* Hexagonal Background Box */}
+                <path d="M 0,0 L 235,0 L 250,15 L 250,60 L 15,60 L 0,45 Z" fill="white" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" className="transition-colors duration-500" style={{ color: 'rgba(var(--env-rgb), 0.4)' }} />
+                
+                {/* Horizontal Tech Lines changing color */}
+                <line x1="5" y1="4" x2="232" y2="4" stroke="currentColor" strokeWidth="0.8" className="opacity-30 group-hover:opacity-60 transition-all duration-500" style={{ color: 'var(--env-hex)' }} />
+                <line x1="12" y1="56" x2="242" y2="56" stroke="currentColor" strokeWidth="0.8" className="opacity-30 group-hover:opacity-60 transition-all duration-500" style={{ color: 'var(--env-hex)' }} />
+              </svg>
+            </div>
+
+            {/* Avatar Container — circular overlapping the left side */}
             <div className="relative shrink-0 w-[64px] h-[64px] z-20">
-              {/* Outer Tech Ring (animated) */}
+              {/* Circular Tech Lines changing color */}
               <div 
-                className="absolute -inset-[5px] rounded-full border transition-colors duration-500 animate-[spin_10s_linear_infinite]" 
-                style={{ borderColor: 'rgba(var(--env-rgb), 0.3)', borderTopColor: 'var(--env-hex)' }}
+                className="absolute -inset-[4px] rounded-full border-[1.5px] border-dashed transition-colors duration-500 animate-[spin_12s_linear_infinite]" 
+                style={{ borderColor: 'rgba(var(--env-rgb), 0.5)', borderTopColor: 'var(--env-hex)', borderRightColor: 'var(--env-hex)' }}
               />
-              {/* Inner Tech Ring */}
               <div 
-                className="absolute -inset-[2px] rounded-full border transition-colors duration-500 animate-[spin_15s_linear_infinite_reverse]" 
-                style={{ borderColor: 'rgba(var(--env-rgb), 0.15)', borderBottomColor: 'var(--env-hex)' }}
+                className="absolute -inset-[7px] rounded-full border transition-colors duration-500 opacity-40 animate-[spin_20s_linear_infinite_reverse]" 
+                style={{ borderColor: 'var(--env-hex)', clipPath: 'polygon(0 0, 100% 0, 100% 50%, 0 50%)' }}
               />
               
               {/* Avatar Circle */}
               <div 
-                className="w-full h-full rounded-full bg-surface-container-high border-[2px] flex items-center justify-center overflow-hidden transition-all duration-500 relative z-10 group-hover:scale-[1.03] shadow-md bg-white"
+                className="w-full h-full rounded-full bg-surface-container-high border-[2px] flex items-center justify-center overflow-hidden transition-all duration-500 relative z-10 group-hover:scale-[1.05] shadow-md bg-white"
                 style={{ borderColor: 'var(--env-hex)' }}
               >
-                <span className="material-symbols-outlined text-[30px] text-on-surface-variant transition-colors duration-500 group-hover:text-[var(--env-hex)]">person</span>
+                <span className="material-symbols-outlined text-[32px] text-on-surface-variant transition-colors duration-500 group-hover:text-[var(--env-hex)]">person</span>
               </div>
               
-              {/* Premium Shield Level Badge */}
+              {/* Premium Gold Shield Level Badge */}
               <div 
-                className="absolute -bottom-2 -left-2 w-[30px] h-[36px] flex flex-col items-center justify-start shadow-xl z-30 transition-all duration-500 overflow-hidden group-hover:scale-105"
+                className="absolute -bottom-1 -left-1 w-[26px] h-[32px] flex flex-col items-center justify-start shadow-xl z-30 transition-transform duration-500 group-hover:scale-110"
                 style={{ 
-                  background: 'linear-gradient(135deg, #222 0%, #000 100%)',
+                  background: 'linear-gradient(135deg, #FFD700 0%, #DAA520 100%)',
                   clipPath: 'polygon(50% 100%, 100% 80%, 100% 0%, 0% 0%, 0% 80%)',
-                  border: '1px solid rgba(var(--env-rgb), 0.5)'
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.2)'
                 }}
               >
-                <div className="w-full text-center text-[6px] font-black uppercase text-white tracking-widest pt-[2px] pb-[1px]" style={{ background: 'var(--env-hex)' }}>
-                  LEVEL
+                <div className="w-full text-center text-[5px] font-black uppercase text-black/70 tracking-widest pt-[3px] pb-[1px]">
+                  LVL
                 </div>
-                <div className="text-white text-[13px] font-black leading-none mt-[3px] tracking-tighter" style={{ textShadow: '0 0 4px rgba(255,255,255,0.3)' }}>
+                <div className="text-black text-[12px] font-black leading-none mt-[1px]">
                   99
                 </div>
               </div>
             </div>
             
-            {/* Info Section — Extended width for long XP bar */}
-            <div className="flex flex-col justify-center pl-4 min-w-[200px] max-w-[260px] relative z-10 mt-1">
-              <div className="flex items-end justify-between">
-                <span className="text-[16px] font-display font-black text-on-surface tracking-wider uppercase truncate transition-colors duration-500 group-hover:text-[var(--env-hex)] leading-none">{userName}</span>
+            {/* Info Section — Extended full right */}
+            <div className="flex flex-col justify-center pl-4 pr-6 py-1 relative z-10 flex-1">
+              <div className="flex items-end justify-between w-full">
+                {/* Bold Highlighted Name */}
+                <span className="text-[17px] font-display font-black text-on-surface tracking-widest uppercase truncate transition-colors duration-500 group-hover:text-[var(--env-hex)] leading-none" style={{ textShadow: '0 1px 2px rgba(var(--env-rgb), 0.1)' }}>{userName}</span>
               </div>
               
-              <div className="flex items-center gap-1.5 mt-1.5 mb-2">
-                <span className="material-symbols-outlined text-[12px] transition-colors duration-500" style={{ color: 'var(--env-hex)' }}>keyboard_double_arrow_up</span>
-                <span className="text-[8px] font-bold text-outline-variant uppercase tracking-[0.2em]">Elite Rank</span>
+              {/* Decreased Rank Size */}
+              <div className="flex items-center gap-1.5 my-[2px]">
+                <span className="material-symbols-outlined text-[9px] transition-colors duration-500" style={{ color: 'var(--env-hex)' }}>star</span>
+                <span className="text-[7px] font-bold text-outline-variant uppercase tracking-[0.25em]">Elite Rank</span>
               </div>
               
               {/* Extended XP Bar */}
-              <div className="flex items-center gap-2 w-full">
-                <span className="text-[9px] font-black uppercase tracking-widest shrink-0 transition-colors duration-500" style={{ color: 'var(--env-hex)' }}>XP</span>
-                <div className="flex-1 h-[4px] bg-outline-variant/20 rounded-full overflow-hidden relative shadow-inner">
+              <div className="flex items-center gap-2 w-full mt-[2px]">
+                <span className="text-[7px] font-black uppercase tracking-widest shrink-0 transition-colors duration-500" style={{ color: 'var(--env-hex)' }}>XP</span>
+                <div className="flex-1 h-[5px] bg-surface-variant/40 rounded-full overflow-hidden relative shadow-inner">
                   <div 
                     className="w-[78%] h-full rounded-full relative overflow-hidden transition-all duration-500"
-                    style={{ background: 'var(--env-hex)', boxShadow: '0 0 8px var(--env-hex)' }}
+                    style={{ background: 'var(--env-hex)', boxShadow: '0 0 10px rgba(var(--env-rgb), 0.8)' }}
                   >
-                    <div className="absolute inset-0 bg-white/50 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                    <div className="absolute inset-0 bg-white/40 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
                   </div>
                 </div>
-                <span className="text-[9px] font-mono font-medium text-outline-variant shrink-0 tracking-tighter"><span style={{ color: 'var(--env-hex)' }}>78,450</span> / 100,000</span>
+                <span className="text-[7.5px] font-mono font-medium text-outline-variant shrink-0 tracking-tight"><span style={{ color: 'var(--env-hex)' }} className="font-bold transition-colors duration-500">78,450</span> / 100K</span>
               </div>
             </div>
           </Link>
