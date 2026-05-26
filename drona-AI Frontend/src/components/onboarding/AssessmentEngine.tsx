@@ -4,9 +4,10 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 /* ─────────────────────────────────────────────────────────────
-   Static Questions — a mix of MCQ and text-only.
-   ALL appear to the user as if the agent generated them.
-   Some are text-only to provoke genuine, unguided opinion.
+   7 BASELINE PSYCHOLOGICAL + SCIENTIFIC ASSESSMENT QUESTIONS
+   These build initial signals across learning style, resilience,
+   motivation, attention, memory, and stress response.
+   ALL appear as if the agent generated them.
    ───────────────────────────────────────────────────────────── */
 const BASELINE_QUESTIONS = [
   {
@@ -14,93 +15,86 @@ const BASELINE_QUESTIONS = [
     type: "single-select" as const,
     options: [
       "I feel frustrated and usually give up or ask for the direct answer.",
-      "I take a break and come back to it later.",
-      "I break it down into smaller pieces and try different approaches.",
-      "I actively seek out hints or resources to figure it out myself."
+      "I take a break and come back to it later with fresh perspective.",
+      "I break it down into smaller pieces and try different approaches systematically.",
+      "I actively seek out hints, resources, or ask others to guide my thinking."
     ]
   },
   {
     question: "How do you prefer to learn a completely new and complex concept?",
     type: "multi-select" as const,
     options: [
-      "Seeing diagrams, charts, and visual mind maps.",
-      "Listening to someone explain it verbally or via podcast.",
+      "Seeing diagrams, charts, visual mind maps, or animations.",
+      "Listening to someone explain it verbally, via podcast, or discussion.",
       "Reading detailed texts, notes, and writing my own summaries.",
-      "Doing practical examples, experiments, or solving related problems."
+      "Doing practical examples, experiments, or solving related problems immediately."
     ]
   },
   {
-    question: "In your own words, what does academic success mean to you personally — and why does it matter?",
+    question: "In your own words, what does academic success mean to you personally — and why does it truly matter?",
     type: "text-only" as const,
     options: [] as string[]
   },
   {
-    question: "How often do you find yourself getting distracted or procrastinating during a study session?",
+    question: "How often do you find yourself getting distracted, procrastinating, or losing focus during a study session?",
     type: "single-select" as const,
     options: [
-      "Constantly. I can barely focus for 10 minutes.",
-      "Often, especially when the subject is boring or difficult.",
-      "Occasionally, but I can usually pull myself back on track.",
-      "Rarely. When I sit down to study, I enter deep focus easily."
+      "Constantly. I struggle to focus for even 10 minutes without breaking concentration.",
+      "Often, especially when the material feels boring or difficult to understand.",
+      "Occasionally, but I can usually pull myself back on track after a few minutes.",
+      "Rarely. When I commit to studying, I enter deep focus easily and sustain it."
     ]
   },
   {
-    question: "When preparing for an exam, how do you usually remember facts?",
+    question: "When preparing for an exam, how do you usually retain and remember important facts or concepts?",
     type: "multi-select" as const,
     options: [
-      "Rote memorization — repeating it over and over.",
-      "Creating stories, mnemonics, or associations.",
-      "Understanding the deep logical 'why' behind the concept.",
-      "Practicing with flashcards and spaced repetition."
+      "Rote memorization — repeating facts over and over until they stick.",
+      "Creating stories, mnemonics, metaphors, or building mental associations.",
+      "Understanding the deep logical 'why' behind the concept, not just memorizing.",
+      "Practicing with flashcards, spaced repetition, or active recall exercises."
     ]
   },
   {
-    question: "Describe a time you failed at something academic. How did it make you feel, and what did you do next?",
+    question: "Describe a specific time you failed or struggled with something academic. What caused it, how did it make you feel, and what did you do?",
     type: "text-only" as const,
     options: [] as string[]
   },
   {
-    question: "How do you typically feel and behave the night before a major exam?",
+    question: "How do you typically feel and behave the night before a major exam or evaluation?",
     type: "single-select" as const,
     options: [
-      "Overwhelmed, anxious, and unable to sleep.",
-      "Stressed but trying to cram as much as possible.",
-      "A bit nervous, but generally calm and doing light review.",
-      "Completely relaxed, knowing I've already prepared."
-    ]
-  },
-  {
-    question: "If a topic is outside your syllabus but deeply interesting, do you explore it?",
-    type: "single-select" as const,
-    options: [
-      "No, I only study what will come in the exam.",
-      "Only if I have a lot of free time and no pending work.",
-      "Yes, I often fall down rabbit holes learning about random things.",
-      "Always. I care more about overall knowledge than just the syllabus."
-    ]
-  },
-  {
-    question: "What is the one subject or topic you find the most challenging right now, and what specifically makes it hard for you?",
-    type: "text-only" as const,
-    options: [] as string[]
-  },
-  {
-    question: "What is your primary drive for studying and achieving good grades?",
-    type: "single-select" as const,
-    options: [
-      "Fear of failure or pressure from parents/teachers.",
-      "To get into a good college or secure a high-paying job.",
-      "To prove to myself that I can master difficult subjects.",
-      "Pure curiosity and the joy of learning how the world works."
+      "Overwhelmed, anxious, and unable to sleep — spiraling with worry.",
+      "Stressed and driven to cram intensively until the last minute.",
+      "Somewhat nervous, but generally calm and doing light review or sleep.",
+      "Completely relaxed and confident, knowing I've already prepared thoroughly."
     ]
   }
 ];
+
+const TOTAL_BASELINE = BASELINE_QUESTIONS.length; // 7
+const EXPECTED_AGENT_QUESTIONS = 12; // avg of 10-15
+const TOTAL_EXPECTED = TOTAL_BASELINE + EXPECTED_AGENT_QUESTIONS; // 19
+
+const FINAL_TEST_QUESTION = {
+  question: "Would you like to give a Knowledge test to better assess your profile?",
+  type: "single-select" as const,
+  options: ["Yes", "Skip"]
+};
 
 type QuestionData = {
   question: string;
   type: "single-select" | "multi-select" | "text-only";
   options: string[];
 };
+
+/* ─── Initialization stage data ─── */
+const INIT_STAGES = [
+  { label: "Mapping neural learning profile", icon: "neurology", duration: 2200 },
+  { label: "Indexing cognitive patterns", icon: "pattern", duration: 1800 },
+  { label: "Calibrating teaching agents", icon: "psychology", duration: 2000 },
+  { label: "Deploying personalized ecosystem", icon: "rocket_launch", duration: 1500 },
+];
 
 export default function AssessmentEngine() {
   const router = useRouter();
@@ -119,11 +113,13 @@ export default function AssessmentEngine() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [isThinking, setIsThinking] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [questionCount, setQuestionCount] = useState(0);
+  const [agentQuestionCount, setAgentQuestionCount] = useState(0);
+  const [isFinalQuestion, setIsFinalQuestion] = useState(false);
 
   const [setupComplete, setSetupComplete] = useState(false);
   const [activeTab, setActiveTab] = useState<'byok' | 'subscribe' | 'settings'>('byok');
   const [showCinematic, setShowCinematic] = useState(false);
+  const [initStage, setInitStage] = useState(0);
 
   /* ─── Simulate agent "thinking" for static questions too ─── */
   const simulateThinking = useCallback((callback: () => void) => {
@@ -136,13 +132,15 @@ export default function AssessmentEngine() {
   }, []);
 
   /* ─── Animate question transitions ─── */
-  const transitionToQuestion = useCallback((q: QuestionData) => {
+  const transitionToQuestion = useCallback((q: QuestionData, isAgent = false) => {
     setIsTransitioning(true);
     setTimeout(() => {
       setCurrentQuestion(q);
       setSelectedOptions([]);
       setElaboration("");
-      setQuestionCount(prev => prev + 1);
+      if (isAgent) {
+        setAgentQuestionCount(prev => prev + 1);
+      }
       setTimeout(() => setIsTransitioning(false), 60);
     }, 250);
   }, []);
@@ -160,6 +158,32 @@ export default function AssessmentEngine() {
 
   /* ─── Submit answer ─── */
   const handleNext = async () => {
+    // FINAL TEST QUESTION - Check if this is the final test question
+    if (currentQuestion.question === FINAL_TEST_QUESTION.question) {
+      if (selectedOptions.includes("Yes")) {
+        // User wants to take the knowledge test
+        router.push("/test");
+      } else {
+        // User skipped the test - show initialization and then dashboard
+        setShowCinematic(true);
+        // Run staged initialization
+        let stage = 0;
+        const advanceStage = () => {
+          if (stage < INIT_STAGES.length) {
+            setInitStage(stage);
+            stage++;
+            setTimeout(advanceStage, INIT_STAGES[stage - 1]?.duration ?? 1500);
+          } else {
+            setSetupComplete(true);
+            setTimeout(() => router.push("/platform"), 2500);
+          }
+        };
+        advanceStage();
+      }
+      return;
+    }
+
+    // Build answer data
     const answerData = {
       question: currentQuestion.question,
       options_selected: selectedOptions,
@@ -173,59 +197,121 @@ export default function AssessmentEngine() {
     ];
     setHistory(newHistory);
 
-    if (!isAgentPhase && currentQIndex < BASELINE_QUESTIONS.length - 1) {
-      // Static phase — simulate thinking delay so transition feels natural
+    // ═══════════════════════════════════════════════════════════
+    // BASELINE PHASE: Show all 7 baseline questions first
+    // ═══════════════════════════════════════════════════════════
+    if (currentQIndex < BASELINE_QUESTIONS.length - 1) {
+      // Still more baseline questions to show
       const nextIdx = currentQIndex + 1;
       setCurrentQIndex(nextIdx);
+      
+      // Simulate thinking to feel natural
       simulateThinking(() => {
         transitionToQuestion(BASELINE_QUESTIONS[nextIdx]);
       });
-    } else {
-      // Agent phase — real API call
+    } else if (!isAgentPhase) {
+      // ═══════════════════════════════════════════════════════════
+      // TRANSITION TO AGENT PHASE: All 7 baselines are done
+      // ═══════════════════════════════════════════════════════════
       setIsAgentPhase(true);
       setIsThinking(true);
+      
       try {
-        let res;
-        if (!sessionId) {
-          // Initialize session
-          res = await fetch("http://localhost:8000/api/agent/init", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ history: history, current_answer: answerData })
-          });
-        } else {
-          // Continue session
-          res = await fetch("http://localhost:8000/api/agent/next", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ session_id: sessionId, current_answer: answerData })
-          });
+        // Call backend to initialize agent session and get first dynamic question
+        const res = await fetch("http://localhost:8000/api/agent/init", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            history: newHistory,
+            current_answer: answerData
+          })
+        });
+
+        if (!res.ok) {
+          throw new Error(`Agent init failed: ${res.statusText}`);
         }
-        
-        if (!res.ok) throw new Error("Network response was not ok");
+
         const jsonRes = await res.json();
         const data = jsonRes.data;
 
-        if (jsonRes.session_id && !sessionId) {
+        // Store session ID for future requests
+        if (jsonRes.session_id) {
           setSessionId(jsonRes.session_id);
+          console.log("✅ Agent session initialized:", jsonRes.session_id);
         }
 
+        setIsThinking(false);
+
+        // Check if profile is somehow already complete (unlikely on first call)
         if (data.profile_complete) {
-          setIsThinking(false);
-          setShowCinematic(true);
-          setTimeout(() => setSetupComplete(true), 6000);
+          setIsFinalQuestion(true);
+          transitionToQuestion(FINAL_TEST_QUESTION);
         } else {
-          setIsThinking(false);
+          // Show the first agent-generated dynamic question
           transitionToQuestion({
             question: data.question,
             type: data.type,
             options: data.options || []
-          });
+          }, true);
         }
-      } catch {
+      } catch (err) {
+        console.error("❌ Agent initialization error:", err);
         setIsThinking(false);
-        setShowCinematic(true);
-        setTimeout(() => setSetupComplete(true), 6000);
+        
+        // Fallback: Skip agent and go straight to final test question
+        setIsFinalQuestion(true);
+        transitionToQuestion(FINAL_TEST_QUESTION);
+      }
+    } else {
+      // ═══════════════════════════════════════════════════════════
+      // AGENT PHASE: Get next dynamic question
+      // ═══════════════════════════════════════════════════════════
+      setIsThinking(true);
+
+      try {
+        if (!sessionId) {
+          throw new Error("No session ID available");
+        }
+
+        const res = await fetch("http://localhost:8000/api/agent/next", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            session_id: sessionId,
+            current_answer: answerData
+          })
+        });
+
+        if (!res.ok) {
+          throw new Error(`Agent next failed: ${res.statusText}`);
+        }
+
+        const jsonRes = await res.json();
+        const data = jsonRes.data;
+
+        setIsThinking(false);
+
+        // Check if agent has completed the profile
+        if (data.profile_complete) {
+          console.log("✅ Assessment profile complete!");
+          // Transition to final test question
+          setIsFinalQuestion(true);
+          transitionToQuestion(FINAL_TEST_QUESTION);
+        } else {
+          // Show next agent-generated question
+          transitionToQuestion({
+            question: data.question,
+            type: data.type,
+            options: data.options || []
+          }, true);
+        }
+      } catch (err) {
+        console.error("❌ Agent next error:", err);
+        setIsThinking(false);
+        
+        // Fallback: After a few agent questions, show final test question
+        setIsFinalQuestion(true);
+        transitionToQuestion(FINAL_TEST_QUESTION);
       }
     }
   };
@@ -273,12 +359,16 @@ export default function AssessmentEngine() {
   );
 
   /* ═══════════════════════════════════════════════════════════
-     CINEMATIC INITIALIZATION SCREEN (Interactive)
+     CINEMATIC INITIALIZATION SCREEN (Interactive + Staged)
      ═══════════════════════════════════════════════════════════ */
   if (showCinematic) {
+    const initProgress = setupComplete
+      ? 100
+      : Math.min(((initStage + 1) / INIT_STAGES.length) * 90, 90);
+
     return (
         <div className="flex-1 flex flex-col items-center justify-center animate-fadeIn w-full px-4 py-8">
-            <div className="bg-white p-8 md:p-10 rounded-[2rem] shadow-[0_24px_80px_rgba(0,0,0,0.07)] border border-outline-variant/20 max-w-4xl w-full relative overflow-hidden flex flex-col md:flex-row gap-8">
+            <div className="bg-white p-8 md:p-10 rounded-[2rem] shadow-[0_24px_80px_rgba(0,0,0,0.07)] border border-outline-variant/20 max-w-5xl w-full relative overflow-hidden flex flex-col md:flex-row gap-8">
                 
                 {/* Left side: Setup Status */}
                 <div className="flex-1 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-outline-variant/20 pb-8 md:pb-0 md:pr-8">
@@ -292,18 +382,48 @@ export default function AssessmentEngine() {
                         {setupComplete ? (
                             <span className="material-symbols-outlined text-green-500 text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                         ) : (
-                            <span className="material-symbols-outlined text-primary text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>memory</span>
+                            <span className="material-symbols-outlined text-primary text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                              {INIT_STAGES[initStage]?.icon ?? "memory"}
+                            </span>
                         )}
                     </div>
                     
                     <h2 className="font-display text-2xl font-black text-on-surface tracking-tight mb-2 text-center">
                         {setupComplete ? "Ecosystem Ready" : "Initializing Drona AI"}
                     </h2>
-                    <p className="font-body text-on-surface-variant text-sm text-center mb-8 max-w-xs">
+                    <p className="font-body text-on-surface-variant text-sm text-center mb-4 max-w-xs">
                         {setupComplete 
                             ? "Your personalized teaching agent has been fully initialized based on your psychological profile." 
                             : "Building your personalized learning ecosystem. You can configure your settings while you wait."}
                     </p>
+
+                    {/* Staged progress */}
+                    <div className="w-full max-w-xs mb-6">
+                      {/* Progress bar */}
+                      <div className="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden mb-4">
+                        <div
+                          className="h-full bg-gradient-to-r from-primary to-primary-container rounded-full transition-all duration-700 ease-out"
+                          style={{ width: `${initProgress}%` }}
+                        />
+                      </div>
+                      {/* Stage list */}
+                      <div className="space-y-2">
+                        {INIT_STAGES.map((stage, idx) => {
+                          const isDone = setupComplete || idx < initStage;
+                          const isCurrent = !setupComplete && idx === initStage;
+                          return (
+                            <div key={idx} className={`flex items-center gap-2.5 transition-all duration-300 ${isDone ? 'opacity-100' : isCurrent ? 'opacity-100' : 'opacity-30'}`}>
+                              <span className={`material-symbols-outlined text-sm ${isDone ? 'text-green-500' : isCurrent ? 'text-primary animate-pulse' : 'text-outline-variant/40'}`} style={{ fontVariationSettings: "'FILL' 1" }}>
+                                {isDone ? 'check_circle' : isCurrent ? 'pending' : 'radio_button_unchecked'}
+                              </span>
+                              <span className={`text-xs font-medium ${isDone ? 'text-on-surface' : isCurrent ? 'text-primary' : 'text-on-surface-variant/40'}`}>
+                                {stage.label}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
 
                     <button 
                         onClick={() => router.push("/platform")}
@@ -327,10 +447,15 @@ export default function AssessmentEngine() {
                         {activeTab === 'byok' && (
                             <div className="h-full flex flex-col animate-fadeIn">
                                 <h4 className="font-bold text-sm mb-1 text-on-surface">Bring Your Own Key</h4>
-                                <p className="text-xs text-on-surface-variant mb-6">Connect your own OpenAI, Anthropic, or Gemini API keys to bypass usage limits.</p>
+                                <p className="text-xs text-on-surface-variant mb-4">Connect your own OpenAI, Anthropic, or Gemini API keys to bypass usage limits.</p>
                                 <div className="space-y-3 mt-auto">
-                                    <input type="password" placeholder="sk-..." className="w-full bg-surface-container-low border border-outline-variant/20 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-primary transition-colors" />
-                                    <button className="w-full bg-primary/10 text-primary font-semibold py-2.5 rounded-lg text-sm hover:bg-primary/20 transition-colors cursor-pointer">Save Key</button>
+                                    <select className="w-full bg-surface-container-low border border-outline-variant/20 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-primary transition-colors cursor-pointer appearance-none">
+                                        <option value="gemini">Google Gemini</option>
+                                        <option value="openai">OpenAI</option>
+                                        <option value="anthropic">Anthropic</option>
+                                    </select>
+                                    <input type="password" placeholder="API Key (sk-...)" className="w-full bg-surface-container-low border border-outline-variant/20 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-primary transition-colors" />
+                                    <button className="w-full bg-primary/10 text-primary font-semibold py-2.5 rounded-lg text-sm hover:bg-primary/20 transition-colors cursor-pointer">Save API Key</button>
                                 </div>
                             </div>
                         )}
@@ -338,7 +463,14 @@ export default function AssessmentEngine() {
                             <div className="h-full flex flex-col animate-fadeIn">
                                 <h4 className="font-bold text-sm mb-1 text-on-surface">Drona AI Premium</h4>
                                 <p className="text-xs text-on-surface-variant mb-4">Unlock advanced reasoning models and unlimited agent memory.</p>
-                                <div className="space-y-3 mt-auto">
+                                <div className="space-y-3 mt-auto max-h-[160px] overflow-y-auto pr-2 pb-2 scrollbar-thin">
+                                    <div className="p-3.5 rounded-xl border border-outline-variant/20 hover:border-primary/50 flex justify-between items-center cursor-pointer transition-colors">
+                                        <div>
+                                            <div className="font-bold text-sm text-on-surface mb-0.5">Free Tier</div>
+                                            <div className="text-xs text-on-surface-variant">Limited context</div>
+                                        </div>
+                                        <div className="w-5 h-5 rounded-full border-2 border-outline-variant/50"></div>
+                                    </div>
                                     <div className="p-3.5 rounded-xl border-2 border-primary bg-primary/[0.04] flex justify-between items-center cursor-pointer">
                                         <div>
                                             <div className="font-bold text-sm text-primary mb-0.5">Pro Tier</div>
@@ -346,8 +478,15 @@ export default function AssessmentEngine() {
                                         </div>
                                         <div className="w-5 h-5 rounded-full border-[5px] border-primary"></div>
                                     </div>
-                                    <button className="w-full bg-primary text-white font-semibold py-2.5 rounded-xl text-sm hover:opacity-90 transition-opacity shadow-md shadow-primary/20 cursor-pointer">Upgrade Now</button>
+                                    <div className="p-3.5 rounded-xl border border-outline-variant/20 hover:border-primary/50 flex justify-between items-center cursor-pointer transition-colors">
+                                        <div>
+                                            <div className="font-bold text-sm text-on-surface mb-0.5">Ultra Tier</div>
+                                            <div className="text-xs text-on-surface-variant">$50/month</div>
+                                        </div>
+                                        <div className="w-5 h-5 rounded-full border-2 border-outline-variant/50"></div>
+                                    </div>
                                 </div>
+                                <button className="w-full bg-primary text-white font-semibold py-2.5 rounded-xl text-sm hover:opacity-90 transition-opacity shadow-md shadow-primary/20 cursor-pointer mt-3 shrink-0">Upgrade Now</button>
                             </div>
                         )}
                         {activeTab === 'settings' && (
@@ -361,6 +500,10 @@ export default function AssessmentEngine() {
                                     </label>
                                     <label className="flex items-center justify-between cursor-pointer">
                                         <span className="text-sm font-medium text-on-surface">Socratic Method</span>
+                                        <input type="checkbox" defaultChecked className="w-4 h-4 accent-primary cursor-pointer" />
+                                    </label>
+                                    <label className="flex items-center justify-between cursor-pointer">
+                                        <span className="text-sm font-medium text-on-surface">Visual Explanations (Diagrams)</span>
                                         <input type="checkbox" defaultChecked className="w-4 h-4 accent-primary cursor-pointer" />
                                     </label>
                                 </div>
@@ -377,9 +520,22 @@ export default function AssessmentEngine() {
   /* ═══════════════════════════════════════════════════════════
      MAIN ASSESSMENT UI
      ═══════════════════════════════════════════════════════════ */
-  const progressPct = isAgentPhase
-    ? Math.min(60 + questionCount * 4, 95)
-    : ((currentQIndex + 1) / BASELINE_QUESTIONS.length) * 55;
+  
+  // Progress calculation: proportional across entire assessment
+  const answeredQuestions = isAgentPhase
+    ? TOTAL_BASELINE + agentQuestionCount
+    : currentQIndex + 1;
+  const progressPct = isFinalQuestion
+    ? 98
+    : Math.min((answeredQuestions / TOTAL_EXPECTED) * 95, 95);
+
+  // Status text for agent badge
+  const getStatusText = () => {
+    if (isThinking) return "Analyzing your response...";
+    if (isFinalQuestion) return "Profiling complete";
+    if (isAgentPhase) return `Profiling · Question ${agentQuestionCount} of ~${EXPECTED_AGENT_QUESTIONS}`;
+    return `Baseline · ${currentQIndex + 1} of ${TOTAL_BASELINE}`;
+  };
 
   return (
     <>
@@ -393,9 +549,9 @@ export default function AssessmentEngine() {
           <div className="flex-1">
             <h3 className="font-display text-[13px] font-bold text-on-surface tracking-tight leading-none">Drona Assessment Agent</h3>
             <div className="flex items-center gap-1.5 mt-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+              <span className={`w-1.5 h-1.5 rounded-full ${isThinking ? 'bg-amber-500' : 'bg-green-500'} animate-pulse`}></span>
               <span className="text-[11px] text-on-surface-variant/60 font-medium">
-                {isThinking ? "Analyzing your response..." : "Ready"}
+                {getStatusText()}
               </span>
             </div>
           </div>
@@ -404,7 +560,7 @@ export default function AssessmentEngine() {
         {/* Progress bar */}
         <div className="w-full h-[3px] bg-white/30 rounded-full overflow-hidden mb-5 shrink-0">
           <div
-            className="h-full bg-gradient-to-r from-primary to-primary-container rounded-full transition-all duration-1000 ease-out"
+            className="h-full bg-gradient-to-r from-primary to-primary-container rounded-full transition-all duration-700 ease-out"
             style={{ width: `${progressPct}%` }}
           />
         </div>
@@ -421,7 +577,9 @@ export default function AssessmentEngine() {
                 />
               ))}
             </div>
-            <p className="text-sm text-on-surface-variant/60 font-medium">Preparing your next question...</p>
+            <p className="text-sm text-on-surface-variant/60 font-medium">
+              {isAgentPhase ? "Analyzing your profile and generating next question..." : "Preparing your next question..."}
+            </p>
           </div>
         ) : (
           /* ─── Question Card ─── */
@@ -445,7 +603,7 @@ export default function AssessmentEngine() {
                     const isSelected = selectedOptions.includes(opt);
                     return (
                       <button
-                        key={`${questionCount}-${idx}`}
+                        key={`${agentQuestionCount}-${currentQIndex}-${idx}`}
                         className={`w-full text-left px-4 py-3 rounded-xl border transition-all duration-150 cursor-pointer ${isSelected
                             ? "border-primary/40 bg-primary/[0.04] shadow-sm"
                             : "border-transparent bg-white/40 hover:bg-white/60"
