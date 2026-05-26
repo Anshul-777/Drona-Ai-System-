@@ -29,10 +29,10 @@ export default function Dashboard() {
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
   return (
-    <main className="w-full max-w-[1400px] mx-auto px-6 lg:px-12 py-10 animate-fadeIn transition-all duration-300">
+    <main className="w-full max-w-[1600px] mx-auto px-6 lg:px-8 py-8 animate-fadeIn transition-all duration-300">
          
          <div className="mb-12">
-            <h1 className="font-display font-black text-4xl md:text-5xl lg:text-6xl text-on-surface tracking-tight mb-4">Learning Dashboard</h1>
+            <h1 className="font-display font-black text-3xl md:text-4xl lg:text-5xl text-on-surface tracking-tight mb-3">Learning Dashboard</h1>
             <div className="flex flex-wrap items-center gap-3 text-on-surface-variant text-sm md:text-base">
                <span className="font-medium">{today}</span>
                <span className="text-outline/40">•</span>
@@ -51,10 +51,10 @@ export default function Dashboard() {
               
               <div className="flex items-center gap-3 mb-6 relative z-10">
                 <span className="material-symbols-outlined text-primary text-3xl">insights</span>
-                <h3 className="font-display text-2xl md:text-3xl font-bold text-on-surface">Daily Tactical Analysis</h3>
+                <h3 className="font-display text-xl md:text-2xl font-bold text-on-surface">Daily Tactical Analysis</h3>
               </div>
               
-              <p className="text-on-surface-variant text-lg leading-relaxed mb-10 relative z-10 font-medium">
+              <p className="text-on-surface-variant text-base leading-relaxed mb-8 relative z-10 font-medium">
                 "Your cognitive baseline is established, but active learning data is required to generate tactical insights. I recommend initiating your first focused sprint to begin mapping your neural pathways and precision metrics."
               </p>
               
@@ -71,7 +71,7 @@ export default function Dashboard() {
             
             {/* ─── Live Metrics (4-col) ─── */}
             <div className="xl:col-span-4 bg-white border border-outline-variant/30 rounded-[2rem] p-8 md:p-10 shadow-sm">
-              <h3 className="font-display text-2xl font-bold text-on-surface mb-8">Live Metrics</h3>
+              <h3 className="font-display text-xl font-bold text-on-surface mb-8">Live Metrics</h3>
               
               <div className="space-y-8">
                 <div>
@@ -108,7 +108,7 @@ export default function Dashboard() {
             
             {/* ─── Today's Blueprint (12-col) ─── */}
             <div className="col-span-1 xl:col-span-12 bg-white border border-outline-variant/30 rounded-[2rem] p-8 md:p-10 shadow-sm">
-              <h3 className="font-display text-2xl font-bold text-on-surface mb-8">Today's Blueprint</h3>
+              <h3 className="font-display text-xl font-bold text-on-surface mb-8">Today's Blueprint</h3>
               
               <div className="flex flex-col items-center justify-center py-16 text-center border-2 border-dashed border-outline-variant/20 rounded-2xl bg-surface-container-lowest/50">
                 <div className="w-16 h-16 rounded-2xl bg-surface-container-low flex items-center justify-center mb-4">
