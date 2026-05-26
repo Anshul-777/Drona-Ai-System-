@@ -127,7 +127,7 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
 
           {/* Profile Component — Circular to Hexagonal Tech Design */}
           <Link href="/profile" 
-            className="flex items-center gap-0 cursor-pointer relative group transition-all duration-500 min-w-[280px] -my-3"
+            className="flex items-center gap-0 cursor-pointer relative group transition-all duration-500 min-w-[300px] ml-6 -my-3"
             style={{ 
               '--env-hex': activeTab.hex,
               '--env-rgb': activeTab.rgb
@@ -137,24 +137,36 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
             <div className="absolute inset-y-0 right-0 left-[32px] z-0 pointer-events-none transition-all duration-500 group-hover:scale-[1.01] origin-left">
               <svg className="w-full h-full drop-shadow-sm" preserveAspectRatio="none" viewBox="0 0 250 60">
                 {/* Hexagonal Background Box */}
-                <path d="M 0,0 L 235,0 L 250,15 L 250,60 L 15,60 L 0,45 Z" fill="white" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" className="transition-colors duration-500" style={{ color: 'rgba(var(--env-rgb), 0.4)' }} />
+                <path d="M 0,0 L 235,0 L 250,15 L 250,60 L 15,60 L 0,45 Z" fill="white" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" className="transition-colors duration-500" style={{ color: 'rgba(var(--env-rgb), 0.2)' }} />
                 
-                {/* Horizontal Tech Lines changing color */}
-                <line x1="5" y1="4" x2="232" y2="4" stroke="currentColor" strokeWidth="0.8" className="opacity-30 group-hover:opacity-60 transition-all duration-500" style={{ color: 'var(--env-hex)' }} />
-                <line x1="12" y1="56" x2="242" y2="56" stroke="currentColor" strokeWidth="0.8" className="opacity-30 group-hover:opacity-60 transition-all duration-500" style={{ color: 'var(--env-hex)' }} />
+                {/* Horizontal Tech Lines (Very low visibility) */}
+                {/* Top line positioned to stay safely above the name text */}
+                <line x1="5" y1="2" x2="232" y2="2" stroke="currentColor" strokeWidth="0.5" className="opacity-[0.08] group-hover:opacity-20 transition-all duration-500" style={{ color: 'var(--env-hex)' }} />
+                
+                {/* Bottom line positioned to exactly touch the bottom of the header */}
+                <line x1="12" y1="59.5" x2="242" y2="59.5" stroke="currentColor" strokeWidth="0.5" className="opacity-[0.15] group-hover:opacity-30 transition-all duration-500" style={{ color: 'var(--env-hex)' }} />
               </svg>
             </div>
 
-            {/* Avatar Container — circular overlapping the left side */}
+            {/* Avatar Container */}
             <div className="relative shrink-0 w-[64px] h-[64px] z-20">
-              {/* Circular Tech Lines changing color */}
+              {/* 2 Very Small Circular Lines (Inside) */}
               <div 
-                className="absolute -inset-[4px] rounded-full border-[1.5px] border-dashed transition-colors duration-500 animate-[spin_12s_linear_infinite]" 
-                style={{ borderColor: 'rgba(var(--env-rgb), 0.5)', borderTopColor: 'var(--env-hex)', borderRightColor: 'var(--env-hex)' }}
+                className="absolute -inset-[2px] rounded-full border-[1.5px] border-dashed transition-colors duration-500 animate-[spin_8s_linear_infinite] opacity-30 group-hover:opacity-60" 
+                style={{ borderColor: 'var(--env-hex)' }}
               />
               <div 
-                className="absolute -inset-[7px] rounded-full border transition-colors duration-500 opacity-40 animate-[spin_20s_linear_infinite_reverse]" 
-                style={{ borderColor: 'var(--env-hex)', clipPath: 'polygon(0 0, 100% 0, 100% 50%, 0 50%)' }}
+                className="absolute -inset-[4px] rounded-full border transition-colors duration-500 animate-[spin_15s_linear_infinite_reverse] opacity-20 group-hover:opacity-50" 
+                style={{ borderColor: 'var(--env-hex)' }}
+              />
+              
+              {/* Outside Broken Hexagon separately */}
+              <div 
+                className="absolute -inset-[10px] border-[1.5px] border-dashed transition-colors duration-500 animate-[spin_25s_linear_infinite] opacity-40 group-hover:opacity-70" 
+                style={{ 
+                  borderColor: 'var(--env-hex)', 
+                  clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' 
+                }}
               />
               
               {/* Avatar Circle */}
@@ -184,7 +196,7 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
             </div>
             
             {/* Info Section — Extended full right */}
-            <div className="flex flex-col justify-center pl-4 pr-6 py-1 relative z-10 flex-1">
+            <div className="flex flex-col justify-center pl-6 pr-6 py-1 relative z-10 flex-1">
               <div className="flex items-end justify-between w-full">
                 {/* Bold Highlighted Name */}
                 <span className="text-[17px] font-display font-black text-on-surface tracking-widest uppercase truncate transition-colors duration-500 group-hover:text-[var(--env-hex)] leading-none" style={{ textShadow: '0 1px 2px rgba(var(--env-rgb), 0.1)' }}>{userName}</span>
@@ -196,18 +208,17 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
                 <span className="text-[7px] font-bold text-outline-variant uppercase tracking-[0.25em]">Elite Rank</span>
               </div>
               
-              {/* Extended XP Bar */}
+              {/* Extended XP Bar without dummy numbers */}
               <div className="flex items-center gap-2 w-full mt-[2px]">
                 <span className="text-[7px] font-black uppercase tracking-widest shrink-0 transition-colors duration-500" style={{ color: 'var(--env-hex)' }}>XP</span>
                 <div className="flex-1 h-[5px] bg-surface-variant/40 rounded-full overflow-hidden relative shadow-inner">
                   <div 
-                    className="w-[78%] h-full rounded-full relative overflow-hidden transition-all duration-500"
+                    className="w-[10%] h-full rounded-full relative overflow-hidden transition-all duration-500"
                     style={{ background: 'var(--env-hex)', boxShadow: '0 0 10px rgba(var(--env-rgb), 0.8)' }}
                   >
                     <div className="absolute inset-0 bg-white/40 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
                   </div>
                 </div>
-                <span className="text-[7.5px] font-mono font-medium text-outline-variant shrink-0 tracking-tight"><span style={{ color: 'var(--env-hex)' }} className="font-bold transition-colors duration-500">78,450</span> / 100K</span>
               </div>
             </div>
           </Link>
