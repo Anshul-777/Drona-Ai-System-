@@ -1,3 +1,6 @@
+## Run Directly Command : .\Run.bat
+
+
 1st, after the static question, assessment agent didnt continue and asked its questions for getting more info in real time, and then the final test question also wasn't asked. and if no, then initailize, and if yes, just open some page with test and will make later.   anyways, and initailziation make better use more big.   byok, allows users to choose provide and add their own api, show full subscirbe plans and setting show more options in real.     and test gemini as its failing. did you use the free working model or what ?
 
 the initializing is happening before the final question.  read all past conversation session and see how i explained and also read the my plan, [My%20Plan.md](file;file:///c%3A/Users/anshu/OneDrive/Desktop/Drona%20AI%20System/Plan%20for%20Drona%20AI/My%20Plan.md) whole.     begin assessment > Pop up note > 7 static question > agent continues those questions with its own making in real time to get info > would you like to test ? > if yes, show seperate page.   or if skipped > show initialization > enter dashboard. this. 

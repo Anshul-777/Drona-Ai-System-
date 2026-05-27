@@ -451,7 +451,7 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
         </nav>
 
         <div className="px-6 mt-auto space-y-4">
-          <Link href="/dock"
+          <Link href="/agent-dock/architecture"
             className={`w-full flex justify-center text-white font-bold text-sm py-3 rounded-xl hover:-translate-y-0.5 hover:shadow-lg transition-all cursor-pointer ${sidebarOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
             style={{
               backgroundColor: activeTab.hex,
