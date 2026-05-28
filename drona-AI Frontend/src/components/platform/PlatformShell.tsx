@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Logo from "@/components/ui/Logo";
 import { createClient } from "@/lib/supabase/client";
+import { useNotifications } from "@/context/NotificationContext";
 
 export default function PlatformShell({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
@@ -12,6 +13,7 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
   const [userName, setUserName] = useState("Scholar");
   const pathname = usePathname();
   const router = useRouter();
+  const { addNotification, unreadCount } = useNotifications();
 
   useEffect(() => {
     setMounted(true);
@@ -43,6 +45,67 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
       window.removeEventListener('visibilitychange', handleVisibility);
     };
   }, []);
+
+  // Login Notification Logic
+  useEffect(() => {
+    if (mounted && userName) {
+      const hasLoggedIn = localStorage.getItem("drona_has_logged_in_before");
+      
+      if (!hasLoggedIn) {
+        // First Registration
+        localStorage.setItem("drona_has_logged_in_before", "true");
+        setTimeout(() => {
+          addNotification({
+            title: `Welcome to Drona, ${userName}!`,
+            message: "Your cognitive baseline is initializing. We are thrilled to have you onboard.",
+            type: "system",
+            href: "/platform"
+          });
+        }, 1000);
+        
+        setTimeout(() => {
+          addNotification({
+            title: "Drona AI Protocol Active",
+            message: "I am Drona, your advanced Multi-Agent system. I will orchestrate your learning, analyze your telemetry, and guide your journey to mastery.",
+            type: "agent",
+            href: "/agent-dock/architecture"
+          });
+        }, 2500);
+
+        setTimeout(() => {
+          // Silently unlock the achievement in localStorage so the achievements page can see it
+          try {
+            const existing = JSON.parse(localStorage.getItem("drona_unlocked_achievements") || "[]");
+            if (!existing.includes("welcome-to-drona")) {
+              existing.push("welcome-to-drona");
+              localStorage.setItem("drona_unlocked_achievements", JSON.stringify(existing));
+            }
+          } catch {}
+
+          addNotification({
+            title: "Welcome to Drona",
+            message: "Achievement Unlocked!",
+            type: "achievement",
+            achievementId: "welcome-to-drona"
+          });
+        }, 4000);
+      } else {
+        // Normal login, run only once per session
+        const sessionLogged = sessionStorage.getItem("drona_session_welcome");
+        if (!sessionLogged) {
+          sessionStorage.setItem("drona_session_welcome", "true");
+          setTimeout(() => {
+            addNotification({
+              title: `Welcome back, ${userName}!`,
+              message: "Your dashboard and agents are ready for your next sprint.",
+              type: "system",
+              href: "/platform"
+            });
+          }, 1000);
+        }
+      }
+    }
+  }, [mounted, userName]);
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -102,6 +165,7 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
         { label: "Syllabus & Planner", icon: "edit_calendar", path: "/planner" },
         { label: "Progress", icon: "leaderboard", path: "/progress" },
         { label: "Knowledge Base", icon: "psychology", path: "/kb" },
+        { label: "Achievements", icon: "emoji_events", path: "/achievements" },
       ],
       agentsTitle: "AI Agents",
       agents: [
@@ -274,6 +338,9 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
                 className="w-11 h-11 rounded-xl hover:bg-surface-container-low flex items-center justify-center transition-all duration-300 cursor-pointer text-outline-variant hover:text-on-surface relative group"
               >
                 <span className="material-symbols-outlined text-[22px] transition-transform duration-300 group-hover:scale-110">{item.icon}</span>
+                {item.icon === 'notifications' && unreadCount > 0 && (
+                  <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white pointer-events-none animate-pulse" />
+                )}
                 {/* Tooltip background effect */}
                 <div className="absolute inset-0 rounded-xl border border-transparent group-hover:border-outline-variant/30 group-hover:shadow-sm transition-all duration-300" />
               </Link>

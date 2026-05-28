@@ -1,273 +1,386 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState, useRef, useEffect } from "react";
+
+// --- Deterministic Layout Generator ---
+const generateStaticGraph = () => {
+  const width = 1400;
+  const height = 1000;
+  const cx = width / 2;
+  const cy = height / 2;
+
+  const nodes: any[] = [];
+  const links: any[] = [];
+
+  const addNode = (id: string, label: string, group: string, x: number, y: number, colorTheme: string, size: number) => {
+    nodes.push({ id, label, group, x, y, colorTheme, size });
+  };
+  const addLink = (source: string, target: string, color: string, isDashed = false) => {
+    links.push({ source, target, color, isDashed });
+  };
+
+  addNode("core", "Student Core", "core", cx, cy, "white", 64);
+
+  const subjects = [
+    { id: "chem", label: "Chemistry", theme: "emerald", hex: "#10b981", concepts: ["Organic Chem", "Inorganic Chem", "Physical Chem", "Covalent Bonds", "Ionic Bonds", "Equilibrium", "Kinetics", "Polymers"] },
+    { id: "phys", label: "Physics", theme: "blue", hex: "#3b82f6", concepts: ["Mechanics", "Optics", "Thermodynamics", "Electromagnetism", "Quantum Physics", "Kinematics", "Waves", "Nuclear Physics"] },
+    { id: "math", label: "Mathematics", theme: "violet", hex: "#8b5cf6", concepts: ["Calculus", "Algebra", "Geometry", "Trigonometry", "Probability", "Statistics", "Linear Algebra", "Vector Calculus"] },
+    { id: "habits", label: "Study Habits", theme: "amber", hex: "#f59e0b", concepts: ["Time Management", "Focus", "Sleep", "Pomodoro", "Spaced Repetition", "Active Recall", "Procrastination", "Deep Work"] }
+  ];
+
+  subjects.forEach((subj, i) => {
+    const angle = (i / subjects.length) * Math.PI * 2 - Math.PI / 4;
+    const sx = cx + Math.cos(angle) * 220;
+    const sy = cy + Math.sin(angle) * 220;
+    
+    addNode(subj.id, subj.label, subj.id, sx, sy, subj.theme, 48);
+    addLink("core", subj.id, subj.hex);
+
+    subj.concepts.forEach((concept, j) => {
+      // Arc spread around the subject node
+      const conceptAngle = angle - Math.PI/1.8 + (j / (subj.concepts.length - 1)) * (Math.PI * 1.1);
+      const distance = 160 + (j % 2) * 40; // Stagger to look organic
+      const cx2 = sx + Math.cos(conceptAngle) * distance;
+      const cy2 = sy + Math.sin(conceptAngle) * distance;
+      
+      const conceptId = `${subj.id}_${j}`;
+      addNode(conceptId, concept, subj.id, cx2, cy2, subj.theme, 24);
+      addLink(subj.id, conceptId, subj.hex);
+
+      // Level 3 nodes (Sub-concepts) to dramatically increase density
+      const subNodesCount = 2 + (j % 3); // Generates 2 to 4 sub-nodes per concept
+      const subLabels = ["Definition", "Core Formula", "Applications", "Common Errors"];
+      for (let k = 0; k < subNodesCount; k++) {
+        // Tighter arc around the parent concept
+        const subAngle = conceptAngle - Math.PI/3 + (k / Math.max(1, subNodesCount - 1)) * (Math.PI / 1.5);
+        const subDist = 60 + (k % 2) * 20; // Stagger distances
+        const cx3 = cx2 + Math.cos(subAngle) * subDist;
+        const cy3 = cy2 + Math.sin(subAngle) * subDist;
+        
+        const subId = `${conceptId}_sub_${k}`;
+        addNode(subId, subLabels[k], subj.id, cx3, cy3, subj.theme, 10);
+        addLink(conceptId, subId, subj.hex, true);
+      }
+    });
+  });
+
+  // Cross links (Interconnected Knowledge Web)
+  const linkColor = "#cbd5e1"; // Slate 300 for light theme
+  
+  // Physics <-> Math
+  addLink(`phys_4`, `math_0`, linkColor, true); // Quantum -> Calculus
+  addLink(`phys_0`, `math_2`, linkColor, true); // Mechanics -> Geometry
+  addLink(`phys_5`, `math_0`, linkColor, true); // Kinematics -> Calculus
+  addLink(`phys_3`, `math_7`, linkColor, true); // Electromagnetism -> Vector Calculus
+  addLink(`phys_1`, `math_3`, linkColor, true); // Optics -> Trigonometry
+  
+  // Physics <-> Chemistry
+  addLink(`chem_2`, `phys_2`, linkColor, true); // Physical Chem -> Thermodynamics
+  addLink(`chem_6`, `phys_7`, linkColor, true); // Kinetics -> Nuclear Physics
+  addLink(`chem_4`, `phys_3`, linkColor, true); // Ionic Bonds -> Electromagnetism
+  addLink(`chem_5`, `phys_2`, linkColor, true); // Equilibrium -> Thermodynamics
+  
+  // Chemistry <-> Math
+  addLink(`chem_6`, `math_3`, linkColor, true); // Kinetics -> Trigonometry
+  addLink(`chem_6`, `math_0`, linkColor, true); // Kinetics -> Calculus
+  addLink(`chem_2`, `math_5`, linkColor, true); // Physical Chem -> Statistics
+  
+  // Math <-> Math (Internal)
+  addLink(`math_4`, `math_5`, linkColor, true); // Probability -> Statistics
+  addLink(`math_6`, `math_7`, linkColor, true); // Linear Algebra -> Vector Calculus
+  
+  // Habits <-> Everything (Meta-learning)
+  addLink(`habits_0`, `habits_3`, linkColor, true); // Time Management -> Pomodoro
+  addLink(`habits_4`, `habits_5`, linkColor, true); // Spaced Repetition -> Active Recall
+  addLink(`habits_1`, `habits_6`, linkColor, true); // Focus -> Procrastination (Inverse)
+  addLink(`habits_7`, `phys_4`, linkColor, true);   // Deep Work -> Quantum Physics (Requires focus)
+  addLink(`habits_5`, `math_0`, linkColor, true);   // Active Recall -> Calculus
+  addLink(`habits_4`, `chem_0`, linkColor, true);   // Spaced Repetition -> Organic Chem (Memorization)
+  
+  // Subject level cross-pollination
+  addLink(`phys`, `math`, linkColor, true);
+  addLink(`chem`, `phys`, linkColor, true);
+
+  return { nodes, links, width, height };
+};
+
+const THEMES: Record<string, { bg: string, border: string, text: string, shadow: string, hex: string }> = {
+  emerald: { bg: "bg-emerald-100", border: "border-emerald-300", text: "text-emerald-700", shadow: "shadow-[0_4px_14px_rgba(16,185,129,0.2)]", hex: "#10b981" },
+  blue: { bg: "bg-blue-100", border: "border-blue-300", text: "text-blue-700", shadow: "shadow-[0_4px_14px_rgba(59,130,246,0.2)]", hex: "#3b82f6" },
+  violet: { bg: "bg-violet-100", border: "border-violet-300", text: "text-violet-700", shadow: "shadow-[0_4px_14px_rgba(139,92,246,0.2)]", hex: "#8b5cf6" },
+  amber: { bg: "bg-amber-100", border: "border-amber-300", text: "text-amber-700", shadow: "shadow-[0_4px_14px_rgba(245,158,11,0.2)]", hex: "#f59e0b" },
+  white: { bg: "bg-slate-100", border: "border-slate-300", text: "text-slate-700", shadow: "shadow-[0_4px_14px_rgba(148,163,184,0.2)]", hex: "#64748b" },
+};
 
 export default function AgentDockMemory() {
-  const [nodes, setNodes] = useState([
-    { id: 1, type: "core", label: "Student Core", icon: "person", top: 170, left: 270, bg: "bg-primary text-on-primary shadow-primary/20", glow: "ring-4 ring-primary/20" },
-    { id: 2, type: "knowledge", label: "Chemistry", icon: "science", top: 110, left: 510, score: "89", text: "Organic Chem: Strong. Inorganic: Weak. Electrochemistry: Moderate.", color: "green" },
-    { id: 3, type: "knowledge", label: "Physics", icon: "bolt", top: 90, left: 90, score: "72", text: "Mechanics: OK. Optics: Weak. Thermodynamics: Needs review.", color: "blue" },
-    { id: 4, type: "knowledge", label: "Mathematics", icon: "calculate", top: 26, left: 210, text: "Calculus: Weak → Priority", color: "purple" },
-    { id: 5, type: "active", label: "Covalent Bonds", icon: "link", top: 50, left: 650, text: "Active concept. Polar vs non-polar gap identified. Water analogy used.", bg: "bg-primary/5 border-2 border-primary" },
-    { id: 6, type: "style", label: "Learning Style", icon: "palette", top: 310, left: 130, text: "Visual learner. Prefers analogies. Responds well to challenges.", color: "amber" },
-    { id: 7, type: "weakness", label: "Weak Areas", icon: "warning", top: 290, left: 470, text: "Polarity, Integration by Parts, Optics — recurring failures.", color: "rose" },
-    { id: 8, type: "gap", label: "Polarity Gap", icon: "electric_bolt", top: 210, left: 650, text: "3 failed attempts. Needs visual.", color: "secondary" },
-    { id: 9, type: "history", label: "Session 4", icon: "history", top: 410, left: 290, text: "Water molecule analogy worked.", color: "teal" },
-    { id: 10, type: "mood", label: "Mood", icon: "mood", top: 410, left: 10, text: "Motivated but frustrated with polarity.", color: "pink" },
-    { id: 11, type: "target", label: "JEE Target", icon: "flag", top: 290, left: 810, text: "Rank < 5000. Chemistry focus.", color: "indigo" },
-    { id: 12, type: "pattern", label: "Study Pattern", icon: "schedule", top: 410, left: 590, text: "Peak: 8-11PM. Avg 3.2h/day.", color: "cyan" },
-    { id: 13, type: "confidence", label: "Confidence", icon: "trending_up", top: 410, left: 770, text: "Overall: 67%. Rising trend.", color: "emerald" },
-  ]);
+  const { nodes, links, width: graphWidth, height: graphHeight } = generateStaticGraph();
+  
+  // Pan and Zoom state
+  const [transform, setTransform] = useState({ x: 0, y: 0, scale: 0.8 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [startPan, setStartPan] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [hoveredNode, setHoveredNode] = useState<string | null>(null);
 
-  const canvasRef = useRef<HTMLDivElement>(null);
-  const [draggedNode, setDraggedNode] = useState<number | null>(null);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const resetView = () => {
+    if (containerRef.current) {
+      const { clientWidth, clientHeight } = containerRef.current;
+      const fitScale = Math.min(clientWidth / graphWidth, clientHeight / graphHeight) * 0.9;
+      setTransform({
+        x: (clientWidth - graphWidth * fitScale) / 2,
+        y: (clientHeight - graphHeight * fitScale) / 2,
+        scale: fitScale
+      });
+    }
+  };
 
-  const handleMouseDown = (e: React.MouseEvent, id: number) => {
-    if (!canvasRef.current) return;
-    const nodeElement = e.currentTarget as HTMLDivElement;
-    const rect = nodeElement.getBoundingClientRect();
-    setOffset({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-    setDraggedNode(id);
+  // Center the graph on mount to fit perfectly
+  useEffect(() => {
+    resetView();
+  }, [graphWidth, graphHeight]);
+
+  const handleZoom = (delta: number) => {
+    setTransform(prev => ({ ...prev, scale: Math.max(0.1, Math.min(prev.scale + delta, 3)) }));
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setStartPan({ x: e.clientX - transform.x, y: e.clientY - transform.y });
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (draggedNode === null || !canvasRef.current) return;
-    const canvasRect = canvasRef.current.getBoundingClientRect();
-    
-    setNodes(prev => prev.map(n => {
-      if (n.id === draggedNode) {
-        return {
-          ...n,
-          left: Math.max(0, e.clientX - canvasRect.left - offset.x),
-          top: Math.max(0, e.clientY - canvasRect.top - offset.y),
-        };
-      }
-      return n;
+    if (!isDragging) return;
+    setTransform(prev => ({
+      ...prev,
+      x: e.clientX - startPan.x,
+      y: e.clientY - startPan.y
     }));
   };
 
   const handleMouseUp = () => {
-    setDraggedNode(null);
+    setIsDragging(false);
   };
 
-  const getNodeColor = (colorStr?: string) => {
-    const map: Record<string, string> = {
-      green: "bg-green-500 text-white",
-      blue: "bg-blue-500 text-white",
-      purple: "bg-purple-500 text-white",
-      amber: "bg-amber-500 text-white",
-      rose: "bg-rose-500 text-white",
-      secondary: "bg-secondary text-white",
-      teal: "bg-teal-500 text-white",
-      pink: "bg-pink-400 text-white",
-      indigo: "bg-indigo-500 text-white",
-      cyan: "bg-cyan-500 text-white",
-      emerald: "bg-emerald-500 text-white",
-    };
-    return colorStr && map[colorStr] ? map[colorStr] : "bg-primary text-white";
-  };
-  
-  const getBorderColor = (colorStr?: string) => {
-    const map: Record<string, string> = {
-      green: "border-green-300",
-      blue: "border-blue-300",
-      purple: "border-purple-200",
-      amber: "border-amber-300",
-      rose: "border-rose-200",
-      secondary: "border-outline-variant/40",
-      teal: "border-outline-variant/40",
-      pink: "border-outline-variant/40",
-      indigo: "border-outline-variant/40",
-      cyan: "border-outline-variant/40",
-      emerald: "border-outline-variant/40",
-    };
-    return colorStr && map[colorStr] ? map[colorStr] : "border-outline-variant/40";
+  const handleWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    const scaleAdjust = e.deltaY * -0.001;
+    const newScale = Math.min(Math.max(0.2, transform.scale + scaleAdjust), 3);
+    
+    // Zoom towards center of screen
+    const ratio = newScale / transform.scale;
+    const cx = containerRef.current ? containerRef.current.clientWidth / 2 : 0;
+    const cy = containerRef.current ? containerRef.current.clientHeight / 2 : 0;
+    
+    setTransform(prev => ({
+      scale: newScale,
+      x: cx - (cx - prev.x) * ratio,
+      y: cy - (cy - prev.y) * ratio
+    }));
   };
 
-  const getScoreColor = (colorStr?: string) => {
-    const map: Record<string, string> = {
-      green: "bg-green-100 text-green-700",
-      blue: "bg-blue-100 text-blue-700",
-    };
-    return colorStr && map[colorStr] ? map[colorStr] : "bg-surface-container-high text-secondary";
-  };
+  const activeNodeData = nodes.find(n => n.id === hoveredNode);
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden animate-[viewFadeIn_0.4s_cubic-bezier(0.4,0,0.2,1)]">
+    <div className="flex-1 w-full h-full flex flex-col overflow-hidden bg-slate-50 text-slate-800 select-none">
       
-      {/* Memory Header */}
-      <div className="px-6 py-4 border-b border-outline-variant/20 flex items-center justify-between flex-shrink-0 bg-surface/50">
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes float0 { 0%, 100% { transform: translate(0px, 0px); } 50% { transform: translate(6px, -8px); } }
+        @keyframes float1 { 0%, 100% { transform: translate(0px, 0px); } 50% { transform: translate(-8px, 6px); } }
+        @keyframes float2 { 0%, 100% { transform: translate(0px, 0px); } 50% { transform: translate(5px, 7px); } }
+        .node-float-0 { animation: float0 6s ease-in-out infinite; }
+        .node-float-1 { animation: float1 7.5s ease-in-out infinite; }
+        .node-float-2 { animation: float2 9s ease-in-out infinite; }
+      `}} />
+
+      {/* Header */}
+      <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between flex-shrink-0 bg-slate-50/90 backdrop-blur-md z-20">
         <div className="flex items-center gap-4">
-          <h2 className="font-display font-bold text-xl text-on-surface">Memory Canvas</h2>
+          <h2 className="font-display font-bold text-xl tracking-tight text-slate-900">Neural Canvas</h2>
           <div className="flex items-center gap-2 text-[10px] font-mono">
-            <span className="bg-primary/10 text-primary px-2 py-0.5 rounded-full font-bold">1,247 nodes</span>
-            <span className="bg-surface-container-high text-secondary px-2 py-0.5 rounded-full">2,891 connections</span>
+            <span className="bg-emerald-100 text-emerald-700 border border-emerald-300 px-2 py-0.5 rounded-full font-bold shadow-sm">Active State</span>
+            <span className="bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full border border-slate-300">{nodes.length} Nodes</span>
+            <span className="bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full border border-slate-300">{links.length} Edges</span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 bg-surface-container-low border border-outline-variant/30 rounded-lg px-3 py-1.5 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20 transition-all">
-            <span className="material-symbols-outlined text-[16px] text-secondary">search</span>
-            <input type="text" placeholder="Search memories..." className="bg-transparent text-xs font-body outline-none w-40 placeholder:text-outline border-none focus:ring-0 p-0"/>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 bg-white border border-slate-300 rounded-xl px-3 py-1.5 focus-within:border-slate-400 focus-within:ring-1 focus-within:ring-slate-400 transition-all shadow-sm">
+            <span className="material-symbols-outlined text-[16px] text-slate-400">search</span>
+            <input type="text" placeholder="Query Neural Net..." className="bg-transparent text-xs font-body outline-none w-48 placeholder:text-slate-400 text-slate-800 border-none focus:ring-0 p-0"/>
           </div>
-          <button className="w-8 h-8 rounded-lg border border-outline-variant/30 flex items-center justify-center text-secondary hover:text-on-surface hover:bg-surface-container-low transition-all" title="Filter">
-            <span className="material-symbols-outlined text-[18px]">filter_list</span>
-          </button>
-          <button className="w-8 h-8 rounded-lg border border-outline-variant/30 flex items-center justify-center text-secondary hover:text-on-surface hover:bg-surface-container-low transition-all" title="Zoom In">
-            <span className="material-symbols-outlined text-[18px]">zoom_in</span>
-          </button>
-          <button className="w-8 h-8 rounded-lg border border-outline-variant/30 flex items-center justify-center text-secondary hover:text-on-surface hover:bg-surface-container-low transition-all" title="Zoom Out">
-            <span className="material-symbols-outlined text-[18px]">zoom_out</span>
+          <button onClick={resetView} className="w-8 h-8 rounded-xl border border-slate-300 bg-white flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-all" title="Reset View">
+            <span className="material-symbols-outlined text-[18px]">center_focus_strong</span>
           </button>
         </div>
       </div>
 
-      {/* Canvas */}
-      <div className="flex-1 flex overflow-hidden">
-        
-        {/* Graph Canvas Area */}
+      {/* Main Interactive Area */}
+      <div 
+        ref={containerRef}
+        className="flex-1 w-full h-full relative overflow-hidden"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onWheel={handleWheel}
+        style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+      >
+        {/* Background Grid */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{
+          backgroundImage: "linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)",
+          backgroundSize: `${40 * transform.scale}px ${40 * transform.scale}px`,
+          backgroundPosition: `${transform.x}px ${transform.y}px`
+        }} />
+
+        {/* Graph Layer */}
         <div 
-          className="flex-1 relative overflow-hidden" 
-          id="memory-canvas"
-          ref={canvasRef}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          style={{
-            backgroundImage: "linear-gradient(rgba(196,197,217,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(196,197,217,0.15) 1px, transparent 1px)",
-            backgroundSize: "32px 32px"
+          className="absolute origin-top-left transition-transform duration-75"
+          style={{ 
+            width: graphWidth, 
+            height: graphHeight,
+            transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.scale})`
           }}
         >
-          {/* SVG Connections Layer (Static for demo) */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1 }}>
-            {/* These lines are static in this demo but could dynamically connect nodes based on their positions */}
-            <line x1="320" y1="200" x2="560" y2="140" stroke="#0042dc" strokeWidth="2" fill="none"/>
-            <line x1="320" y1="200" x2="180" y2="340" stroke="#0042dc" strokeWidth="2" fill="none"/>
-            <line x1="320" y1="200" x2="520" y2="320" stroke="#c4c5d9" strokeWidth="1.5" fill="none"/>
-            <line x1="320" y1="200" x2="140" y2="120" stroke="#c4c5d9" strokeWidth="1.5" fill="none"/>
-            <line x1="560" y1="140" x2="720" y2="80" stroke="#c4c5d9" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.5" fill="none"/>
-            <line x1="560" y1="140" x2="700" y2="240" stroke="#c4c5d9" strokeWidth="1.5" fill="none"/>
-            <line x1="180" y1="340" x2="340" y2="440" stroke="#c4c5d9" strokeWidth="1.5" fill="none"/>
-            <line x1="180" y1="340" x2="60" y2="440" stroke="#c4c5d9" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.5" fill="none"/>
-            <line x1="520" y1="320" x2="700" y2="240" stroke="#c4c5d9" strokeWidth="1.5" fill="none"/>
-            <line x1="520" y1="320" x2="640" y2="440" stroke="#c4c5d9" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.5" fill="none"/>
-            <line x1="340" y1="440" x2="520" y2="320" stroke="#c4c5d9" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.5" fill="none"/>
-            <line x1="140" y1="120" x2="260" y2="60" stroke="#c4c5d9" strokeWidth="1.5" fill="none"/>
-            <line x1="700" y1="240" x2="860" y2="320" stroke="#c4c5d9" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.5" fill="none"/>
-            <line x1="860" y1="320" x2="820" y2="440" stroke="#c4c5d9" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.5" fill="none"/>
+          {/* SVG Links */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
+            {links.map((link, idx) => {
+              const sourceNode = nodes.find(n => n.id === link.source);
+              const targetNode = nodes.find(n => n.id === link.target);
+              if (!sourceNode || !targetNode) return null;
+
+              const isConnected = hoveredNode === sourceNode.id || hoveredNode === targetNode.id;
+              const isFaded = hoveredNode && !isConnected;
+
+              return (
+                <line 
+                  key={idx}
+                  x1={sourceNode.x}
+                  y1={sourceNode.y}
+                  x2={targetNode.x}
+                  y2={targetNode.y}
+                  stroke={isConnected ? targetNode.hex : "#cbd5e1"}
+                  strokeWidth={isConnected ? 3 : 1.5}
+                  strokeDasharray={link.isDashed ? "5,5" : "none"}
+                  opacity={isFaded ? 0.1 : (isConnected ? 0.9 : 0.6)}
+                  className="transition-all duration-300"
+                />
+              );
+            })}
           </svg>
 
-          {/* Render Nodes */}
-          {nodes.map(node => (
-            <div 
-              key={node.id}
-              className={`absolute select-none cursor-grab active:cursor-grabbing transition-transform hover:scale-[1.04] ${draggedNode === node.id ? 'z-50 scale-[1.04]' : 'z-10'}`}
-              style={{ left: `${node.left}px`, top: `${node.top}px` }}
-              onMouseDown={(e) => handleMouseDown(e, node.id)}
-            >
-              {node.type === 'core' ? (
-                <div className={`w-[100px] h-[60px] rounded-xl flex flex-col items-center justify-center shadow-lg ${node.bg} ${node.glow}`}>
-                  <span className="material-symbols-outlined filled text-[18px]">{node.icon}</span>
-                  <span className="text-[9px] font-bold mt-0.5">{node.label}</span>
-                </div>
-              ) : (
-                <div className={`rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow max-w-[170px] ${node.type === 'active' ? node.bg : `bg-surface-container-lowest border-2 ${getBorderColor(node.color)}`}`}>
-                  <div className="flex items-center gap-2 mb-1">
-                    <div className={`w-5 h-5 rounded flex items-center justify-center ${node.type === 'active' ? 'bg-primary' : getNodeColor(node.color)}`}>
-                      <span className="material-symbols-outlined text-[12px]">{node.icon}</span>
-                    </div>
-                    <span className={`text-[10px] font-bold ${node.type === 'active' ? 'text-primary' : 'text-on-surface'}`}>{node.label}</span>
-                    
-                    {node.score && (
-                      <span className={`text-[8px] px-1 rounded ml-auto ${getScoreColor(node.color)}`}>{node.score}/100</span>
-                    )}
-                    {node.type === 'active' && (
-                      <div className="w-2 h-2 rounded-full bg-primary animate-pulse ml-auto shadow-[0_0_8px_rgba(0,66,220,0.5)]"></div>
-                    )}
-                  </div>
-                  <p className="text-[9px] text-secondary leading-tight">{node.text}</p>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+          {/* HTML Nodes */}
+          {nodes.map((node, idx) => {
+            const isHovered = hoveredNode === node.id;
+            const isNeighbor = hoveredNode && links.some(l => 
+              (l.source === hoveredNode && l.target === node.id) || 
+              (l.target === hoveredNode && l.source === node.id)
+            );
+            const isFaded = hoveredNode && !isHovered && !isNeighbor;
+            const theme = THEMES[node.colorTheme];
 
-        {/* Right: Node Inspector */}
-        <div className="w-72 border-l border-outline-variant/20 bg-surface-container-lowest flex flex-col flex-shrink-0 overflow-y-auto hidden lg:flex shadow-[-4px_0_24px_rgba(0,0,0,0.02)]">
-          <div className="p-4 border-b border-outline-variant/20">
-            <h3 className="text-xs font-bold text-secondary uppercase tracking-wider mb-3">Node Inspector</h3>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-green-500 flex items-center justify-center">
-                <span className="material-symbols-outlined text-white text-[20px]">science</span>
+            return (
+              <div 
+                key={node.id}
+                className={`absolute node-float-${idx % 3}`}
+                style={{
+                  left: node.x - node.size / 2,
+                  top: node.y - node.size / 2,
+                  width: node.size,
+                  height: node.size,
+                  opacity: isFaded ? 0.15 : 1,
+                  zIndex: isHovered ? 10 : (isNeighbor ? 5 : 1)
+                }}
+                onMouseEnter={() => setHoveredNode(node.id)}
+                onMouseLeave={() => setHoveredNode(null)}
+              >
+                <div 
+                  className={`w-full h-full rounded-full flex items-center justify-center transition-all duration-300 ${theme.bg} ${isHovered ? 'shadow-[0_0_30px_rgba(0,0,0,0.1)] ' + theme.shadow : ''}`}
+                  style={{
+                    transform: isHovered ? 'scale(1.2)' : 'scale(1)',
+                  }}
+                >
+                  {/* Node Border Glow */}
+                  <div className={`absolute inset-0 rounded-full border-[3px] ${theme.border} opacity-80`}></div>
+
+                  {/* Core Brain Icon */}
+                  {node.group === 'core' && (
+                    <span className="material-symbols-outlined text-slate-400 text-3xl opacity-50 absolute">psychology</span>
+                  )}
+                  
+                  {/* Node Label */}
+                  {(!isFaded || node.size > 30) && (
+                    <div 
+                      className={`absolute whitespace-nowrap text-center transition-all duration-300 pointer-events-none
+                        ${isHovered ? 'text-slate-800 font-bold text-sm' : 'text-slate-500 font-medium text-xs'}
+                      `}
+                      style={{
+                        top: node.size + (isHovered ? 12 : 8),
+                        opacity: isFaded ? 0 : 1
+                      }}
+                    >
+                      <span className="bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full border border-slate-200 shadow-sm">
+                        {node.label}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Floating Inspector */}
+      <div className="absolute top-20 right-6 w-72 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-2xl flex flex-col flex-shrink-0 shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 pointer-events-none z-30">
+        <div className="p-4 border-b border-slate-100">
+          <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Node Inspector</h3>
+          
+          {activeNodeData ? (
+            <div className="flex items-center gap-3 animate-[viewFadeIn_0.2s_ease-out]">
+              <div className={`w-10 h-10 rounded-xl ${THEMES[activeNodeData.colorTheme].bg} border ${THEMES[activeNodeData.colorTheme].border} flex items-center justify-center shadow-sm`}>
+                <span className={`material-symbols-outlined ${THEMES[activeNodeData.colorTheme].text} text-[20px]`}>
+                  {activeNodeData.type === 'core' ? 'hub' : activeNodeData.type === 'subject' ? 'category' : 'radio_button_checked'}
+                </span>
               </div>
               <div>
-                <p className="text-sm font-bold text-on-surface">Chemistry</p>
-                <p className="text-[10px] text-secondary">Knowledge Cluster • 89/100</p>
+                <p className="text-sm font-bold text-slate-800">{activeNodeData.label}</p>
+                <p className="text-[10px] text-slate-500 capitalize">{activeNodeData.type} Node</p>
               </div>
             </div>
-          </div>
-          <div className="p-4 space-y-4 text-xs">
-            <div>
-              <p className="font-bold text-secondary uppercase tracking-wider text-[10px] mb-2">Sub-Topics</p>
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between p-2 bg-surface-container-low rounded-lg">
-                  <span className="text-on-surface font-medium">Organic Chemistry</span>
-                  <span className="text-green-600 font-bold">94%</span>
-                </div>
-                <div className="flex items-center justify-between p-2 bg-surface-container-low rounded-lg">
-                  <span className="text-on-surface font-medium">Electrochemistry</span>
-                  <span className="text-amber-600 font-bold">71%</span>
-                </div>
-                <div className="flex items-center justify-between p-2 bg-surface-container-low rounded-lg">
-                  <span className="text-on-surface font-medium">Inorganic Chemistry</span>
-                  <span className="text-rose-600 font-bold">58%</span>
-                </div>
-                <div className="flex items-center justify-between p-2 bg-surface-container-low rounded-lg">
-                  <span className="text-on-surface font-medium">Physical Chemistry</span>
-                  <span className="text-blue-600 font-bold">82%</span>
-                </div>
+          ) : (
+            <div className="flex items-center gap-3 opacity-50">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center">
+                <span className="material-symbols-outlined text-slate-400 text-[20px]">ads_click</span>
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-500">No Node Selected</p>
+                <p className="text-[10px] text-slate-400">Hover over the neural graph</p>
               </div>
             </div>
-            <div>
-              <p className="font-bold text-secondary uppercase tracking-wider text-[10px] mb-2">Connected Nodes</p>
-              <div className="flex flex-wrap gap-1.5">
-                <span className="bg-primary/10 text-primary px-2 py-1 rounded-lg font-medium">Student Core</span>
-                <span className="bg-primary/10 text-primary px-2 py-1 rounded-lg font-medium">Covalent Bonds</span>
-                <span className="bg-surface-container-high text-secondary px-2 py-1 rounded-lg">Polarity Gap</span>
-                <span className="bg-surface-container-high text-secondary px-2 py-1 rounded-lg">Weak Areas</span>
-              </div>
-            </div>
-            <div>
-              <p className="font-bold text-secondary uppercase tracking-wider text-[10px] mb-2">Recent Activity</p>
-              <div className="space-y-2">
-                <div className="flex gap-2">
-                  <div className="w-1 rounded-full bg-primary flex-shrink-0"></div>
-                  <div>
-                    <p className="text-on-surface font-medium">Covalent bond eval triggered</p>
-                    <p className="text-secondary text-[10px]">2 min ago</p>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <div className="w-1 rounded-full bg-outline-variant flex-shrink-0"></div>
-                  <div>
-                    <p className="text-on-surface font-medium">Organic Chem quiz: 9/10</p>
-                    <p className="text-secondary text-[10px]">1 hour ago</p>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <div className="w-1 rounded-full bg-outline-variant flex-shrink-0"></div>
-                  <div>
-                    <p className="text-on-surface font-medium">Polarity concept re-taught</p>
-                    <p className="text-secondary text-[10px]">Yesterday</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
+      </div>
+
+      {/* Legend */}
+      <div className="absolute bottom-6 left-6 flex gap-2 z-20">
+        {[{label: 'Chemistry', theme: 'emerald'}, {label: 'Physics', theme: 'blue'}, {label: 'Math', theme: 'violet'}, {label: 'Habits', theme: 'amber'}].map(item => (
+          <div key={item.label} className="bg-white/90 backdrop-blur-md border border-slate-200 px-3 py-1.5 rounded-full flex items-center gap-2 shadow-sm cursor-pointer hover:bg-slate-50 transition-colors pointer-events-auto">
+            <div className={`w-2 h-2 rounded-full ${THEMES[item.theme].bg} ${THEMES[item.theme].shadow}`}></div>
+            <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">{item.label}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Zoom Controls */}
+      <div className="absolute bottom-6 right-6 flex items-center bg-white/90 backdrop-blur-md border border-slate-200 rounded-xl shadow-sm z-20 overflow-hidden pointer-events-auto">
+        <button onClick={() => handleZoom(0.1)} className="p-2 hover:bg-slate-100 text-slate-600 transition-colors border-r border-slate-200 flex items-center justify-center" title="Zoom In">
+          <span className="material-symbols-outlined text-[20px]">zoom_in</span>
+        </button>
+        <button onClick={resetView} className="px-4 py-2 hover:bg-slate-100 text-slate-600 font-bold text-[10px] uppercase tracking-wider transition-colors border-r border-slate-200 flex items-center justify-center" title="Reset View">
+          Reset
+        </button>
+        <button onClick={() => handleZoom(-0.1)} className="p-2 hover:bg-slate-100 text-slate-600 transition-colors flex items-center justify-center" title="Zoom Out">
+          <span className="material-symbols-outlined text-[20px]">zoom_out</span>
+        </button>
       </div>
     </div>
   );

@@ -25,6 +25,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from app.api.drona import router as drona_router
+app.include_router(drona_router, prefix="/api")
+
 # ============================================================================
 # CONFIGURATION & API SETUP
 # ============================================================================

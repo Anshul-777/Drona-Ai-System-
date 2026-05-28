@@ -49,10 +49,64 @@ export default function TeacherLounge() {
         >
           <div className="w-full px-8 space-y-8 pb-12">
             
-            {/* Timestamp Divider */}
+            {/* Timestamp Divider - Earlier */}
             <div className="flex items-center gap-4 py-4">
               <div className="h-px bg-gray-200 flex-1"></div>
-              <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-full border border-gray-200">09:14 AM - User Request</span>
+              <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-full border border-gray-200">Yesterday, 11:30 PM - Routine Analysis</span>
+              <div className="h-px bg-gray-200 flex-1"></div>
+            </div>
+
+            {/* Event: Agent Deliberation */}
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 border border-emerald-200 flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-[20px]">science</span>
+              </div>
+              <div className="flex-1">
+                <div className="flex items-baseline gap-2 mb-1">
+                  <span className="font-bold text-sm text-emerald-600">Chemistry Agent</span>
+                  <span className="text-[10px] text-gray-500 font-mono">11:30:05 PM</span>
+                </div>
+                <div className="text-sm text-gray-700 leading-relaxed bg-white border border-gray-100 rounded-2xl rounded-tl-none p-4 shadow-sm inline-block">
+                  Notice: The student successfully mastered "Covalent Bonds" today. However, their active recall score dropped significantly during the post-study quiz. They might be passively reading instead of deeply engaging.
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 ml-8">
+              <div className="w-8 h-8 rounded-full bg-teal-100 text-teal-600 border border-teal-200 flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-[16px]">calendar_month</span>
+              </div>
+              <div className="flex-1">
+                <div className="flex items-baseline gap-2 mb-1">
+                  <span className="font-bold text-sm text-teal-600">Schedule Agent</span>
+                  <span className="text-[10px] text-gray-500 font-mono">11:30:12 PM</span>
+                </div>
+                <div className="text-sm text-gray-700 leading-relaxed">
+                  I've checked the logs. They studied continuously for 3.5 hours without taking a break. Burnout is imminent. I am modifying tomorrow's schedule to enforce strict 25-minute Pomodoro cycles.
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 ml-8">
+              <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-600 border border-purple-200 flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-[16px]">memory</span>
+              </div>
+              <div className="flex-1">
+                <div className="flex items-baseline gap-2 mb-1">
+                  <span className="font-bold text-sm text-purple-600">Memory Mesh</span>
+                  <span className="text-[10px] text-gray-500 font-mono">11:30:15 PM</span>
+                </div>
+                <div className="text-sm text-gray-700 leading-relaxed bg-purple-50/50 p-3 rounded-lg border border-purple-100">
+                  <span className="font-bold text-[11px] uppercase tracking-wider text-purple-500 block mb-1">System Update</span>
+                  Successfully mapped {`"Organic Chemistry Fatigue"`} to the student's profile. Lowering cognitive load threshold for tomorrow's sessions by 15%.
+                </div>
+              </div>
+            </div>
+
+            {/* Timestamp Divider - Current */}
+            <div className="flex items-center gap-4 py-8">
+              <div className="h-px bg-gray-200 flex-1"></div>
+              <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-full border border-gray-200">Today, 09:14 AM - User Request</span>
               <div className="h-px bg-gray-200 flex-1"></div>
             </div>
 
@@ -193,8 +247,33 @@ export default function TeacherLounge() {
               <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-full border border-gray-200">11:45 AM - System Event</span>
               <div className="h-px bg-gray-200 flex-1"></div>
             </div>
+            
+            {/* Some extra padding to ensure nothing is hidden behind the fixed input */}
+            <div className="h-10"></div>
+          </div>
+        </div>
 
-            {/* Add a fade out at the bottom to indicate more can be typed */}
+        {/* ════════════════════════════════════════════════════════
+            DISABLED INPUT AREA (STUDENT VIEW)
+            ════════════════════════════════════════════════════════ */}
+        <div className="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-200 p-4 md:px-12 lg:px-24">
+          <div className="max-w-4xl mx-auto flex flex-col gap-2">
+            <div className="relative flex items-center w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 opacity-60 cursor-not-allowed">
+              <span className="material-symbols-outlined text-gray-400 mr-3">lock</span>
+              <input 
+                type="text" 
+                placeholder="Students are not allowed to send messages in the Teacher Lounge..." 
+                disabled 
+                className="bg-transparent border-none outline-none text-sm text-gray-600 w-full cursor-not-allowed"
+              />
+              <button disabled className="w-8 h-8 rounded-lg bg-gray-200 text-gray-400 flex items-center justify-center cursor-not-allowed">
+                <span className="material-symbols-outlined text-[18px]">send</span>
+              </button>
+            </div>
+            <p className="text-[11px] text-gray-500 text-center flex items-center justify-center gap-1.5 font-medium">
+              <span className="material-symbols-outlined text-[14px] text-blue-500">info</span>
+              Note: You will be given permission to voice your opinions here in future updates. We deeply value student feedback and do not disregard your input.
+            </p>
           </div>
         </div>
       </div>

@@ -163,6 +163,7 @@ export default function PlatformDashboard() {
   const [fullResponse, setFullResponse] = useState("");
   const [displayedResponse, setDisplayedResponse] = useState("");
   const [blueprintSort, setBlueprintSort] = useState("Day");
+  const [dynamicQuote, setDynamicQuote] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const metricValues = [0, 0, 0, 0, 0, 0];
@@ -191,6 +192,14 @@ export default function PlatformDashboard() {
       }, 800);
     }, 4 * 60 * 60 * 1000);
 
+    // Fetch dynamic quote from API
+    fetch("http://localhost:8000/api/quote")
+      .then(res => res.json())
+      .then(data => {
+        if (data.quote) setDynamicQuote(data.quote);
+      })
+      .catch(console.error);
+
     return () => {
       clearInterval(timeInterval);
       clearInterval(contentInterval);
@@ -204,10 +213,10 @@ export default function PlatformDashboard() {
     let i = 0;
     setDisplayedResponse("");
     const timer = setInterval(() => {
-      setDisplayedResponse(prev => prev + fullResponse.charAt(i));
-      i++;
-      if (i === fullResponse.length) clearInterval(timer);
-    }, 25);
+      setDisplayedResponse(prev => prev + fullResponse.substring(i, i + 3));
+      i += 3;
+      if (i >= fullResponse.length) clearInterval(timer);
+    }, 10);
     return () => clearInterval(timer);
   }, [fullResponse]);
 
@@ -216,7 +225,7 @@ export default function PlatformDashboard() {
     if (chatOpen) setTimeout(() => inputRef.current?.focus(), 100);
   }, [chatOpen]);
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     const text = chatInput.trim();
     if (!text || isThinking) return;
     setChatInput("");
@@ -224,24 +233,23 @@ export default function PlatformDashboard() {
     setFullResponse("");
     setDisplayedResponse("");
     
-    // Simulate thinking delay
-    setTimeout(() => {
-      const lowerText = text.toLowerCase();
-      let reply = "";
-      
-      if (lowerText.match(/\b(hi|hii|hello|hey|greetings)\b/)) {
-        reply = "Hello! I am Drona, your AI tutor. Ready to dive into your next learning sprint?";
-      } else if (lowerText.includes("what's up") || lowerText.includes("whats up")) {
-        reply = "I'm currently optimizing your cognitive baseline and monitoring your learning telemetry. What would you like to focus on today?";
-      } else if (lowerText.includes("who are you") || lowerText.includes("what are you")) {
-        reply = "I am Drona, an advanced Multi-Agent AI system designed to accelerate your learning using the Feynman Technique, spaced repetition, and active cognitive telemetry.";
-      } else {
-        reply = DRONA_RESPONSES[Math.floor(Math.random() * DRONA_RESPONSES.length)];
-      }
-      
+    try {
+      const res = await fetch("http://localhost:8000/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          session_id: "quick_chat_platform",
+          message: text + "\n\n(IMPORTANT: Keep your response extremely brief and concise, ideally 1-2 sentences maximum, as this is a small quick-chat widget.)"
+        })
+      });
+      const data = await res.json();
+      setFullResponse(data.response || "I am currently unable to connect to my systems.");
+    } catch (err) {
+      console.error(err);
+      setFullResponse("Error connecting to Drona AI systems.");
+    } finally {
       setIsThinking(false);
-      setFullResponse(reply);
-    }, 1500);
+    }
   };
 
   if (!mounted || !currentTime) return null;
@@ -306,7 +314,9 @@ export default function PlatformDashboard() {
           <div className="absolute right-[40px] md:right-[80px] top-[75px] flex items-center justify-end z-[60]">
             
             {/* Output Window (Expands Above, perfectly aligned over typing box) */}
-            <div className={`absolute bottom-full mb-3 right-[68px] w-[320px] bg-white border border-outline-variant/30 rounded-[1.25rem] p-4 shadow-xl origin-bottom transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+            <div className={`absolute bottom-full mb-3 bg-white border border-outline-variant/30 rounded-[1.25rem] p-4 shadow-xl transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+              displayedResponse.length > 100 ? 'w-[420px] -right-[32px] origin-bottom-left' : 'w-[320px] right-[68px] origin-bottom'
+            } ${
               chatOpen && displayedResponse && !isThinking
                 ? "opacity-100 translate-y-0 scale-100" 
                 : "opacity-0 translate-y-6 scale-90 pointer-events-none"
@@ -397,7 +407,7 @@ export default function PlatformDashboard() {
           <div className="relative z-10 flex items-start gap-3">
             <span className="material-symbols-outlined text-primary text-xl mt-0.5">lightbulb</span>
             <p className="text-on-surface text-sm md:text-base font-medium italic leading-relaxed">
-              "{QUOTES[quoteIndex]}"
+              "{dynamicQuote || QUOTES[quoteIndex]}"
             </p>
           </div>
         </div>
@@ -658,13 +668,7 @@ export default function PlatformDashboard() {
 
       </div>
 
-      {/* Click-outside to close chat */}
-      {chatOpen && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setChatOpen(false)}
-        />
-      )}
+
 
       <style jsx global>{`
         @keyframes slideUp {

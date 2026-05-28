@@ -15,7 +15,7 @@ export default function AgentDockLayout({ children }: { children: ReactNode }) {
   ];
 
   return (
-    <div className="bg-background text-on-background font-body min-h-screen flex flex-col antialiased overflow-hidden selection:bg-primary/20">
+    <div className="bg-background text-on-background font-body h-screen w-screen flex flex-col antialiased overflow-hidden selection:bg-primary/20">
       {/* ═══════════════════════════════════════════════════════
           TOP BAR — Agent Dock Header
           ═══════════════════════════════════════════════════════ */}

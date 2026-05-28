@@ -2,8 +2,28 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "DRONA AI — India's First Multi-Agent AI Education System",
-  description: "DRONA AI — India's first multi-agent AI education platform. 100+ features across 6 connected environments. Personalized, gamified, story-mode learning for 10th, 11th, 12th, JEE, NEET, CET.",
+  title: "DRONA AI — Intelligence OS",
+  description: "DRONA AI is an advanced, multi-agent educational operating system designed for 10th, 11th, 12th, JEE, NEET, and CET preparation. It features personalized, gamified, and story-driven learning across 6 connected environments.",
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/icon.svg",
+    apple: "/icon.svg",
+  },
+  openGraph: {
+    title: "DRONA AI — Intelligence OS",
+    description: "India's first multi-agent AI education platform.",
+    siteName: "DRONA AI",
+    images: [
+      {
+        url: "/icon.svg",
+        width: 512,
+        height: 512,
+        alt: "Drona AI Logo"
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

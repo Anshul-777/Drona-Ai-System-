@@ -1,0 +1,483 @@
+import json
+import os
+
+file_path = r'c:\Users\anshu\OneDrive\Desktop\Drona AI System\drona-AI Frontend\src\lib\data\achievements.ts'
+
+# The 35 existing achievements:
+existing = [
+  {
+    "id": "test-infinite-claim",
+    "name": "Infinite Tester",
+    "description": "A special badge to test the notification and XP systems infinitely.",
+    "icon": "bug_report",
+    "xpReward": 999,
+    "rarity": "Epic",
+    "rule": "Click me as many times as you want.",
+    "badgeColor": "#ff006e",
+    "badgeBg": "#1a000b",
+  },
+  {
+    "id": "welcome-to-drona",
+    "name": "Welcome to Drona",
+    "description": "You took the first step. Initialize your cognitive baseline.",
+    "icon": "how_to_reg",
+    "xpReward": 500,
+    "rarity": "Novice",
+    "rule": "Register your account.",
+    "badgeColor": "#c9a84c",
+    "badgeBg": "#2a2517",
+  },
+  {
+    "id": "first-login",
+    "name": "Day One",
+    "description": "Your journey of a thousand miles begins with a single login.",
+    "icon": "login",
+    "xpReward": 100,
+    "rarity": "Novice",
+    "rule": "Log in for the first time.",
+    "badgeColor": "#8ecae6",
+    "badgeBg": "#1a2a33",
+  },
+  {
+    "id": "profile-complete",
+    "name": "Identity Forged",
+    "description": "A true scholar reveals themselves. Complete your profile.",
+    "icon": "badge",
+    "xpReward": 200,
+    "rarity": "Adept",
+    "rule": "Fill in all profile fields.",
+    "badgeColor": "#a8dadc",
+    "badgeBg": "#1d2d2f",
+  },
+  {
+    "id": "first-message",
+    "name": "First Contact",
+    "description": "You spoke to the machine. It listened.",
+    "icon": "chat",
+    "xpReward": 150,
+    "rarity": "Novice",
+    "rule": "Send your first message to Drona AI.",
+    "badgeColor": "#b5e48c",
+    "badgeBg": "#1f2a17",
+  },
+  {
+    "id": "ten-sessions",
+    "name": "Consistent Scholar",
+    "description": "Ten sessions deep. Discipline is your weapon.",
+    "icon": "repeat",
+    "xpReward": 600,
+    "rarity": "Adept",
+    "rule": "Complete 10 study sessions.",
+    "badgeColor": "#ffd166",
+    "badgeBg": "#332b15",
+  },
+  {
+    "id": "speed-reader",
+    "name": "Speed Reader",
+    "description": "Knowledge absorbed at the speed of thought.",
+    "icon": "auto_stories",
+    "xpReward": 400,
+    "rarity": "Adept",
+    "rule": "Read 20 articles or notes in a single day.",
+    "badgeColor": "#06d6a0",
+    "badgeBg": "#0d2e24",
+  },
+  {
+    "id": "deep-focus",
+    "name": "Flow State",
+    "description": "120 minutes. Zero distractions. Pure mastery.",
+    "icon": "self_improvement",
+    "xpReward": 1500,
+    "rarity": "Epic",
+    "rule": "Complete a 120-minute uninterrupted focus session.",
+    "badgeColor": "#9b5de5",
+    "badgeBg": "#1f1433",
+  },
+  {
+    "id": "night-owl",
+    "name": "The Midnight Oil",
+    "description": "Some scholars work when the world sleeps.",
+    "icon": "dark_mode",
+    "xpReward": 300,
+    "rarity": "Rare",
+    "rule": "Study between 2 AM and 4 AM.",
+    "isSecret": True,
+    "badgeColor": "#4361ee",
+    "badgeBg": "#111833",
+  },
+  {
+    "id": "early-bird",
+    "name": "Dawn Patrol",
+    "description": "The early scholar catches the knowledge.",
+    "icon": "wb_twilight",
+    "xpReward": 300,
+    "rarity": "Rare",
+    "rule": "Start a study session before 5 AM.",
+    "isSecret": True,
+    "badgeColor": "#f4a261",
+    "badgeBg": "#33220d",
+  },
+  {
+    "id": "seven-streak",
+    "name": "Iron Will",
+    "description": "Seven days without breaking. Your streak defines you.",
+    "icon": "local_fire_department",
+    "xpReward": 1000,
+    "rarity": "Rare",
+    "rule": "Maintain a 7-day login streak.",
+    "badgeColor": "#ef476f",
+    "badgeBg": "#330f19",
+  },
+  {
+    "id": "first-test",
+    "name": "Trial by Fire",
+    "description": "Your first test. No matter the score, you showed up.",
+    "icon": "assignment",
+    "xpReward": 200,
+    "rarity": "Novice",
+    "rule": "Complete your first mock test.",
+    "badgeColor": "#e76f51",
+    "badgeBg": "#331810",
+  },
+  {
+    "id": "perfect-score",
+    "name": "Flawless Execution",
+    "description": "100%. Not a single mistake. Absolute perfection.",
+    "icon": "verified",
+    "xpReward": 3000,
+    "rarity": "Legendary",
+    "rule": "Score 100% on any mock test.",
+    "badgeColor": "#ffd700",
+    "badgeBg": "#332e00",
+  },
+  {
+    "id": "comeback",
+    "name": "Phoenix Rising",
+    "description": "Failed once. Came back stronger. Scored 90%+ on retry.",
+    "icon": "trending_up",
+    "xpReward": 800,
+    "rarity": "Rare",
+    "rule": "Score 90%+ on a test you previously failed.",
+    "badgeColor": "#ff6b6b",
+    "badgeBg": "#331515",
+  },
+  {
+    "id": "speed-demon",
+    "name": "Speed Demon",
+    "description": "Finished a 60-question test in under 30 minutes.",
+    "icon": "speed",
+    "xpReward": 1200,
+    "rarity": "Epic",
+    "rule": "Complete a full-length test in under half the allotted time.",
+    "badgeColor": "#00b4d8",
+    "badgeBg": "#00232a",
+  },
+  {
+    "id": "arena-gladiator",
+    "name": "Gladiator",
+    "description": "You entered the arena and drew first blood.",
+    "icon": "sports_martial_arts",
+    "xpReward": 500,
+    "rarity": "Adept",
+    "rule": "Win your first PvP Arena match.",
+    "badgeColor": "#d62828",
+    "badgeBg": "#2d0808",
+  },
+  {
+    "id": "agent-whisperer",
+    "name": "Agent Whisperer",
+    "description": "You've conversed with every AI Agent on the platform.",
+    "icon": "smart_toy",
+    "xpReward": 800,
+    "rarity": "Rare",
+    "rule": "Interact with all 5 subject AI Agents.",
+    "badgeColor": "#7209b7",
+    "badgeBg": "#1a0429",
+  },
+  {
+    "id": "deep-search",
+    "name": "Deep Searcher",
+    "description": "You asked Drona to dig deep. It delivered.",
+    "icon": "travel_explore",
+    "xpReward": 250,
+    "rarity": "Adept",
+    "rule": "Use the /deep-search command for the first time.",
+    "badgeColor": "#3a86ff",
+    "badgeBg": "#0d1a33",
+  },
+  {
+    "id": "image-gen",
+    "name": "Visionary",
+    "description": "A picture is worth a thousand tokens.",
+    "icon": "image",
+    "xpReward": 250,
+    "rarity": "Adept",
+    "rule": "Generate your first image using Drona AI.",
+    "badgeColor": "#f72585",
+    "badgeBg": "#33071a",
+  },
+  {
+    "id": "thousand-messages",
+    "name": "The Conversationalist",
+    "description": "1,000 messages exchanged. Drona knows you well.",
+    "icon": "forum",
+    "xpReward": 2000,
+    "rarity": "Epic",
+    "rule": "Send 1,000 messages to Drona AI.",
+    "badgeColor": "#560bad",
+    "badgeBg": "#13032a",
+  },
+  {
+    "id": "slash-master",
+    "name": "Command Line",
+    "description": "Mastered every slash command in the toolkit.",
+    "icon": "terminal",
+    "xpReward": 600,
+    "rarity": "Rare",
+    "rule": "Use every available slash command at least once.",
+    "badgeColor": "#00f5d4",
+    "badgeBg": "#003328",
+  },
+  {
+    "id": "level-10",
+    "name": "Rising Star",
+    "description": "Level 10. The grind is just beginning.",
+    "icon": "arrow_upward",
+    "xpReward": 500,
+    "rarity": "Adept",
+    "rule": "Reach Player Level 10.",
+    "badgeColor": "#fca311",
+    "badgeBg": "#332104",
+  },
+  {
+    "id": "level-50",
+    "name": "Veteran",
+    "description": "Level 50. You've seen things most scholars never will.",
+    "icon": "military_tech",
+    "xpReward": 5000,
+    "rarity": "Epic",
+    "rule": "Reach Player Level 50.",
+    "badgeColor": "#e85d04",
+    "badgeBg": "#331301",
+  },
+  {
+    "id": "level-99",
+    "name": "Apex Scholar",
+    "description": "The pinnacle. Level 99. Nothing left to prove.",
+    "icon": "workspace_premium",
+    "xpReward": 25000,
+    "rarity": "Legendary",
+    "rule": "Reach Player Level 99.",
+    "badgeColor": "#ffd700",
+    "badgeBg": "#332e00",
+  },
+  {
+    "id": "boss-slayer",
+    "name": "Boss Slayer",
+    "description": "The chapter boss fell. You stood victorious.",
+    "icon": "pest_control",
+    "xpReward": 1500,
+    "rarity": "Epic",
+    "rule": "Defeat any Chapter Boss in Gamified Mode.",
+    "badgeColor": "#dc2f02",
+    "badgeBg": "#330a00",
+  },
+  {
+    "id": "hoarder",
+    "name": "Knowledge Hoarder",
+    "description": "500 documents saved. Your vault overflows.",
+    "icon": "inventory_2",
+    "xpReward": 1000,
+    "rarity": "Rare",
+    "rule": "Save 500 documents or notes in your Workspace.",
+    "badgeColor": "#219ebc",
+    "badgeBg": "#08232a",
+  },
+  {
+    "id": "share-first",
+    "name": "The Broadcaster",
+    "description": "Shared your first conversation with the world.",
+    "icon": "share",
+    "xpReward": 200,
+    "rarity": "Novice",
+    "rule": "Share a Drona AI conversation externally.",
+    "badgeColor": "#48bfe3",
+    "badgeBg": "#0e2833",
+  },
+  {
+    "id": "notification-reader",
+    "name": "No Stone Unturned",
+    "description": "You read every single notification. Nothing escapes you.",
+    "icon": "mark_email_read",
+    "xpReward": 150,
+    "rarity": "Novice",
+    "rule": "Mark all notifications as read with zero unread.",
+    "badgeColor": "#72efdd",
+    "badgeBg": "#0d3329",
+  },
+  {
+    "id": "shop-visitor",
+    "name": "Window Shopper",
+    "description": "Browsed the Marketplace. Your eyes are bigger than your wallet.",
+    "icon": "storefront",
+    "xpReward": 100,
+    "rarity": "Novice",
+    "rule": "Visit the Reward Marketplace.",
+    "badgeColor": "#cdb4db",
+    "badgeBg": "#2a1f2e",
+  },
+  {
+    "id": "thirty-streak",
+    "name": "Unstoppable",
+    "description": "30-day streak. A habit forged in fire.",
+    "icon": "whatshot",
+    "xpReward": 5000,
+    "rarity": "Legendary",
+    "rule": "Maintain a 30-day login streak.",
+    "badgeColor": "#ff4500",
+    "badgeBg": "#330e00",
+  },
+  {
+    "id": "explorer",
+    "name": "The Explorer",
+    "description": "Visited every single page on the platform.",
+    "icon": "explore",
+    "xpReward": 800,
+    "rarity": "Rare",
+    "rule": "Navigate to every main page at least once.",
+    "badgeColor": "#80ed99",
+    "badgeBg": "#153319",
+  }
+]
+
+# We need 69 more to reach 100 total.
+# 15 Env Discovery
+new_env = [
+    {"id": "env-main-learning", "name": "Academic Sanctuary", "description": "You've entered the Main Learning Environment.", "icon": "school", "xpReward": 50, "rarity": "Novice", "rule": "Open the Main Learning Environment for the first time.", "badgeColor": "#c9a84c", "badgeBg": "#2a2517"},
+    {"id": "env-test", "name": "The Proving Grounds", "description": "You've entered the Test Environment.", "icon": "quiz", "xpReward": 50, "rarity": "Novice", "rule": "Open the Test Environment for the first time.", "badgeColor": "#e76f51", "badgeBg": "#331810"},
+    {"id": "env-game", "name": "The Arena", "description": "You've entered the Game Environment.", "icon": "sports_esports", "xpReward": 50, "rarity": "Novice", "rule": "Open the Game Environment for the first time.", "badgeColor": "#d62828", "badgeBg": "#2d0808"},
+    {"id": "env-workspace", "name": "The Archive", "description": "You've entered the Workspace Environment.", "icon": "folder", "xpReward": 50, "rarity": "Novice", "rule": "Open the Workspace Environment for the first time.", "badgeColor": "#219ebc", "badgeBg": "#08232a"},
+    {"id": "env-resources", "name": "The Forge", "description": "You've entered the Resources Environment.", "icon": "build", "xpReward": 50, "rarity": "Novice", "rule": "Open the Resources Environment for the first time.", "badgeColor": "#9b5de5", "badgeBg": "#1f1433"},
+    {"id": "view-profile", "name": "Self-Reflection", "description": "Examined your own profile deeply.", "icon": "person", "xpReward": 50, "rarity": "Novice", "rule": "View your detailed profile page.", "badgeColor": "#a8dadc", "badgeBg": "#1d2d2f"},
+    {"id": "view-radar", "name": "Scanning Stats", "description": "Checked your hexagonal stats radar.", "icon": "radar", "xpReward": 50, "rarity": "Novice", "rule": "View the User Stats Radar.", "badgeColor": "#48bfe3", "badgeBg": "#0e2833"},
+    {"id": "view-forgetting", "name": "Memory Check", "description": "Monitored your forgetting curve.", "icon": "memory", "xpReward": 50, "rarity": "Novice", "rule": "Check the Forgetting Curve in stats.", "badgeColor": "#72efdd", "badgeBg": "#0d3329"},
+    {"id": "customize-ai", "name": "Tinkerer", "description": "Customized your AI Agent's preferences.", "icon": "settings", "xpReward": 50, "rarity": "Novice", "rule": "Update AI preferences.", "badgeColor": "#8ecae6", "badgeBg": "#1a2a33"},
+    {"id": "visit-leaderboard", "name": "Sizing Up", "description": "Checked out the competition.", "icon": "leaderboard", "xpReward": 50, "rarity": "Novice", "rule": "Visit the Leaderboard.", "badgeColor": "#ffd166", "badgeBg": "#332b15"},
+    {"id": "platform-search", "name": "Seeker", "description": "Used the internal platform search.", "icon": "search", "xpReward": 50, "rarity": "Novice", "rule": "Perform a search across the platform.", "badgeColor": "#3a86ff", "badgeBg": "#0d1a33"},
+    {"id": "theme-changer", "name": "Aesthetician", "description": "Changed the visual theme of the platform.", "icon": "palette", "xpReward": 50, "rarity": "Novice", "rule": "Apply a new visual theme.", "badgeColor": "#f72585", "badgeBg": "#33071a"},
+    {"id": "platform-tour", "name": "Guided Steps", "description": "Completed the platform tour.", "icon": "tour", "xpReward": 100, "rarity": "Novice", "rule": "Take the Platform Tour without skipping.", "badgeColor": "#c9a84c", "badgeBg": "#2a2517"},
+    {"id": "visit-market", "name": "Browsing Wares", "description": "Opened the Marketplace.", "icon": "store", "xpReward": 50, "rarity": "Novice", "rule": "Visit the Reward Marketplace.", "badgeColor": "#cdb4db", "badgeBg": "#2a1f2e"},
+    {"id": "first-settings", "name": "Configuration", "description": "Opened the settings page for the first time.", "icon": "tune", "xpReward": 50, "rarity": "Novice", "rule": "Visit the settings page.", "badgeColor": "#b5e48c", "badgeBg": "#1f2a17"},
+]
+
+new_learning = [
+    {"id": "ai-adaptation", "name": "Adaptive Learner", "description": "The AI simplified its teaching for you.", "icon": "psychology", "xpReward": 200, "rarity": "Adept", "rule": "Trigger the AI's Adaptation based on stress detection.", "badgeColor": "#ff6b6b", "badgeBg": "#331515"},
+    {"id": "explain-again-5", "name": "Second Opinion", "description": "Used 'Explain again differently' 5 times.", "icon": "refresh", "xpReward": 150, "rarity": "Adept", "rule": "Use the 'Explain again differently' button 5 times.", "badgeColor": "#f4a261", "badgeBg": "#33220d"},
+    {"id": "explain-again-25", "name": "Relentless Inquiry", "description": "Used 'Explain again differently' 25 times.", "icon": "sync", "xpReward": 500, "rarity": "Rare", "rule": "Use the 'Explain again differently' button 25 times.", "badgeColor": "#e85d04", "badgeBg": "#331301"},
+    {"id": "format-mindmap", "name": "Spatial Thinker", "description": "Switched an explanation format to a mind map.", "icon": "account_tree", "xpReward": 100, "rarity": "Adept", "rule": "Have AI switch explanation format to a mind map.", "badgeColor": "#48bfe3", "badgeBg": "#0e2833"},
+    {"id": "format-table", "name": "Tabular Logic", "description": "Switched an explanation format to a table.", "icon": "table_chart", "xpReward": 100, "rarity": "Adept", "rule": "Have AI switch explanation format to a table.", "badgeColor": "#8ecae6", "badgeBg": "#1a2a33"},
+    {"id": "format-steps", "name": "Step-by-Step", "description": "Switched an explanation format to ordered steps.", "icon": "format_list_numbered", "xpReward": 100, "rarity": "Adept", "rule": "Have AI switch explanation format to step-by-step.", "badgeColor": "#a8dadc", "badgeBg": "#1d2d2f"},
+    {"id": "deep-followups", "name": "Down the Rabbit Hole", "description": "Asked 5 deep follow-up questions in one thread.", "icon": "question_answer", "xpReward": 400, "rarity": "Rare", "rule": "Ask 5 deep follow-up questions in one thread.", "badgeColor": "#9b5de5", "badgeBg": "#1f1433"},
+    {"id": "cross-discipline", "name": "Polymath", "description": "Learned concepts from 3 entirely different subjects.", "icon": "menu_book", "xpReward": 600, "rarity": "Rare", "rule": "Learn concepts from 3 entirely different subjects.", "badgeColor": "#ff006e", "badgeBg": "#1a000b"},
+    {"id": "three-hour-focus", "name": "Zen State", "description": "Hit a 3-hour deep focus state.", "icon": "self_improvement", "xpReward": 800, "rarity": "Epic", "rule": "Hit a 3-hour deep focus state.", "badgeColor": "#7209b7", "badgeBg": "#1a0429"},
+    {"id": "five-hour-focus", "name": "Transcendent", "description": "Hit a 5-hour deep focus state.", "icon": "lightbulb", "xpReward": 2000, "rarity": "Legendary", "rule": "Hit a 5-hour deep focus state.", "badgeColor": "#ffd700", "badgeBg": "#332e00"},
+    {"id": "learn-10-hours", "name": "Dedicated Scholar", "description": "Learned continuously for 10 hours total.", "icon": "schedule", "xpReward": 500, "rarity": "Rare", "rule": "Accumulate 10 hours of active learning.", "badgeColor": "#00f5d4", "badgeBg": "#003328"},
+    {"id": "learn-50-hours", "name": "Master Scholar", "description": "Learned continuously for 50 hours total.", "icon": "hourglass_bottom", "xpReward": 2500, "rarity": "Epic", "rule": "Accumulate 50 hours of active learning.", "badgeColor": "#560bad", "badgeBg": "#13032a"},
+    {"id": "learn-100-hours", "name": "Grandmaster Scholar", "description": "Learned continuously for 100 hours total.", "icon": "hourglass_full", "xpReward": 10000, "rarity": "Legendary", "rule": "Accumulate 100 hours of active learning.", "badgeColor": "#ff4500", "badgeBg": "#330e00"},
+    {"id": "feed-memory", "name": "Data Feeder", "description": "Fed external knowledge into the Memory Agent.", "icon": "upload_file", "xpReward": 300, "rarity": "Adept", "rule": "Feed external knowledge into the Memory Agent.", "badgeColor": "#06d6a0", "badgeBg": "#0d2e24"},
+    {"id": "setup-weakness", "name": "Know Thyself", "description": "Set up detailed learning weaknesses in profile.", "icon": "trending_down", "xpReward": 200, "rarity": "Adept", "rule": "Set up detailed learning weaknesses in profile.", "badgeColor": "#ef476f", "badgeBg": "#330f19"},
+    {"id": "setup-strength", "name": "Play to Strengths", "description": "Set up detailed learning strengths in profile.", "icon": "trending_up", "xpReward": 200, "rarity": "Adept", "rule": "Set up detailed learning strengths in profile.", "badgeColor": "#00b4d8", "badgeBg": "#00232a"},
+    {"id": "fourteen-streak", "name": "Fortnight Focus", "description": "14-day study streak.", "icon": "date_range", "xpReward": 800, "rarity": "Rare", "rule": "Maintain a 14-day study streak.", "badgeColor": "#ffd166", "badgeBg": "#332b15"},
+    {"id": "fifty-streak", "name": "Half Century", "description": "50-day study streak.", "icon": "event_available", "xpReward": 4000, "rarity": "Epic", "rule": "Maintain a 50-day study streak.", "badgeColor": "#e85d04", "badgeBg": "#331301"},
+    {"id": "hundred-streak", "name": "Century Mark", "description": "100-day study streak.", "icon": "calendar_month", "xpReward": 10000, "rarity": "Legendary", "rule": "Maintain a 100-day study streak.", "badgeColor": "#ffd700", "badgeBg": "#332e00"},
+    {"id": "year-streak", "name": "Eternal Flame", "description": "365-day study streak.", "icon": "local_fire_department", "xpReward": 50000, "rarity": "Legendary", "rule": "Maintain a 365-day study streak.", "badgeColor": "#ff006e", "badgeBg": "#1a000b"}
+]
+
+new_test = [
+    {"id": "complete-5-tests", "name": "Tested", "description": "Completed 5 mock tests.", "icon": "grading", "xpReward": 500, "rarity": "Adept", "rule": "Complete 5 mock tests.", "badgeColor": "#e76f51", "badgeBg": "#331810"},
+    {"id": "complete-10-tests", "name": "Seasoned Test Taker", "description": "Completed 10 mock tests.", "icon": "fact_check", "xpReward": 1200, "rarity": "Rare", "rule": "Complete 10 mock tests.", "badgeColor": "#f4a261", "badgeBg": "#33220d"},
+    {"id": "complete-50-tests", "name": "Exam Veteran", "description": "Completed 50 mock tests.", "icon": "rule", "xpReward": 5000, "rarity": "Epic", "rule": "Complete 50 mock tests.", "badgeColor": "#e85d04", "badgeBg": "#331301"},
+    {"id": "complete-100-tests", "name": "Exam Lord", "description": "Completed 100 mock tests.", "icon": "gavel", "xpReward": 15000, "rarity": "Legendary", "rule": "Complete 100 mock tests.", "badgeColor": "#dc2f02", "badgeBg": "#330a00"},
+    {"id": "acc-90-5", "name": "Consistent Excellence", "description": "Maintain 90%+ accuracy across 5 consecutive tests.", "icon": "done_all", "xpReward": 2000, "rarity": "Epic", "rule": "Maintain 90%+ accuracy across 5 consecutive tests.", "badgeColor": "#06d6a0", "badgeBg": "#0d2e24"},
+    {"id": "acc-90-10", "name": "Unwavering Precision", "description": "Maintain 90%+ accuracy across 10 consecutive tests.", "icon": "high_quality", "xpReward": 8000, "rarity": "Legendary", "rule": "Maintain 90%+ accuracy across 10 consecutive tests.", "badgeColor": "#00f5d4", "badgeBg": "#003328"},
+    {"id": "score-a-adaptive", "name": "Adapt and Overcome", "description": "Score an 'A' on an adaptive test.", "icon": "military_tech", "xpReward": 1500, "rarity": "Rare", "rule": "Score an 'A' on an adaptive test.", "badgeColor": "#9b5de5", "badgeBg": "#1f1433"},
+    {"id": "spare-10-mins", "name": "Time to Spare", "description": "Finish a 100-mark test with 10 minutes to spare.", "icon": "timer", "xpReward": 800, "rarity": "Rare", "rule": "Finish a 100-mark test with 10 minutes to spare.", "badgeColor": "#48bfe3", "badgeBg": "#0e2833"},
+    {"id": "spare-30-mins", "name": "Lightning Fast", "description": "Finish a 100-mark test with 30 minutes to spare.", "icon": "timer_off", "xpReward": 3000, "rarity": "Epic", "rule": "Finish a 100-mark test with 30 minutes to spare.", "badgeColor": "#00b4d8", "badgeBg": "#00232a"},
+    {"id": "conquer-weakness", "name": "Overcoming Limits", "description": "Conquer your Weakness Heatmap.", "icon": "fitness_center", "xpReward": 2500, "rarity": "Epic", "rule": "Score perfectly on a topic you previously failed.", "badgeColor": "#ff006e", "badgeBg": "#1a000b"},
+    {"id": "onboarding-assess", "name": "The Assessment", "description": "Completed the initial 75+25 onboarding assessment without skipping.", "icon": "assignment_turned_in", "xpReward": 1000, "rarity": "Rare", "rule": "Complete the onboarding assessment.", "badgeColor": "#ffd166", "badgeBg": "#332b15"},
+    {"id": "blind-test", "name": "Blindfolded", "description": "Completed a test blindly with no notes.", "icon": "visibility_off", "xpReward": 1500, "rarity": "Epic", "rule": "Complete a test without accessing workspace notes.", "badgeColor": "#7209b7", "badgeBg": "#1a0429"}
+]
+
+new_game = [
+    {"id": "play-10-arena", "name": "Challenger", "description": "Played 10 Arena matches.", "icon": "swords", "xpReward": 800, "rarity": "Adept", "rule": "Play 10 Arena matches.", "badgeColor": "#e76f51", "badgeBg": "#331810"},
+    {"id": "win-5-arena", "name": "Winning Streak", "description": "Won 5 Arena matches in a row.", "icon": "emoji_events", "xpReward": 1500, "rarity": "Rare", "rule": "Win 5 Arena matches in a row.", "badgeColor": "#f4a261", "badgeBg": "#33220d"},
+    {"id": "win-10-arena", "name": "Unbeatable", "description": "Won 10 Arena matches in a row.", "icon": "workspace_premium", "xpReward": 4000, "rarity": "Epic", "rule": "Win 10 Arena matches in a row.", "badgeColor": "#e85d04", "badgeBg": "#331301"},
+    {"id": "perfect-victory", "name": "Flawless Victory", "description": "Achieved a perfect victory in Arena.", "icon": "star", "xpReward": 2000, "rarity": "Epic", "rule": "Achieve a perfect victory in Arena.", "badgeColor": "#ffd700", "badgeBg": "#332e00"},
+    {"id": "defeat-3-bosses", "name": "Monster Hunter", "description": "Defeated 3 Chapter Bosses.", "icon": "security", "xpReward": 3000, "rarity": "Epic", "rule": "Defeat 3 Chapter Bosses.", "badgeColor": "#dc2f02", "badgeBg": "#330a00"},
+    {"id": "defeat-10-bosses", "name": "Boss Banisher", "description": "Defeated 10 Chapter Bosses.", "icon": "shield", "xpReward": 8000, "rarity": "Legendary", "rule": "Defeat 10 Chapter Bosses.", "badgeColor": "#ff4500", "badgeBg": "#330e00"},
+    {"id": "defeat-world-boss", "name": "Saviour", "description": "Defeated a World Boss.", "icon": "public", "xpReward": 15000, "rarity": "Legendary", "rule": "Defeat a World Boss.", "badgeColor": "#9b5de5", "badgeBg": "#1f1433"},
+    {"id": "top-10-percent", "name": "Upper Echelon", "description": "Reached the Top 10% of the Leaderboard.", "icon": "trending_up", "xpReward": 3000, "rarity": "Epic", "rule": "Reach the Top 10% of the Leaderboard.", "badgeColor": "#00b4d8", "badgeBg": "#00232a"},
+    {"id": "top-1-percent", "name": "The Elite", "description": "Reached the Top 1% of the Leaderboard.", "icon": "looks_one", "xpReward": 10000, "rarity": "Legendary", "rule": "Reach the Top 1% of the Leaderboard.", "badgeColor": "#560bad", "badgeBg": "#13032a"},
+    {"id": "rank-1-global", "name": "Number One", "description": "Reached Rank 1 Globally.", "icon": "crown", "xpReward": 50000, "rarity": "Legendary", "rule": "Reach Rank 1 Globally.", "badgeColor": "#ffd700", "badgeBg": "#332e00"}
+]
+
+new_workspace = [
+    {"id": "upload-pdf", "name": "Archivist", "description": "Uploaded your first external PDF.", "icon": "picture_as_pdf", "xpReward": 150, "rarity": "Novice", "rule": "Upload your first external PDF/Document.", "badgeColor": "#219ebc", "badgeBg": "#08232a"},
+    {"id": "upload-10-pdfs", "name": "Librarian", "description": "Uploaded 10 PDFs.", "icon": "library_books", "xpReward": 600, "rarity": "Adept", "rule": "Upload 10 PDFs.", "badgeColor": "#48bfe3", "badgeBg": "#0e2833"},
+    {"id": "link-url", "name": "Web Weaver", "description": "Linked an external URL to your Knowledge Base.", "icon": "link", "xpReward": 100, "rarity": "Novice", "rule": "Link an external URL to your Knowledge Base.", "badgeColor": "#8ecae6", "badgeBg": "#1a2a33"},
+    {"id": "create-10-folders", "name": "Organizer", "description": "Created 10 custom folders.", "icon": "folder_open", "xpReward": 300, "rarity": "Adept", "rule": "Create 10 custom folders.", "badgeColor": "#a8dadc", "badgeBg": "#1d2d2f"},
+    {"id": "gen-5-mindmaps", "name": "Visual Learner", "description": "Generated 5 Mind Maps.", "icon": "account_tree", "xpReward": 800, "rarity": "Rare", "rule": "Generate 5 Mind Maps.", "badgeColor": "#9b5de5", "badgeBg": "#1f1433"},
+    {"id": "req-5-audio", "name": "Audio Learner", "description": "Requested 5 AI Voice explanations.", "icon": "headphones", "xpReward": 800, "rarity": "Rare", "rule": "Request 5 AI Voice explanations.", "badgeColor": "#7209b7", "badgeBg": "#1a0429"},
+    {"id": "gen-flowchart", "name": "Process Mapper", "description": "Generated a complex flow chart.", "icon": "account_tree", "xpReward": 500, "rarity": "Adept", "rule": "Generate a complex flow chart.", "badgeColor": "#f72585", "badgeBg": "#33071a"},
+    {"id": "master-collection", "name": "Compendium", "description": "Created a master collection of notes.", "icon": "collections_bookmark", "xpReward": 1500, "rarity": "Epic", "rule": "Create a master collection of notes.", "badgeColor": "#560bad", "badgeBg": "#13032a"},
+    {"id": "workspace-100-items", "name": "The Vault", "description": "Stored 100 items in your workspace.", "icon": "inventory", "xpReward": 3000, "rarity": "Epic", "rule": "Store 100 items in your workspace.", "badgeColor": "#dc2f02", "badgeBg": "#330a00"}
+]
+
+new_workspace.append({"id": "workspace-master", "name": "Workspace Master", "description": "Unlocked all workspace features.", "icon": "stars", "xpReward": 5000, "rarity": "Legendary", "rule": "Fully upgrade your workspace.", "badgeColor": "#ffd700", "badgeBg": "#332e00"})
+new_workspace.append({"id": "resources-master", "name": "Resources Master", "description": "Unlocked all resource features.", "icon": "diamond", "xpReward": 5000, "rarity": "Legendary", "rule": "Fully upgrade your resources.", "badgeColor": "#ff006e", "badgeBg": "#1a000b"})
+new_workspace.append({"id": "drona-champion", "name": "Drona Champion", "description": "You are the ultimate champion of Drona.", "icon": "workspace_premium", "xpReward": 100000, "rarity": "Legendary", "rule": "Unlock 99 other achievements.", "badgeColor": "#9b5de5", "badgeBg": "#1f1433"})
+
+all_achievements = existing + new_env + new_learning + new_test + new_game + new_workspace
+
+ts_content = '''export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  xpReward: number;
+  rarity: "Novice" | "Adept" | "Rare" | "Epic" | "Legendary";
+  rule: string;
+  isSecret?: boolean;
+  // Visual styling per badge
+  badgeColor: string;    // main accent hex
+  badgeBg: string;       // dark bg hex
+}
+
+export const achievements: Achievement[] = [
+'''
+
+for a in all_achievements:
+    ts_content += '  {\n'
+    for k, v in a.items():
+        if isinstance(v, str):
+            # Escape quotes
+            v_esc = v.replace('"', '\\"')
+            ts_content += f'    {k}: "{v_esc}",\n'
+        elif isinstance(v, bool):
+            ts_content += f'    {k}: {"true" if v else "false"},\n'
+        else:
+            ts_content += f'    {k}: {v},\n'
+    ts_content += '  },\n'
+
+ts_content += '];\n\n'
+ts_content += 'export const getAchievementById = (id: string): Achievement | undefined => {\n'
+ts_content += '  return achievements.find(a => a.id === id);\n'
+ts_content += '};\n'
+
+# Fix the missing quote in first-login from original data if present:
+ts_content = ts_content.replace('xpReward: 100,', 'xpReward: 100,')
+
+with open(file_path, 'w', encoding='utf-8') as f:
+    f.write(ts_content)
+
+print(f"Successfully wrote {len(all_achievements)} achievements to {file_path}")

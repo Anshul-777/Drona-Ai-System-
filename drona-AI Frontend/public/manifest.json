@@ -1,0 +1,16 @@
+{
+  "name": "Drona Intelligence OS",
+  "short_name": "Drona AI",
+  "description": "India's first multi-agent AI education platform.",
+  "start_url": "/drona",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

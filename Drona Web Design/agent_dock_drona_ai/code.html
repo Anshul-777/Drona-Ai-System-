@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Agent Dock — DRONA AI</title>
+<meta name="description" content="DRONA AI Agent Dock — Real-time multi-agent orchestration, memory graph, internal deliberation, and configuration console."/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "on-primary-fixed":"#001454","on-background":"#191c1d","surface-tint":"#074af0",
+        "surface-container-highest":"#e1e3e4","primary":"#0042dc","on-error":"#ffffff",
+        "surface":"#f8f9fa","surface-container-high":"#e7e8e9","primary-container":"#2a5cff",
+        "error":"#ba1a1a","on-secondary":"#ffffff","inverse-primary":"#b8c4ff",
+        "secondary-container":"#e2e0fc","primary-fixed":"#dde1ff",
+        "inverse-surface":"#2e3132","surface-container-lowest":"#ffffff",
+        "surface-container-low":"#f3f4f5","outline":"#747688",
+        "surface-container":"#edeeef","surface-variant":"#e1e3e4",
+        "surface-dim":"#d9dadb","secondary":"#5d5c74",
+        "on-primary-container":"#efefff","on-primary":"#ffffff",
+        "on-surface-variant":"#434656","tertiary":"#9a3200",
+        "outline-variant":"#c4c5d9","on-surface":"#191c1d",
+        "error-container":"#ffdad6","background":"#f8f9fa",
+        "tertiary-container":"#c34100","on-secondary-container":"#63627a"
+      },
+      fontFamily: {
+        headline:["Playfair Display","serif"],
+        display:["Playfair Display","serif"],
+        body:["Inter","sans-serif"],
+        label:["Inter","sans-serif"],
+        mono:["JetBrains Mono","monospace"]
+      }
+    }
+  }
+}
+</script>
+<style>
+  /* ═══════════════════════════════════════════════════════
+     AGENT DOCK — Custom Styles
+     ═══════════════════════════════════════════════════════ */
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .material-symbols-outlined.filled { font-variation-settings: 'FILL' 1; }
+
+  /* Tab underline animation */
+  .dock-tab { position: relative; }
+  .dock-tab::after {
+    content: ''; position: absolute; bottom: -1px; left: 50%; width: 0; height: 2px;
+    background: #0042dc; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); transform: translateX(-50%);
+  }
+  .dock-tab.active::after { width: 100%; }
+  .dock-tab.active { color: #0042dc; font-weight: 700; }
+
+  /* View transitions */
+  .dock-view { display: none; animation: viewFadeIn 0.4s cubic-bezier(0.4,0,0.2,1); }
+  .dock-view.active { display: flex; }
+  @keyframes viewFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Pulse rings for active agents */
+  @keyframes pulseRing {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+  .pulse-ring::before {
+    content: ''; position: absolute; inset: -4px; border-radius: 50%;
+    border: 2px solid currentColor; animation: pulseRing 2s infinite;
+  }
+
+  /* Data flow particles on SVG paths */
+  @keyframes flowParticle {
+    0% { offset-distance: 0%; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { offset-distance: 100%; opacity: 0; }
+  }
+  .flow-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: #0042dc;
+    position: absolute; offset-rotate: 0deg;
+    animation: flowParticle 3s linear infinite;
+  }
+
+  /* Canvas node styling */
+  .memory-node {
+    position: absolute; cursor: grab; transition: box-shadow 0.2s, transform 0.2s;
+    user-select: none;
+  }
+  .memory-node:hover { transform: scale(1.04); box-shadow: 0 8px 32px rgba(0,66,220,0.15); z-index: 20; }
+  .memory-node:active { cursor: grabbing; }
+
+  /* Connection lines for memory canvas */
+  .canvas-line { stroke: #c4c5d9; stroke-width: 1.5; fill: none; }
+  .canvas-line.strong { stroke: #0042dc; stroke-width: 2; stroke-dasharray: none; }
+  .canvas-line.weak { stroke-dasharray: 6 4; opacity: 0.5; }
+
+  /* Terminal log auto-scroll glow */
+  .log-container { scrollbar-width: thin; scrollbar-color: #313244 transparent; }
+  .log-container::-webkit-scrollbar { width: 4px; }
+  .log-container::-webkit-scrollbar-thumb { background: #313244; border-radius: 4px; }
+
+  /* Agent card micro-interaction */
+  .agent-card { transition: all 0.25s cubic-bezier(0.4,0,0.2,1); }
+  .agent-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+
+  /* Typing indicator */
+  @keyframes blink { 0%,100%{opacity:0.2} 50%{opacity:1} }
+  .typing-dot { animation: blink 1.4s infinite; }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  /* Settings toggle */
+  .toggle-track { transition: background 0.2s; }
+  .toggle-track.on { background: #0042dc; }
+  .toggle-knob { transition: transform 0.2s cubic-bezier(0.4,0,0.2,1); }
+  .toggle-track.on .toggle-knob { transform: translateX(20px); }
+
+  /* Cron expression highlight */
+  .cron-field { font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em; }
+
+  /* Subtle grid background for architecture view */
+  .grid-bg {
+    background-image: radial-gradient(circle, #e1e3e4 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Canvas background */
+  .canvas-bg {
+    background-image:
+      linear-gradient(rgba(196,197,217,0.15) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(196,197,217,0.15) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  /* Glow effect for active nodes */
+  .glow-primary { box-shadow: 0 0 0 4px rgba(0,66,220,0.1), 0 0 20px rgba(0,66,220,0.08); }
+  .glow-green { box-shadow: 0 0 0 4px rgba(34,197,94,0.1), 0 0 20px rgba(34,197,94,0.08); }
+  .glow-amber { box-shadow: 0 0 0 4px rgba(245,158,11,0.1), 0 0 20px rgba(245,158,11,0.08); }
+
+  /* Smooth scroll for lounge */
+  .lounge-scroll { scroll-behavior: smooth; }
+
+  /* Status badge */
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .status-active { background: #22c55e; box-shadow: 0 0 8px rgba(34,197,94,0.5); }
+  .status-idle { background: #a3a3a3; }
+  .status-processing { background: #0042dc; animation: blink 1s infinite; }
+  .status-error { background: #ef4444; }
+
+  /* Frosted header */
+  .frosted { background: rgba(248,249,250,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+</style>
+</head>
+
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col antialiased overflow-hidden">
+
+<!-- ═══════════════════════════════════════════════════════
+     TOP BAR — Agent Dock Header
+     ═══════════════════════════════════════════════════════ -->
+<header class="frosted border-b border-outline-variant/30 z-50 flex-shrink-0">
+  <div class="flex items-center justify-between px-6 h-14">
+    <!-- Left: Back + Title -->
+    <div class="flex items-center gap-4">
+      <button id="btn-close-dock" class="w-8 h-8 rounded-lg bg-surface-container-high/60 flex items-center justify-center text-secondary hover:text-on-surface hover:bg-surface-container-highest transition-all active:scale-90">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+      </button>
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
+          <span class="material-symbols-outlined filled text-on-primary text-[16px]">smart_toy</span>
+        </div>
+        <h1 class="font-display font-bold text-lg text-on-surface tracking-tight">Agent Dock</h1>
+        <span class="text-[10px] font-mono font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase tracking-wider">Live</span>
+      </div>
+    </div>
+
+    <!-- Center: View Tabs -->
+    <nav class="hidden md:flex items-center gap-1 h-full" id="dock-tabs">
+      <button class="dock-tab active px-4 py-2 text-sm font-medium text-secondary hover:text-on-surface transition-colors h-full flex items-center gap-2" data-view="architecture">
+        <span class="material-symbols-outlined text-[18px]">account_tree</span>
+        Architecture
+      </button>
+      <button class="dock-tab px-4 py-2 text-sm font-medium text-secondary hover:text-on-surface transition-colors h-full flex items-center gap-2" data-view="memory">
+        <span class="material-symbols-outlined text-[18px]">hub</span>
+        Memory
+      </button>
+      <button class="dock-tab px-4 py-2 text-sm font-medium text-secondary hover:text-on-surface transition-colors h-full flex items-center gap-2" data-view="lounge">
+        <span class="material-symbols-outlined text-[18px]">forum</span>
+        Teacher Lounge
+      </button>
+      <button class="dock-tab px-4 py-2 text-sm font-medium text-secondary hover:text-on-surface transition-colors h-full flex items-center gap-2" data-view="settings">
+        <span class="material-symbols-outlined text-[18px]">tune</span>
+        Settings
+      </button>
+    </nav>
+
+    <!-- Right: Status -->
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 text-xs font-mono text-secondary">
+        <div class="status-dot status-active"></div>
+        <span>7 agents online</span>
+      </div>
+      <div class="w-px h-6 bg-outline-variant/30"></div>
+      <div class="flex items-center gap-2 text-xs font-mono text-secondary">
+        <span class="material-symbols-outlined text-[14px] text-primary">speed</span>
+        <span>14ms</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Tab Bar -->
+  <div class="md:hidden flex border-t border-outline-variant/20 overflow-x-auto" id="dock-tabs-mobile">
+    <button class="dock-tab active flex-1 min-w-max px-4 py-2.5 text-xs font-medium text-secondary flex items-center justify-center gap-1.5" data-view="architecture">
+      <span class="material-symbols-outlined text-[16px]">account_tree</span> Architecture
+    </button>
+    <button class="dock-tab flex-1 min-w-max px-4 py-2.5 text-xs font-medium text-secondary flex items-center justify-center gap-1.5" data-view="memory">
+      <span class="material-symbols-outlined text-[16px]">hub</span> Memory
+    </button>
+    <button class="dock-tab flex-1 min-w-max px-4 py-2.5 text-xs font-medium text-secondary flex items-center justify-center gap-1.5" data-view="lounge">
+      <span class="material-symbols-outlined text-[16px]">forum</span> Lounge
+    </button>
+    <button class="dock-tab flex-1 min-w-max px-4 py-2.5 text-xs font-medium text-secondary flex items-center justify-center gap-1.5" data-view="settings">
+      <span class="material-symbols-outlined text-[16px]">tune</span> Settings
+    </button>
+  </div>
+</header>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     VIEW 1: AGENT ARCHITECTURE — Real-time Orchestration Dashboard
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="dock-view active flex-1 flex flex-col lg:flex-row overflow-hidden" id="view-architecture">
+
+  <!-- Left: Orchestration Topology -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Topology Header -->
+    <div class="px-6 py-4 border-b border-outline-variant/20 flex items-center justify-between flex-shrink-0">
+      <div>
+        <h2 class="font-display font-bold text-xl text-on-surface">Orchestration Topology</h2>
+        <p class="text-xs text-secondary mt-0.5">Real-time agent routing & consensus pipeline</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="bg-green-50 text-green-700 border border-green-200 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">All Systems Nominal</span>
+        <button class="w-8 h-8 rounded-lg border border-outline-variant/30 flex items-center justify-center text-secondary hover:text-on-surface hover:bg-surface-container-low transition-all">
+          <span class="material-symbols-outlined text-[18px]">fullscreen</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Topology Canvas -->
+    <div class="flex-1 relative grid-bg overflow-auto p-8">
+      <!-- SVG Connection Lines -->
+      <svg class="absolute inset-0 w-full h-full pointer-events-none" style="z-index:1">
+        <!-- Core → Router -->
+        <line x1="50%" y1="100" x2="50%" y2="180" stroke="#0042dc" stroke-width="2" stroke-dasharray="4 3" opacity="0.4"/>
+        <!-- Router → Clusters -->
+        <line x1="50%" y1="220" x2="20%" y2="300" stroke="#0042dc" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.3"/>
+        <line x1="50%" y1="220" x2="50%" y2="300" stroke="#0042dc" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.3"/>
+        <line x1="50%" y1="220" x2="80%" y2="300" stroke="#0042dc" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.3"/>
+      </svg>
+
+      <div class="relative flex flex-col items-center gap-6" style="z-index:2; min-height: 560px;">
+
+        <!-- ═══ TIER 0: Master Orchestrator ═══ -->
+        <div class="flex flex-col items-center">
+          <div class="relative">
+            <div class="w-20 h-20 rounded-2xl bg-primary flex items-center justify-center shadow-lg glow-primary">
+              <span class="material-symbols-outlined filled text-on-primary text-3xl">psychology</span>
+            </div>
+            <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+            <!-- Pulse -->
+            <div class="absolute inset-0 rounded-2xl border-2 border-primary/30 animate-ping" style="animation-duration:3s"></div>
+          </div>
+          <div class="mt-3 text-center">
+            <h3 class="font-display font-bold text-base text-on-surface">Drona Core</h3>
+            <p class="text-[10px] font-mono text-primary font-medium mt-0.5">MASTER ORCHESTRATOR</p>
+            <p class="text-[10px] text-secondary mt-1">Routing • Consensus • Delegation</p>
+          </div>
+        </div>
+
+        <!-- ═══ TIER 1: Cognitive Router ═══ -->
+        <div class="flex flex-col items-center">
+          <div class="w-px h-6 bg-primary/30"></div>
+          <div class="px-5 py-2.5 rounded-xl bg-surface-container-lowest border border-primary/20 shadow-sm flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-[20px]">route</span>
+            <div>
+              <p class="text-xs font-bold text-on-surface">Cognitive Router</p>
+              <p class="text-[10px] text-primary font-mono">DISPATCHING → Chemistry Node</p>
+            </div>
+            <div class="status-dot status-processing ml-2"></div>
+          </div>
+          <div class="w-px h-6 bg-primary/30"></div>
+        </div>
+
+        <!-- ═══ TIER 2: Agent Clusters ═══ -->
+        <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
+
+          <!-- STEM Cluster -->
+          <div class="flex flex-col gap-3">
+            <div class="text-center">
+              <span class="text-[10px] font-bold text-secondary uppercase tracking-widest bg-surface-container-high px-3 py-1 rounded-full">STEM Specialists</span>
+            </div>
+
+            <!-- Physics Agent -->
+            <div class="agent-card bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4 flex items-center gap-3 cursor-pointer">
+              <div class="relative flex-shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-blue-600 text-[20px]">bolt</span>
+                </div>
+                <div class="absolute -bottom-0.5 -right-0.5 status-dot status-idle border border-white"></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-bold text-on-surface">Physics</p>
+                  <span class="text-[9px] font-mono text-secondary bg-surface-container-high px-1.5 py-0.5 rounded">IDLE</span>
+                </div>
+                <p class="text-[10px] text-secondary mt-0.5 truncate">Last: Kinematics review — 4m ago</p>
+                <div class="w-full h-1 bg-surface-container-highest rounded-full mt-2"><div class="h-full bg-blue-400 rounded-full" style="width:0%"></div></div>
+              </div>
+            </div>
+
+            <!-- Chemistry Agent (ACTIVE) -->
+            <div class="agent-card bg-surface-container-lowest border-2 border-primary/40 rounded-xl p-4 flex items-center gap-3 cursor-pointer glow-primary">
+              <div class="relative flex-shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
+                  <span class="material-symbols-outlined text-on-primary text-[20px]">science</span>
+                </div>
+                <div class="absolute -bottom-0.5 -right-0.5 status-dot status-active border border-white"></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-bold text-primary">Chemistry</p>
+                  <span class="text-[9px] font-mono text-primary bg-primary/10 px-1.5 py-0.5 rounded font-bold">ACTIVE</span>
+                </div>
+                <p class="text-[10px] text-primary/70 mt-0.5 truncate">Evaluating covalent bond response...</p>
+                <div class="w-full h-1 bg-primary/10 rounded-full mt-2"><div class="h-full bg-primary rounded-full animate-pulse" style="width:65%"></div></div>
+              </div>
+            </div>
+
+            <!-- Math Agent -->
+            <div class="agent-card bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4 flex items-center gap-3 cursor-pointer">
+              <div class="relative flex-shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-purple-600 text-[20px]">calculate</span>
+                </div>
+                <div class="absolute -bottom-0.5 -right-0.5 status-dot status-idle border border-white"></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-bold text-on-surface">Mathematics</p>
+                  <span class="text-[9px] font-mono text-secondary bg-surface-container-high px-1.5 py-0.5 rounded">STANDBY</span>
+                </div>
+                <p class="text-[10px] text-secondary mt-0.5 truncate">Ready — Calculus module loaded</p>
+                <div class="w-full h-1 bg-surface-container-highest rounded-full mt-2"><div class="h-full bg-purple-400 rounded-full" style="width:0%"></div></div>
+              </div>
+            </div>
+
+            <!-- Biology Agent -->
+            <div class="agent-card bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4 flex items-center gap-3 cursor-pointer">
+              <div class="relative flex-shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-green-600 text-[20px]">biotech</span>
+                </div>
+                <div class="absolute -bottom-0.5 -right-0.5 status-dot status-idle border border-white"></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-bold text-on-surface">Biology</p>
+                  <span class="text-[9px] font-mono text-secondary bg-surface-container-high px-1.5 py-0.5 rounded">IDLE</span>
+                </div>
+                <p class="text-[10px] text-secondary mt-0.5 truncate">Last: Cell division — 22m ago</p>
+                <div class="w-full h-1 bg-surface-container-highest rounded-full mt-2"><div class="h-full bg-green-400 rounded-full" style="width:0%"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cognitive Core Cluster -->
+          <div class="flex flex-col gap-3">
+            <div class="text-center">
+              <span class="text-[10px] font-bold text-secondary uppercase tracking-widest bg-surface-container-high px-3 py-1 rounded-full">Cognitive Core</span>
+            </div>
+
+            <!-- Context Synthesizer (ACTIVE) -->
+            <div class="agent-card bg-surface-container-lowest border-2 border-amber-300/50 rounded-xl p-4 flex items-center gap-3 cursor-pointer glow-amber">
+              <div class="relative flex-shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-white text-[20px]">psychology_alt</span>
+                </div>
+                <div class="absolute -bottom-0.5 -right-0.5 status-dot status-active border border-white"></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-bold text-amber-700">Context Synth</p>
+                  <span class="text-[9px] font-mono text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded font-bold">ACTIVE</span>
+                </div>
+                <p class="text-[10px] text-amber-600/70 mt-0.5 truncate">Retrieving session history...</p>
+                <div class="w-full h-1 bg-amber-100 rounded-full mt-2"><div class="h-full bg-amber-500 rounded-full animate-pulse" style="width:45%"></div></div>
+              </div>
+            </div>
+
+            <!-- Long-term Memory -->
+            <div class="agent-card bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4 flex items-center gap-3 cursor-pointer">
+              <div class="relative flex-shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-teal-600 text-[20px]">database</span>
+                </div>
+                <div class="absolute -bottom-0.5 -right-0.5 status-dot status-active border border-white"></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-bold text-on-surface">Long-term Mem</p>
+                  <span class="text-[9px] font-mono text-green-700 bg-green-50 px-1.5 py-0.5 rounded">SYNCED</span>
+                </div>
+                <p class="text-[10px] text-secondary mt-0.5">1,247 memories • 99.8% coherence</p>
+                <div class="w-full h-1 bg-surface-container-highest rounded-full mt-2"><div class="h-full bg-teal-500 rounded-full" style="width:99%"></div></div>
+              </div>
+            </div>
+
+            <!-- Strategy Planner -->
+            <div class="agent-card bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4 flex items-center gap-3 cursor-pointer">
+              <div class="relative flex-shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-indigo-600 text-[20px]">target</span>
+                </div>
+                <div class="absolute -bottom-0.5 -right-0.5 status-dot status-idle border border-white"></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-bold text-on-surface">Strategy Planner</p>
+                  <span class="text-[9px] font-mono text-secondary bg-surface-container-high px-1.5 py-0.5 rounded">STANDBY</span>
+                </div>
+                <p class="text-[10px] text-secondary mt-0.5 truncate">Goal: JEE Advanced 2026 — on track</p>
+                <div class="w-full h-1 bg-surface-container-highest rounded-full mt-2"><div class="h-full bg-indigo-400 rounded-full" style="width:0%"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Evaluation Cluster -->
+          <div class="flex flex-col gap-3">
+            <div class="text-center">
+              <span class="text-[10px] font-bold text-secondary uppercase tracking-widest bg-surface-container-high px-3 py-1 rounded-full">Evaluation Layer</span>
+            </div>
+
+            <!-- Grader -->
+            <div class="agent-card bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4 flex items-center gap-3 cursor-pointer">
+              <div class="relative flex-shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-orange-600 text-[20px]">fact_check</span>
+                </div>
+                <div class="absolute -bottom-0.5 -right-0.5 status-dot status-idle border border-white"></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-bold text-on-surface">Grader</p>
+                  <span class="text-[9px] font-mono text-secondary bg-surface-container-high px-1.5 py-0.5 rounded">QUEUED</span>
+                </div>
+                <p class="text-[10px] text-secondary mt-0.5">Awaiting Chemistry eval output</p>
+                <div class="w-full h-1 bg-surface-container-highest rounded-full mt-2"><div class="h-full bg-orange-300 rounded-full" style="width:10%"></div></div>
+              </div>
+            </div>
+
+            <!-- Socratic Tutor -->
+            <div class="agent-card bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4 flex items-center gap-3 cursor-pointer">
+              <div class="relative flex-shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-rose-600 text-[20px]">record_voice_over</span>
+                </div>
+                <div class="absolute -bottom-0.5 -right-0.5 status-dot status-idle border border-white"></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-bold text-on-surface">Socratic Tutor</p>
+                  <span class="text-[9px] font-mono text-secondary bg-surface-container-high px-1.5 py-0.5 rounded">STANDBY</span>
+                </div>
+                <p class="text-[10px] text-secondary mt-0.5">Will compose response after consensus</p>
+                <div class="w-full h-1 bg-surface-container-highest rounded-full mt-2"><div class="h-full bg-rose-300 rounded-full" style="width:0%"></div></div>
+              </div>
+            </div>
+
+            <!-- Exam Strategist -->
+            <div class="agent-card bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4 flex items-center gap-3 cursor-pointer">
+              <div class="relative flex-shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-cyan-600 text-[20px]">military_tech</span>
+                </div>
+                <div class="absolute -bottom-0.5 -right-0.5 status-dot status-idle border border-white"></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-bold text-on-surface">Exam Strategist</p>
+                  <span class="text-[9px] font-mono text-secondary bg-surface-container-high px-1.5 py-0.5 rounded">IDLE</span>
+                </div>
+                <p class="text-[10px] text-secondary mt-0.5">Mock test analysis scheduled 6PM</p>
+                <div class="w-full h-1 bg-surface-container-highest rounded-full mt-2"><div class="h-full bg-cyan-300 rounded-full" style="width:0%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Sidebar: Live Logs + Task Queue -->
+  <div class="w-full lg:w-[420px] border-l border-outline-variant/20 flex flex-col flex-shrink-0 bg-surface-container-lowest">
+
+    <!-- Current Task -->
+    <div class="p-4 border-b border-outline-variant/20">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-xs font-bold text-secondary uppercase tracking-wider">Active Task Pipeline</h3>
+        <span class="text-[10px] font-mono text-primary">3 in queue</span>
+      </div>
+      <div class="bg-primary/5 border border-primary/20 rounded-xl p-3">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="status-dot status-processing"></div>
+          <span class="text-xs font-bold text-on-surface">Evaluate Covalent Bond Understanding</span>
+        </div>
+        <div class="flex items-center gap-3 text-[10px] text-secondary font-mono">
+          <span>Student → "Electrons are shared equally"</span>
+        </div>
+        <div class="mt-2 flex items-center gap-2">
+          <div class="flex-1 h-1.5 bg-primary/10 rounded-full">
+            <div class="h-full bg-primary rounded-full transition-all" style="width:55%"></div>
+          </div>
+          <span class="text-[10px] font-mono text-primary font-bold">55%</span>
+        </div>
+        <div class="mt-2 flex flex-wrap gap-1">
+          <span class="text-[9px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-medium">Chemistry</span>
+          <span class="text-[9px] bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded font-medium">Context Synth</span>
+          <span class="text-[9px] bg-surface-container-high text-secondary px-1.5 py-0.5 rounded">→ Grader</span>
+          <span class="text-[9px] bg-surface-container-high text-secondary px-1.5 py-0.5 rounded">→ Socratic</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- System Prompt Preview -->
+    <div class="p-4 border-b border-outline-variant/20">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="text-xs font-bold text-secondary uppercase tracking-wider flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[14px]">terminal</span>
+          Active Instruction
+        </h3>
+        <button class="text-[10px] text-primary font-medium hover:underline">Expand</button>
+      </div>
+      <div class="bg-[#1e1e2e] rounded-lg p-3 font-mono text-[11px] text-[#cdd6f4] leading-relaxed max-h-24 overflow-hidden relative">
+        <span class="text-[#cba6f7]">"task"</span>: <span class="text-[#a6e3a1]">"Evaluate student's understanding of covalent bonds"</span>,<br/>
+        <span class="text-[#cba6f7]">"constraints"</span>: [<span class="text-[#a6e3a1]">"No direct answers"</span>, <span class="text-[#a6e3a1]">"Socratic method"</span>],<br/>
+        <span class="text-[#cba6f7]">"tone"</span>: <span class="text-[#a6e3a1]">"encouraging, academic"</span>
+        <div class="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-[#1e1e2e] to-transparent"></div>
+      </div>
+    </div>
+
+    <!-- Live Consensus Log -->
+    <div class="flex-1 flex flex-col min-h-0">
+      <div class="px-4 py-3 border-b border-outline-variant/20 flex items-center justify-between flex-shrink-0">
+        <h3 class="text-xs font-bold text-secondary uppercase tracking-wider flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[14px]">monitor_heart</span>
+          Consensus Stream
+        </h3>
+        <div class="flex items-center gap-1.5">
+          <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+          <span class="text-[10px] font-mono text-secondary">LIVE</span>
+        </div>
+      </div>
+      <div class="flex-1 overflow-y-auto p-4 log-container bg-[#1e1e2e] font-mono text-[11px] space-y-2.5" id="arch-log">
+        <div class="flex gap-2">
+          <span class="text-[#585b70] w-14 flex-shrink-0">14:02:38</span>
+          <div><span class="text-[#f9e2af] font-semibold">[Core]</span> <span class="text-[#cdd6f4]">Student submitted response. Routing to pipeline.</span></div>
+        </div>
+        <div class="flex gap-2">
+          <span class="text-[#585b70] w-14 flex-shrink-0">14:02:39</span>
+          <div><span class="text-[#f9e2af] font-semibold">[Router]</span> <span class="text-[#cdd6f4]">Query classified: <span class="text-[#89b4fa]">CHEMISTRY/BONDING</span>. Dispatching.</span></div>
+        </div>
+        <div class="flex gap-2">
+          <span class="text-[#585b70] w-14 flex-shrink-0">14:02:41</span>
+          <div><span class="text-[#89b4fa] font-semibold">[Context Synth]</span> <span class="text-[#cdd6f4]">Pulled 3 prior sessions. Student struggled with polarity.</span></div>
+        </div>
+        <div class="flex gap-2">
+          <span class="text-[#585b70] w-14 flex-shrink-0">14:02:43</span>
+          <div><span class="text-[#a6e3a1] font-semibold">[Chemistry]</span> <span class="text-[#cdd6f4]">Analyzing: "Electrons are shared equally."</span></div>
+        </div>
+        <div class="flex gap-2">
+          <span class="text-[#585b70] w-14 flex-shrink-0">14:02:44</span>
+          <div><span class="text-[#a6e3a1] font-semibold">[Chemistry]</span> <span class="text-[#f38ba8]">⚠ Incomplete. Student conflates polar & non-polar covalent.</span></div>
+        </div>
+        <div class="flex gap-2">
+          <span class="text-[#585b70] w-14 flex-shrink-0">14:02:45</span>
+          <div><span class="text-[#89b4fa] font-semibold">[Context Synth]</span> <span class="text-[#cdd6f4]">Recommending water molecule analogy from Session 4.</span></div>
+        </div>
+        <div class="flex gap-2">
+          <span class="text-[#585b70] w-14 flex-shrink-0">14:02:46</span>
+          <div class="bg-[#313244]/50 p-2 rounded border-l-2 border-[#f9e2af] w-full">
+            <span class="text-[#f9e2af] font-semibold">[Core → Socratic]</span><br/>
+            <span class="text-[#cdd6f4]">CONSENSUS: Generate prompt re: polar vs non-polar. Use water analogy. No direct answers.</span>
+          </div>
+        </div>
+        <div class="flex gap-2 opacity-60">
+          <span class="text-[#585b70] w-14 flex-shrink-0">14:02:48</span>
+          <div class="flex gap-1"><div class="typing-dot w-1.5 h-1.5 rounded-full bg-[#89b4fa]"></div><div class="typing-dot w-1.5 h-1.5 rounded-full bg-[#89b4fa]"></div><div class="typing-dot w-1.5 h-1.5 rounded-full bg-[#89b4fa]"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     VIEW 2: MEMORY CANVAS — Obsidian-like Graph View
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="dock-view flex-1 flex flex-col overflow-hidden" id="view-memory">
+
+  <!-- Memory Header -->
+  <div class="px-6 py-4 border-b border-outline-variant/20 flex items-center justify-between flex-shrink-0">
+    <div class="flex items-center gap-4">
+      <h2 class="font-display font-bold text-xl text-on-surface">Memory Canvas</h2>
+      <div class="flex items-center gap-2 text-[10px] font-mono">
+        <span class="bg-primary/10 text-primary px-2 py-0.5 rounded-full font-bold">1,247 nodes</span>
+        <span class="bg-surface-container-high text-secondary px-2 py-0.5 rounded-full">2,891 connections</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1 bg-surface-container-low border border-outline-variant/30 rounded-lg px-3 py-1.5">
+        <span class="material-symbols-outlined text-[16px] text-secondary">search</span>
+        <input type="text" placeholder="Search memories..." class="bg-transparent text-xs font-body outline-none w-40 placeholder:text-outline"/>
+      </div>
+      <button class="w-8 h-8 rounded-lg border border-outline-variant/30 flex items-center justify-center text-secondary hover:text-on-surface hover:bg-surface-container-low transition-all" title="Filter">
+        <span class="material-symbols-outlined text-[18px]">filter_list</span>
+      </button>
+      <button class="w-8 h-8 rounded-lg border border-outline-variant/30 flex items-center justify-center text-secondary hover:text-on-surface hover:bg-surface-container-low transition-all" title="Zoom In">
+        <span class="material-symbols-outlined text-[18px]">zoom_in</span>
+      </button>
+      <button class="w-8 h-8 rounded-lg border border-outline-variant/30 flex items-center justify-center text-secondary hover:text-on-surface hover:bg-surface-container-low transition-all" title="Zoom Out">
+        <span class="material-symbols-outlined text-[18px]">zoom_out</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Canvas -->
+  <div class="flex-1 flex overflow-hidden">
+
+    <!-- Graph Canvas Area -->
+    <div class="flex-1 relative canvas-bg overflow-hidden" id="memory-canvas">
+      <!-- SVG Connections Layer -->
+      <svg class="absolute inset-0 w-full h-full" style="z-index:1">
+        <!-- Core knowledge connections -->
+        <line x1="320" y1="200" x2="560" y2="140" class="canvas-line strong"/>
+        <line x1="320" y1="200" x2="180" y2="340" class="canvas-line strong"/>
+        <line x1="320" y1="200" x2="520" y2="320" class="canvas-line"/>
+        <line x1="320" y1="200" x2="140" y2="120" class="canvas-line"/>
+        <line x1="560" y1="140" x2="720" y2="80" class="canvas-line weak"/>
+        <line x1="560" y1="140" x2="700" y2="240" class="canvas-line"/>
+        <line x1="180" y1="340" x2="340" y2="440" class="canvas-line"/>
+        <line x1="180" y1="340" x2="60" y2="440" class="canvas-line weak"/>
+        <line x1="520" y1="320" x2="700" y2="240" class="canvas-line"/>
+        <line x1="520" y1="320" x2="640" y2="440" class="canvas-line weak"/>
+        <line x1="340" y1="440" x2="520" y2="320" class="canvas-line weak"/>
+        <line x1="140" y1="120" x2="260" y2="60" class="canvas-line"/>
+        <line x1="700" y1="240" x2="860" y2="320" class="canvas-line weak"/>
+        <line x1="860" y1="320" x2="820" y2="440" class="canvas-line weak"/>
+      </svg>
+
+      <!-- Memory Nodes -->
+      <!-- Central: Student Profile -->
+      <div class="memory-node" style="left:270px; top:170px; z-index:10">
+        <div class="w-[100px] h-[60px] rounded-xl bg-primary text-on-primary flex flex-col items-center justify-center shadow-lg glow-primary">
+          <span class="material-symbols-outlined filled text-[18px]">person</span>
+          <span class="text-[9px] font-bold mt-0.5">Student Core</span>
+        </div>
+      </div>
+
+      <!-- Chemistry Knowledge -->
+      <div class="memory-node" style="left:510px; top:110px; z-index:5">
+        <div class="bg-surface-container-lowest border-2 border-green-300 rounded-xl p-3 shadow-sm w-[160px]">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-5 h-5 rounded bg-green-500 flex items-center justify-center"><span class="material-symbols-outlined text-white text-[12px]">science</span></div>
+            <span class="text-[10px] font-bold text-on-surface">Chemistry</span>
+            <span class="text-[8px] bg-green-100 text-green-700 px-1 rounded ml-auto">89/100</span>
+          </div>
+          <p class="text-[9px] text-secondary leading-tight">Organic Chem: Strong. Inorganic: Weak. Electrochemistry: Moderate.</p>
+        </div>
+      </div>
+
+      <!-- Physics Knowledge -->
+      <div class="memory-node" style="left:90px; top:90px; z-index:5">
+        <div class="bg-surface-container-lowest border-2 border-blue-300 rounded-xl p-3 shadow-sm w-[150px]">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-5 h-5 rounded bg-blue-500 flex items-center justify-center"><span class="material-symbols-outlined text-white text-[12px]">bolt</span></div>
+            <span class="text-[10px] font-bold text-on-surface">Physics</span>
+            <span class="text-[8px] bg-blue-100 text-blue-700 px-1 rounded ml-auto">72/100</span>
+          </div>
+          <p class="text-[9px] text-secondary leading-tight">Mechanics: OK. Optics: Weak. Thermodynamics: Needs review.</p>
+        </div>
+      </div>
+
+      <!-- Math Node -->
+      <div class="memory-node" style="left:210px; top:26px; z-index:5">
+        <div class="bg-surface-container-lowest border border-purple-200 rounded-xl p-2.5 shadow-sm w-[130px]">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-5 h-5 rounded bg-purple-500 flex items-center justify-center"><span class="material-symbols-outlined text-white text-[12px]">calculate</span></div>
+            <span class="text-[10px] font-bold text-on-surface">Mathematics</span>
+          </div>
+          <p class="text-[9px] text-secondary">Calculus: Weak → Priority</p>
+        </div>
+      </div>
+
+      <!-- Covalent Bond Concept (Active) -->
+      <div class="memory-node" style="left:650px; top:50px; z-index:5">
+        <div class="bg-primary/5 border-2 border-primary rounded-xl p-3 shadow-sm w-[170px]">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-5 h-5 rounded bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-white text-[12px]">link</span></div>
+            <span class="text-[10px] font-bold text-primary">Covalent Bonds</span>
+            <div class="status-dot status-processing ml-auto"></div>
+          </div>
+          <p class="text-[9px] text-secondary leading-tight">Active concept. Polar vs non-polar gap identified. Water analogy used.</p>
+        </div>
+      </div>
+
+      <!-- Learning Style -->
+      <div class="memory-node" style="left:130px; top:310px; z-index:5">
+        <div class="bg-surface-container-lowest border-2 border-amber-300 rounded-xl p-3 shadow-sm w-[150px]">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-5 h-5 rounded bg-amber-500 flex items-center justify-center"><span class="material-symbols-outlined text-white text-[12px]">palette</span></div>
+            <span class="text-[10px] font-bold text-on-surface">Learning Style</span>
+          </div>
+          <p class="text-[9px] text-secondary leading-tight">Visual learner. Prefers analogies. Responds well to challenges.</p>
+        </div>
+      </div>
+
+      <!-- Weakness Pattern -->
+      <div class="memory-node" style="left:470px; top:290px; z-index:5">
+        <div class="bg-surface-container-lowest border border-rose-200 rounded-xl p-3 shadow-sm w-[150px]">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-5 h-5 rounded bg-rose-500 flex items-center justify-center"><span class="material-symbols-outlined text-white text-[12px]">warning</span></div>
+            <span class="text-[10px] font-bold text-on-surface">Weak Areas</span>
+          </div>
+          <p class="text-[9px] text-secondary leading-tight">Polarity, Integration by Parts, Optics — recurring failures.</p>
+        </div>
+      </div>
+
+      <!-- Electrode / Polarity gap -->
+      <div class="memory-node" style="left:650px; top:210px; z-index:5">
+        <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-2.5 shadow-sm w-[140px]">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-5 h-5 rounded bg-secondary flex items-center justify-center"><span class="material-symbols-outlined text-white text-[12px]">electric_bolt</span></div>
+            <span class="text-[10px] font-bold text-on-surface">Polarity Gap</span>
+          </div>
+          <p class="text-[9px] text-secondary">3 failed attempts. Needs visual.</p>
+        </div>
+      </div>
+
+      <!-- Session History -->
+      <div class="memory-node" style="left:290px; top:410px; z-index:5">
+        <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-2.5 shadow-sm w-[140px]">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-5 h-5 rounded bg-teal-500 flex items-center justify-center"><span class="material-symbols-outlined text-white text-[12px]">history</span></div>
+            <span class="text-[10px] font-bold text-on-surface">Session 4</span>
+          </div>
+          <p class="text-[9px] text-secondary">Water molecule analogy worked.</p>
+        </div>
+      </div>
+
+      <!-- Emotional State -->
+      <div class="memory-node" style="left:10px; top:410px; z-index:5">
+        <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-2.5 shadow-sm w-[130px]">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-5 h-5 rounded bg-pink-400 flex items-center justify-center"><span class="material-symbols-outlined text-white text-[12px]">mood</span></div>
+            <span class="text-[10px] font-bold text-on-surface">Mood</span>
+          </div>
+          <p class="text-[9px] text-secondary">Motivated but frustrated with polarity.</p>
+        </div>
+      </div>
+
+      <!-- Exam Target -->
+      <div class="memory-node" style="left:810px; top:290px; z-index:5">
+        <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-2.5 shadow-sm w-[130px]">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-5 h-5 rounded bg-indigo-500 flex items-center justify-center"><span class="material-symbols-outlined text-white text-[12px]">flag</span></div>
+            <span class="text-[10px] font-bold text-on-surface">JEE Target</span>
+          </div>
+          <p class="text-[9px] text-secondary">Rank < 5000. Chemistry focus.</p>
+        </div>
+      </div>
+
+      <!-- Study Pattern -->
+      <div class="memory-node" style="left:590px; top:410px; z-index:5">
+        <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-2.5 shadow-sm w-[130px]">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-5 h-5 rounded bg-cyan-500 flex items-center justify-center"><span class="material-symbols-outlined text-white text-[12px]">schedule</span></div>
+            <span class="text-[10px] font-bold text-on-surface">Study Pattern</span>
+          </div>
+          <p class="text-[9px] text-secondary">Peak: 8-11PM. Avg 3.2h/day.</p>
+        </div>
+      </div>
+
+      <!-- Confidence -->
+      <div class="memory-node" style="left:770px; top:410px; z-index:5">
+        <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-2.5 shadow-sm w-[120px]">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-5 h-5 rounded bg-emerald-500 flex items-center justify-center"><span class="material-symbols-outlined text-white text-[12px]">trending_up</span></div>
+            <span class="text-[10px] font-bold text-on-surface">Confidence</span>
+          </div>
+          <p class="text-[9px] text-secondary">Overall: 67%. Rising trend.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Node Inspector -->
+    <div class="w-72 border-l border-outline-variant/20 bg-surface-container-lowest flex flex-col flex-shrink-0 overflow-y-auto hidden lg:flex">
+      <div class="p-4 border-b border-outline-variant/20">
+        <h3 class="text-xs font-bold text-secondary uppercase tracking-wider mb-3">Node Inspector</h3>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-green-500 flex items-center justify-center">
+            <span class="material-symbols-outlined text-white text-[20px]">science</span>
+          </div>
+          <div>
+            <p class="text-sm font-bold text-on-surface">Chemistry</p>
+            <p class="text-[10px] text-secondary">Knowledge Cluster • 89/100</p>
+          </div>
+        </div>
+      </div>
+      <div class="p-4 space-y-4 text-xs">
+        <div>
+          <p class="font-bold text-secondary uppercase tracking-wider text-[10px] mb-2">Sub-Topics</p>
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between p-2 bg-surface-container-low rounded-lg">
+              <span class="text-on-surface font-medium">Organic Chemistry</span>
+              <span class="text-green-600 font-bold">94%</span>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-surface-container-low rounded-lg">
+              <span class="text-on-surface font-medium">Electrochemistry</span>
+              <span class="text-amber-600 font-bold">71%</span>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-surface-container-low rounded-lg">
+              <span class="text-on-surface font-medium">Inorganic Chemistry</span>
+              <span class="text-rose-600 font-bold">58%</span>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-surface-container-low rounded-lg">
+              <span class="text-on-surface font-medium">Physical Chemistry</span>
+              <span class="text-blue-600 font-bold">82%</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p class="font-bold text-secondary uppercase tracking-wider text-[10px] mb-2">Connected Nodes</p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="bg-primary/10 text-primary px-2 py-1 rounded-lg font-medium">Student Core</span>
+            <span class="bg-primary/10 text-primary px-2 py-1 rounded-lg font-medium">Covalent Bonds</span>
+            <span class="bg-surface-container-high text-secondary px-2 py-1 rounded-lg">Polarity Gap</span>
+            <span class="bg-surface-container-high text-secondary px-2 py-1 rounded-lg">Weak Areas</span>
+          </div>
+        </div>
+        <div>
+          <p class="font-bold text-secondary uppercase tracking-wider text-[10px] mb-2">Recent Activity</p>
+          <div class="space-y-2">
+            <div class="flex gap-2">
+              <div class="w-1 rounded-full bg-primary flex-shrink-0"></div>
+              <div>
+                <p class="text-on-surface font-medium">Covalent bond eval triggered</p>
+                <p class="text-secondary text-[10px]">2 min ago</p>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <div class="w-1 rounded-full bg-outline-variant flex-shrink-0"></div>
+              <div>
+                <p class="text-on-surface font-medium">Organic Chem quiz: 9/10</p>
+                <p class="text-secondary text-[10px]">1 hour ago</p>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <div class="w-1 rounded-full bg-outline-variant flex-shrink-0"></div>
+              <div>
+                <p class="text-on-surface font-medium">Polarity concept re-taught</p>
+                <p class="text-secondary text-[10px]">Yesterday</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     VIEW 3: TEACHER LOUNGE — Raw Agent Deliberation
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="dock-view flex-1 flex flex-col overflow-hidden" id="view-lounge">
+
+  <!-- Lounge Header -->
+  <div class="px-6 py-4 border-b border-outline-variant/20 flex items-center justify-between flex-shrink-0">
+    <div>
+      <div class="flex items-center gap-3">
+        <h2 class="font-display font-bold text-xl text-on-surface">Teacher Lounge</h2>
+        <span class="bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Unfiltered</span>
+      </div>
+      <p class="text-xs text-secondary mt-1">Internal agent deliberation — raw thoughts on student progress. <strong>Viewer discretion advised.</strong></p>
+    </div>
+    <div class="flex items-center gap-2">
+      <select class="text-xs bg-surface-container-low border border-outline-variant/30 rounded-lg px-3 py-1.5 text-secondary outline-none cursor-pointer">
+        <option>All Threads</option>
+        <option>Chemistry Session</option>
+        <option>Weekly Strategy</option>
+        <option>Performance Alerts</option>
+      </select>
+      <button class="w-8 h-8 rounded-lg border border-outline-variant/30 flex items-center justify-center text-secondary hover:text-on-surface transition-all" title="Refresh">
+        <span class="material-symbols-outlined text-[18px]">refresh</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Lounge Content -->
+  <div class="flex-1 flex overflow-hidden">
+
+    <!-- Thread List -->
+    <div class="w-72 border-r border-outline-variant/20 bg-surface-container-lowest flex flex-col flex-shrink-0 hidden md:flex">
+      <div class="p-3 border-b border-outline-variant/10">
+        <div class="flex items-center gap-1 bg-surface-container-low border border-outline-variant/30 rounded-lg px-3 py-1.5">
+          <span class="material-symbols-outlined text-[14px] text-secondary">search</span>
+          <input type="text" placeholder="Search threads..." class="bg-transparent text-xs outline-none w-full placeholder:text-outline"/>
+        </div>
+      </div>
+      <div class="flex-1 overflow-y-auto">
+        <!-- Active Thread -->
+        <div class="p-3 bg-primary/5 border-l-2 border-primary cursor-pointer">
+          <div class="flex items-center justify-between mb-1">
+            <p class="text-xs font-bold text-on-surface">Covalent Bond Evaluation</p>
+            <div class="status-dot status-active flex-shrink-0"></div>
+          </div>
+          <p class="text-[10px] text-secondary line-clamp-2">Chemistry + Context Synth discussing polar vs non-polar gap...</p>
+          <p class="text-[9px] text-outline mt-1.5 font-mono">2 min ago • 4 agents</p>
+        </div>
+        <!-- Thread 2 -->
+        <div class="p-3 border-b border-outline-variant/10 hover:bg-surface-container-low cursor-pointer transition-colors">
+          <div class="flex items-center justify-between mb-1">
+            <p class="text-xs font-bold text-on-surface">Weekly Performance Review</p>
+            <span class="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-medium">Flagged</span>
+          </div>
+          <p class="text-[10px] text-secondary line-clamp-2">Strategy + Grader: Declining physics scores need intervention...</p>
+          <p class="text-[9px] text-outline mt-1.5 font-mono">18 min ago • 3 agents</p>
+        </div>
+        <!-- Thread 3 -->
+        <div class="p-3 border-b border-outline-variant/10 hover:bg-surface-container-low cursor-pointer transition-colors">
+          <div class="flex items-center justify-between mb-1">
+            <p class="text-xs font-bold text-on-surface">Motivation Strategy Shift</p>
+          </div>
+          <p class="text-[10px] text-secondary line-clamp-2">Core raised concern about burnout indicators in last 3 sessions...</p>
+          <p class="text-[9px] text-outline mt-1.5 font-mono">1h ago • 2 agents</p>
+        </div>
+        <!-- Thread 4 -->
+        <div class="p-3 border-b border-outline-variant/10 hover:bg-surface-container-low cursor-pointer transition-colors">
+          <div class="flex items-center justify-between mb-1">
+            <p class="text-xs font-bold text-on-surface">Calculus Remediation Plan</p>
+          </div>
+          <p class="text-[10px] text-secondary line-clamp-2">Math Agent: The kid keeps making the same integration mistake. Recommend drilling...</p>
+          <p class="text-[9px] text-outline mt-1.5 font-mono">3h ago • 2 agents</p>
+        </div>
+        <!-- Thread 5 -->
+        <div class="p-3 border-b border-outline-variant/10 hover:bg-surface-container-low cursor-pointer transition-colors">
+          <div class="flex items-center justify-between mb-1">
+            <p class="text-xs font-bold text-on-surface">Exam Readiness Assessment</p>
+          </div>
+          <p class="text-[10px] text-secondary line-clamp-2">Exam Strategist: At current trajectory, JEE Chemistry will be fine but Physics is a risk...</p>
+          <p class="text-[9px] text-outline mt-1.5 font-mono">Yesterday • 5 agents</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Thread: Chat View -->
+    <div class="flex-1 flex flex-col bg-surface min-w-0">
+      <!-- Thread Header -->
+      <div class="px-6 py-3 border-b border-outline-variant/10 flex items-center justify-between bg-surface-container-lowest flex-shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="flex -space-x-2">
+            <div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-[10px] font-bold text-on-primary border-2 border-white z-[4]">DC</div>
+            <div class="w-7 h-7 rounded-full bg-green-500 flex items-center justify-center text-[10px] font-bold text-white border-2 border-white z-[3]">CH</div>
+            <div class="w-7 h-7 rounded-full bg-amber-500 flex items-center justify-center text-[10px] font-bold text-white border-2 border-white z-[2]">CS</div>
+            <div class="w-7 h-7 rounded-full bg-rose-500 flex items-center justify-center text-[10px] font-bold text-white border-2 border-white z-[1]">ST</div>
+          </div>
+          <div>
+            <p class="text-sm font-bold text-on-surface">Covalent Bond Evaluation</p>
+            <p class="text-[10px] text-secondary">Core, Chemistry, Context Synth, Socratic — Active now</p>
+          </div>
+        </div>
+        <button class="text-[10px] text-primary font-medium hover:underline">View Full Log</button>
+      </div>
+
+      <!-- Messages -->
+      <div class="flex-1 overflow-y-auto p-6 space-y-5 lounge-scroll" id="lounge-chat">
+
+        <!-- System Divider -->
+        <div class="flex items-center gap-3">
+          <div class="flex-1 h-px bg-outline-variant/30"></div>
+          <span class="text-[10px] font-mono text-outline uppercase tracking-wider">Thread opened — Today 2:02 PM</span>
+          <div class="flex-1 h-px bg-outline-variant/30"></div>
+        </div>
+
+        <!-- Drona Core -->
+        <div class="flex gap-3 max-w-2xl">
+          <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+            <span class="material-symbols-outlined text-on-primary text-[14px] filled">psychology</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs font-bold text-on-surface">Drona Core</span>
+              <span class="text-[9px] font-mono text-outline">14:02:38</span>
+            </div>
+            <div class="bg-surface-container-low rounded-xl rounded-tl-none p-3 text-sm text-on-surface leading-relaxed">
+              Alright team, student just submitted their covalent bond answer: <span class="font-mono bg-surface-container-highest px-1.5 py-0.5 rounded text-xs">"Electrons are shared equally."</span> — Classic incomplete understanding. Chemistry, I need a full breakdown. Context Synth, pull the history — I know we've been here before.
+            </div>
+          </div>
+        </div>
+
+        <!-- Context Synthesizer -->
+        <div class="flex gap-3 max-w-2xl">
+          <div class="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <span class="material-symbols-outlined text-white text-[14px]">psychology_alt</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs font-bold text-on-surface">Context Synthesizer</span>
+              <span class="text-[9px] font-mono text-outline">14:02:41</span>
+            </div>
+            <div class="bg-surface-container-low rounded-xl rounded-tl-none p-3 text-sm text-on-surface leading-relaxed">
+              Yeah, we've been through this. Session 4 — he gave almost the exact same answer about water molecules. He gets the "sharing" part but completely blanks on <em>electronegativity differences</em>. He's made this same mistake <strong>three times now</strong>. The water analogy worked temporarily but didn't stick. Honestly, we might need a different approach this time.
+            </div>
+          </div>
+        </div>
+
+        <!-- Chemistry Agent -->
+        <div class="flex gap-3 max-w-2xl">
+          <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <span class="material-symbols-outlined text-white text-[14px]">science</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs font-bold text-on-surface">Chemistry Agent</span>
+              <span class="text-[9px] font-mono text-outline">14:02:43</span>
+            </div>
+            <div class="bg-surface-container-low rounded-xl rounded-tl-none p-3 text-sm text-on-surface leading-relaxed">
+              Let me be blunt — this kid keeps confusing polar and non-polar covalent bonds because he's memorizing definitions instead of understanding the <em>why</em>. "Electrons are shared equally" is technically correct for non-polar covalent bonds like H₂, but he's applying it universally. That's a fundamental gap, not a surface-level mistake.
+              <br/><br/>
+              <strong>My assessment:</strong> He doesn't understand electronegativity as a concept. Without that, polarity will never click. We need to stop treating this as a covalent bond problem and start treating it as an electronegativity problem.
+            </div>
+          </div>
+        </div>
+
+        <!-- Drona Core response -->
+        <div class="flex gap-3 max-w-2xl">
+          <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+            <span class="material-symbols-outlined text-on-primary text-[14px] filled">psychology</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs font-bold text-on-surface">Drona Core</span>
+              <span class="text-[9px] font-mono text-outline">14:02:44</span>
+            </div>
+            <div class="bg-surface-container-low rounded-xl rounded-tl-none p-3 text-sm text-on-surface leading-relaxed">
+              Good call. Context Synth — does his learning profile support a more confrontational approach? Like actually challenging him instead of hand-holding? Because clearly the gentle route isn't cutting it.
+            </div>
+          </div>
+        </div>
+
+        <!-- Context Synth -->
+        <div class="flex gap-3 max-w-2xl">
+          <div class="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <span class="material-symbols-outlined text-white text-[14px]">psychology_alt</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs font-bold text-on-surface">Context Synthesizer</span>
+              <span class="text-[9px] font-mono text-outline">14:02:45</span>
+            </div>
+            <div class="bg-surface-container-low rounded-xl rounded-tl-none p-3 text-sm text-on-surface leading-relaxed">
+              Risky. His mood data shows he's motivated but gets frustrated quickly when he feels "attacked." Last time we pushed too hard (Session 2, Thermodynamics), he disengaged for 20 minutes. I'd say firm but encouraging. The Socratic method is still our best bet — make <em>him</em> discover the gap instead of telling him.
+              <br/><br/>
+              One thing that <strong>did</strong> work: physical analogies. The water molecule one from Session 4 got him to 70% understanding. If we use a tug-of-war analogy for electronegativity, it might land better.
+            </div>
+          </div>
+        </div>
+
+        <!-- Chemistry Agent -->
+        <div class="flex gap-3 max-w-2xl">
+          <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <span class="material-symbols-outlined text-white text-[14px]">science</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs font-bold text-on-surface">Chemistry Agent</span>
+              <span class="text-[9px] font-mono text-outline">14:02:46</span>
+            </div>
+            <div class="bg-surface-container-low rounded-xl rounded-tl-none p-3 text-sm text-on-surface leading-relaxed">
+              Tug-of-war is perfect. "Imagine two kids pulling a rope — if they're equally strong, the rope stays centered. But if one kid is way stronger (more electronegative), the rope shifts toward them. That's polarity." I like it. Socratic, you should lead with asking him <em>what happens when the atoms aren't identical</em>, then deploy the analogy.
+            </div>
+          </div>
+        </div>
+
+        <!-- Consensus block -->
+        <div class="mx-auto max-w-2xl">
+          <div class="bg-primary/5 border border-primary/20 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="material-symbols-outlined text-primary text-[16px]">check_circle</span>
+              <span class="text-xs font-bold text-primary uppercase tracking-wider">Consensus Reached</span>
+              <span class="text-[9px] font-mono text-primary/60 ml-auto">14:02:46</span>
+            </div>
+            <p class="text-sm text-on-surface leading-relaxed">Use Socratic method → Ask about non-identical atoms → Deploy tug-of-war analogy for electronegativity → Guide to polar vs non-polar distinction. Tone: Firm but encouraging. No direct answers.</p>
+            <div class="mt-2 flex items-center gap-2">
+              <span class="text-[9px] text-secondary font-mono">Forwarded to:</span>
+              <span class="text-[9px] bg-rose-100 text-rose-700 px-1.5 py-0.5 rounded font-medium">Socratic Tutor</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Socratic Tutor composing -->
+        <div class="flex gap-3 max-w-2xl">
+          <div class="w-8 h-8 rounded-full bg-rose-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <span class="material-symbols-outlined text-white text-[14px]">record_voice_over</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs font-bold text-on-surface">Socratic Tutor</span>
+              <span class="text-[9px] font-mono text-outline">14:02:48</span>
+              <span class="text-[9px] bg-primary/10 text-primary px-1.5 py-0.5 rounded font-medium">Composing response...</span>
+            </div>
+            <div class="bg-surface-container-low rounded-xl rounded-tl-none p-3 text-sm text-secondary italic flex items-center gap-2">
+              <div class="flex gap-1"><div class="typing-dot w-1.5 h-1.5 rounded-full bg-secondary"></div><div class="typing-dot w-1.5 h-1.5 rounded-full bg-secondary"></div><div class="typing-dot w-1.5 h-1.5 rounded-full bg-secondary"></div></div>
+              Drafting student-facing prompt...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     VIEW 4: AGENT SETTINGS — Configuration Console
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="dock-view flex-1 flex flex-col overflow-hidden" id="view-settings">
+
+  <!-- Settings Content (Scrollable) -->
+  <div class="flex-1 overflow-y-auto">
+    <div class="max-w-5xl mx-auto px-6 py-8 space-y-8">
+
+      <!-- Settings Header -->
+      <div>
+        <h2 class="font-display font-bold text-2xl text-on-surface">Agent Configuration</h2>
+        <p class="text-sm text-secondary mt-1">Personalize agent behavior, connect API keys, schedule automations, and create custom agents.</p>
+      </div>
+
+      <!-- Grid Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- ═══ LEFT COLUMN ═══ -->
+        <div class="lg:col-span-8 space-y-6">
+
+          <!-- Personalized System Prompt -->
+          <section class="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl overflow-hidden shadow-sm">
+            <div class="px-6 py-4 border-b border-outline-variant/20 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-primary text-[20px]">edit_note</span>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-on-surface">System Prompt</h3>
+                  <p class="text-[10px] text-secondary">Master instruction that shapes all agent behavior</p>
+                </div>
+              </div>
+              <button class="text-[10px] text-primary font-medium hover:underline">Reset to Default</button>
+            </div>
+            <div class="p-4">
+              <textarea class="w-full h-32 bg-[#1e1e2e] text-[#cdd6f4] font-mono text-xs rounded-xl p-4 border-none outline-none resize-none leading-relaxed" spellcheck="false">You are Drona, a rigorous but empathetic AI tutor for competitive exam preparation (JEE, NEET). You never give direct answers. Instead, use Socratic questioning to guide the student toward understanding. Adapt your complexity based on the student's demonstrated level. Use analogies from everyday life. When the student is frustrated, acknowledge it before redirecting. Always track and reference prior sessions for continuity.</textarea>
+              <div class="mt-3 flex items-center justify-between">
+                <div class="flex items-center gap-3 text-[10px] text-secondary font-mono">
+                  <span>487 tokens</span>
+                  <span>•</span>
+                  <span>Last modified 2d ago</span>
+                </div>
+                <div class="flex gap-2">
+                  <button class="px-3 py-1.5 text-xs font-medium text-secondary border border-outline-variant/30 rounded-lg hover:bg-surface-container-low transition-colors">Discard</button>
+                  <button class="px-3 py-1.5 text-xs font-bold text-on-primary bg-primary rounded-lg hover:bg-primary-container transition-colors">Save Prompt</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Agent Creation / Modification -->
+          <section class="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl overflow-hidden shadow-sm">
+            <div class="px-6 py-4 border-b border-outline-variant/20 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-green-50 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-green-600 text-[20px]">add_circle</span>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-on-surface">Agent Registry</h3>
+                  <p class="text-[10px] text-secondary">Create, modify, or disable specialized agents</p>
+                </div>
+              </div>
+              <button class="px-3 py-1.5 text-xs font-bold text-on-primary bg-primary rounded-lg hover:bg-primary-container transition-colors flex items-center gap-1">
+                <span class="material-symbols-outlined text-[14px]">add</span>
+                New Agent
+              </button>
+            </div>
+            <div class="p-4 space-y-3">
+              <!-- Agent Row: Chemistry -->
+              <div class="flex items-center justify-between p-3 bg-surface rounded-xl border border-outline-variant/20 hover:border-primary/30 transition-colors group">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-green-500 flex items-center justify-center"><span class="material-symbols-outlined text-white text-[18px]">science</span></div>
+                  <div>
+                    <p class="text-sm font-bold text-on-surface">Chemistry Agent</p>
+                    <p class="text-[10px] text-secondary">Specialist • Organic, Inorganic, Physical, Electro</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[9px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">Active</span>
+                  <button class="w-7 h-7 rounded-lg border border-outline-variant/20 flex items-center justify-center text-secondary opacity-0 group-hover:opacity-100 transition-opacity hover:bg-surface-container-low"><span class="material-symbols-outlined text-[14px]">edit</span></button>
+                  <button class="w-7 h-7 rounded-lg border border-outline-variant/20 flex items-center justify-center text-secondary opacity-0 group-hover:opacity-100 transition-opacity hover:bg-surface-container-low"><span class="material-symbols-outlined text-[14px]">more_vert</span></button>
+                </div>
+              </div>
+              <!-- Agent Row: Physics -->
+              <div class="flex items-center justify-between p-3 bg-surface rounded-xl border border-outline-variant/20 hover:border-primary/30 transition-colors group">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-blue-500 flex items-center justify-center"><span class="material-symbols-outlined text-white text-[18px]">bolt</span></div>
+                  <div>
+                    <p class="text-sm font-bold text-on-surface">Physics Agent</p>
+                    <p class="text-[10px] text-secondary">Specialist • Mechanics, Optics, Thermo, EM</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[9px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">Active</span>
+                  <button class="w-7 h-7 rounded-lg border border-outline-variant/20 flex items-center justify-center text-secondary opacity-0 group-hover:opacity-100 transition-opacity hover:bg-surface-container-low"><span class="material-symbols-outlined text-[14px]">edit</span></button>
+                  <button class="w-7 h-7 rounded-lg border border-outline-variant/20 flex items-center justify-center text-secondary opacity-0 group-hover:opacity-100 transition-opacity hover:bg-surface-container-low"><span class="material-symbols-outlined text-[14px]">more_vert</span></button>
+                </div>
+              </div>
+              <!-- Agent Row: Math -->
+              <div class="flex items-center justify-between p-3 bg-surface rounded-xl border border-outline-variant/20 hover:border-primary/30 transition-colors group">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-purple-500 flex items-center justify-center"><span class="material-symbols-outlined text-white text-[18px]">calculate</span></div>
+                  <div>
+                    <p class="text-sm font-bold text-on-surface">Mathematics Agent</p>
+                    <p class="text-[10px] text-secondary">Specialist • Calculus, Algebra, Coordinate, Probability</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[9px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">Active</span>
+                  <button class="w-7 h-7 rounded-lg border border-outline-variant/20 flex items-center justify-center text-secondary opacity-0 group-hover:opacity-100 transition-opacity hover:bg-surface-container-low"><span class="material-symbols-outlined text-[14px]">edit</span></button>
+                  <button class="w-7 h-7 rounded-lg border border-outline-variant/20 flex items-center justify-center text-secondary opacity-0 group-hover:opacity-100 transition-opacity hover:bg-surface-container-low"><span class="material-symbols-outlined text-[14px]">more_vert</span></button>
+                </div>
+              </div>
+              <!-- Agent Row: Socratic (Custom) -->
+              <div class="flex items-center justify-between p-3 bg-surface rounded-xl border border-outline-variant/20 hover:border-primary/30 transition-colors group">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-rose-500 flex items-center justify-center"><span class="material-symbols-outlined text-white text-[18px]">record_voice_over</span></div>
+                  <div>
+                    <p class="text-sm font-bold text-on-surface">Socratic Tutor</p>
+                    <p class="text-[10px] text-secondary">Response Composer • Question-based pedagogy</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[9px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">Active</span>
+                  <button class="w-7 h-7 rounded-lg border border-outline-variant/20 flex items-center justify-center text-secondary opacity-0 group-hover:opacity-100 transition-opacity hover:bg-surface-container-low"><span class="material-symbols-outlined text-[14px]">edit</span></button>
+                  <button class="w-7 h-7 rounded-lg border border-outline-variant/20 flex items-center justify-center text-secondary opacity-0 group-hover:opacity-100 transition-opacity hover:bg-surface-container-low"><span class="material-symbols-outlined text-[14px]">more_vert</span></button>
+                </div>
+              </div>
+              <!-- Disabled Agent -->
+              <div class="flex items-center justify-between p-3 bg-surface rounded-xl border border-outline-variant/20 opacity-50 group">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-gray-400 flex items-center justify-center"><span class="material-symbols-outlined text-white text-[18px]">sports_esports</span></div>
+                  <div>
+                    <p class="text-sm font-bold text-on-surface">Gamification Agent</p>
+                    <p class="text-[10px] text-secondary">XP, Quests, Achievements engine</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[9px] bg-surface-container-high text-secondary px-2 py-0.5 rounded-full font-bold">Disabled</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Cron Jobs -->
+          <section class="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl overflow-hidden shadow-sm">
+            <div class="px-6 py-4 border-b border-outline-variant/20 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-indigo-600 text-[20px]">schedule_send</span>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-on-surface">Scheduled Tasks (Cron)</h3>
+                  <p class="text-[10px] text-secondary">Automated agent jobs on a recurring schedule</p>
+                </div>
+              </div>
+              <button class="px-3 py-1.5 text-xs font-bold text-on-primary bg-primary rounded-lg hover:bg-primary-container transition-colors flex items-center gap-1">
+                <span class="material-symbols-outlined text-[14px]">add</span>
+                New Job
+              </button>
+            </div>
+            <div class="p-4 space-y-3">
+              <!-- Cron Job 1 -->
+              <div class="flex items-center justify-between p-3 bg-surface rounded-xl border border-outline-variant/20">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center"><span class="material-symbols-outlined text-indigo-600 text-[16px]">assessment</span></div>
+                  <div>
+                    <p class="text-sm font-bold text-on-surface">Weekly Performance Digest</p>
+                    <div class="flex items-center gap-2 mt-0.5">
+                      <span class="cron-field text-[10px] bg-[#1e1e2e] text-[#89b4fa] px-2 py-0.5 rounded">0 9 * * MON</span>
+                      <span class="text-[10px] text-secondary">Every Monday 9:00 AM</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[9px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">On</span>
+                  <button class="w-7 h-7 rounded-lg border border-outline-variant/20 flex items-center justify-center text-secondary hover:bg-surface-container-low"><span class="material-symbols-outlined text-[14px]">edit</span></button>
+                </div>
+              </div>
+              <!-- Cron Job 2 -->
+              <div class="flex items-center justify-between p-3 bg-surface rounded-xl border border-outline-variant/20">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center"><span class="material-symbols-outlined text-amber-600 text-[16px]">notifications</span></div>
+                  <div>
+                    <p class="text-sm font-bold text-on-surface">Daily Study Reminder</p>
+                    <div class="flex items-center gap-2 mt-0.5">
+                      <span class="cron-field text-[10px] bg-[#1e1e2e] text-[#89b4fa] px-2 py-0.5 rounded">0 18 * * *</span>
+                      <span class="text-[10px] text-secondary">Every day 6:00 PM</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[9px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">On</span>
+                  <button class="w-7 h-7 rounded-lg border border-outline-variant/20 flex items-center justify-center text-secondary hover:bg-surface-container-low"><span class="material-symbols-outlined text-[14px]">edit</span></button>
+                </div>
+              </div>
+              <!-- Cron Job 3 -->
+              <div class="flex items-center justify-between p-3 bg-surface rounded-xl border border-outline-variant/20">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center"><span class="material-symbols-outlined text-teal-600 text-[16px]">sync</span></div>
+                  <div>
+                    <p class="text-sm font-bold text-on-surface">Memory Consolidation</p>
+                    <div class="flex items-center gap-2 mt-0.5">
+                      <span class="cron-field text-[10px] bg-[#1e1e2e] text-[#89b4fa] px-2 py-0.5 rounded">0 3 * * *</span>
+                      <span class="text-[10px] text-secondary">Every day 3:00 AM</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[9px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">On</span>
+                  <button class="w-7 h-7 rounded-lg border border-outline-variant/20 flex items-center justify-center text-secondary hover:bg-surface-container-low"><span class="material-symbols-outlined text-[14px]">edit</span></button>
+                </div>
+              </div>
+              <!-- Cron Job 4 (Paused) -->
+              <div class="flex items-center justify-between p-3 bg-surface rounded-xl border border-outline-variant/20 opacity-50">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center"><span class="material-symbols-outlined text-rose-500 text-[16px]">quiz</span></div>
+                  <div>
+                    <p class="text-sm font-bold text-on-surface">Auto Mock Test (Sundays)</p>
+                    <div class="flex items-center gap-2 mt-0.5">
+                      <span class="cron-field text-[10px] bg-[#1e1e2e] text-[#585b70] px-2 py-0.5 rounded">0 10 * * SUN</span>
+                      <span class="text-[10px] text-secondary">Paused by student</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[9px] bg-surface-container-high text-secondary px-2 py-0.5 rounded-full font-bold">Paused</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- ═══ RIGHT COLUMN ═══ -->
+        <div class="lg:col-span-4 space-y-6">
+
+          <!-- BYOK (Bring Your Own Key) -->
+          <section class="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl overflow-hidden shadow-sm">
+            <div class="px-5 py-4 border-b border-outline-variant/20 flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center">
+                <span class="material-symbols-outlined text-amber-600 text-[20px]">key</span>
+              </div>
+              <div>
+                <h3 class="text-sm font-bold text-on-surface">API Keys (BYOK)</h3>
+                <p class="text-[10px] text-secondary">Bring your own model provider keys</p>
+              </div>
+            </div>
+            <div class="p-4 space-y-3">
+              <!-- OpenAI -->
+              <div class="p-3 bg-surface rounded-xl border border-outline-variant/20">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded bg-[#1e1e2e] flex items-center justify-center text-[10px] font-bold text-white">OA</div>
+                    <span class="text-xs font-bold text-on-surface">OpenAI</span>
+                  </div>
+                  <span class="text-[9px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-bold">Connected</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="flex-1 bg-surface-container-high rounded-lg px-3 py-1.5 font-mono text-[10px] text-secondary">sk-●●●●●●●●●●●●●●●●●●4kF9</div>
+                  <button class="w-7 h-7 rounded-lg border border-outline-variant/20 flex items-center justify-center text-secondary hover:text-error hover:border-error/30 transition-colors"><span class="material-symbols-outlined text-[14px]">delete</span></button>
+                </div>
+              </div>
+              <!-- Google AI -->
+              <div class="p-3 bg-surface rounded-xl border border-outline-variant/20">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded bg-blue-500 flex items-center justify-center text-[10px] font-bold text-white">G</div>
+                    <span class="text-xs font-bold text-on-surface">Google AI</span>
+                  </div>
+                  <span class="text-[9px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-bold">Connected</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="flex-1 bg-surface-container-high rounded-lg px-3 py-1.5 font-mono text-[10px] text-secondary">AIza●●●●●●●●●●●●●●●●●vX2</div>
+                  <button class="w-7 h-7 rounded-lg border border-outline-variant/20 flex items-center justify-center text-secondary hover:text-error hover:border-error/30 transition-colors"><span class="material-symbols-outlined text-[14px]">delete</span></button>
+                </div>
+              </div>
+              <!-- Anthropic -->
+              <div class="p-3 bg-surface rounded-xl border border-dashed border-outline-variant/40">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded bg-orange-100 flex items-center justify-center text-[10px] font-bold text-orange-700">A</div>
+                    <span class="text-xs font-medium text-secondary">Anthropic</span>
+                  </div>
+                  <button class="text-[10px] text-primary font-medium hover:underline">+ Add Key</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Model Preferences -->
+          <section class="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl overflow-hidden shadow-sm">
+            <div class="px-5 py-4 border-b border-outline-variant/20 flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center">
+                <span class="material-symbols-outlined text-purple-600 text-[20px]">model_training</span>
+              </div>
+              <div>
+                <h3 class="text-sm font-bold text-on-surface">Model Preference</h3>
+                <p class="text-[10px] text-secondary">Default LLM for agent inference</p>
+              </div>
+            </div>
+            <div class="p-4 space-y-2">
+              <label class="flex items-center justify-between p-3 border border-primary/40 bg-primary/5 rounded-xl cursor-pointer">
+                <div class="flex items-center gap-2">
+                  <input type="radio" name="model" checked class="text-primary focus:ring-primary h-3.5 w-3.5"/>
+                  <span class="text-xs font-bold text-on-surface">Gemini 2.5 Pro</span>
+                </div>
+                <span class="text-[9px] bg-primary/10 text-primary px-1.5 py-0.5 rounded font-bold">Recommended</span>
+              </label>
+              <label class="flex items-center justify-between p-3 border border-outline-variant/30 rounded-xl cursor-pointer hover:bg-surface-container-low transition-colors">
+                <div class="flex items-center gap-2">
+                  <input type="radio" name="model" class="text-primary focus:ring-primary h-3.5 w-3.5"/>
+                  <span class="text-xs font-medium text-on-surface">GPT-4o</span>
+                </div>
+                <span class="text-[9px] text-secondary font-mono">via BYOK</span>
+              </label>
+              <label class="flex items-center justify-between p-3 border border-outline-variant/30 rounded-xl cursor-pointer hover:bg-surface-container-low transition-colors">
+                <div class="flex items-center gap-2">
+                  <input type="radio" name="model" class="text-primary focus:ring-primary h-3.5 w-3.5"/>
+                  <span class="text-xs font-medium text-on-surface">Claude Opus 4</span>
+                </div>
+                <span class="text-[9px] text-secondary font-mono">via BYOK</span>
+              </label>
+            </div>
+          </section>
+
+          <!-- Quick Toggles -->
+          <section class="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl overflow-hidden shadow-sm">
+            <div class="px-5 py-4 border-b border-outline-variant/20 flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-teal-50 flex items-center justify-center">
+                <span class="material-symbols-outlined text-teal-600 text-[20px]">toggle_on</span>
+              </div>
+              <h3 class="text-sm font-bold text-on-surface">Quick Toggles</h3>
+            </div>
+            <div class="p-4 space-y-4">
+              <!-- Toggle: Adaptive Difficulty -->
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-xs font-bold text-on-surface">Adaptive Difficulty</p>
+                  <p class="text-[10px] text-secondary">Auto-adjust based on performance</p>
+                </div>
+                <button class="toggle-track on w-11 h-6 rounded-full relative cursor-pointer" onclick="this.classList.toggle('on')">
+                  <div class="toggle-knob w-5 h-5 bg-white rounded-full shadow absolute top-0.5 left-0.5"></div>
+                </button>
+              </div>
+              <!-- Toggle: Memory Persistence -->
+              <div class="flex items-center justify-between border-t border-outline-variant/10 pt-4">
+                <div>
+                  <p class="text-xs font-bold text-on-surface">Memory Persistence</p>
+                  <p class="text-[10px] text-secondary">Remember across sessions</p>
+                </div>
+                <button class="toggle-track on w-11 h-6 rounded-full relative cursor-pointer bg-surface-container-highest" onclick="this.classList.toggle('on')">
+                  <div class="toggle-knob w-5 h-5 bg-white rounded-full shadow absolute top-0.5 left-0.5"></div>
+                </button>
+              </div>
+              <!-- Toggle: Teacher Lounge Access -->
+              <div class="flex items-center justify-between border-t border-outline-variant/10 pt-4">
+                <div>
+                  <p class="text-xs font-bold text-on-surface">Teacher Lounge Visibility</p>
+                  <p class="text-[10px] text-secondary">View raw agent discussions</p>
+                </div>
+                <button class="toggle-track on w-11 h-6 rounded-full relative cursor-pointer bg-surface-container-highest" onclick="this.classList.toggle('on')">
+                  <div class="toggle-knob w-5 h-5 bg-white rounded-full shadow absolute top-0.5 left-0.5"></div>
+                </button>
+              </div>
+              <!-- Toggle: Strict Mode -->
+              <div class="flex items-center justify-between border-t border-outline-variant/10 pt-4">
+                <div>
+                  <p class="text-xs font-bold text-on-surface">Strict Answer Policy</p>
+                  <p class="text-[10px] text-secondary">Never reveal direct answers</p>
+                </div>
+                <button class="toggle-track on w-11 h-6 rounded-full relative cursor-pointer bg-surface-container-highest" onclick="this.classList.toggle('on')">
+                  <div class="toggle-knob w-5 h-5 bg-white rounded-full shadow absolute top-0.5 left-0.5"></div>
+                </button>
+              </div>
+              <!-- Toggle: Voice Mode -->
+              <div class="flex items-center justify-between border-t border-outline-variant/10 pt-4">
+                <div>
+                  <p class="text-xs font-bold text-on-surface">Voice Interaction</p>
+                  <p class="text-[10px] text-secondary">Enable spoken responses</p>
+                </div>
+                <button class="toggle-track w-11 h-6 rounded-full relative cursor-pointer bg-surface-container-highest" onclick="this.classList.toggle('on')">
+                  <div class="toggle-knob w-5 h-5 bg-white rounded-full shadow absolute top-0.5 left-0.5"></div>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Save Bar -->
+          <div class="sticky bottom-0 pt-4 pb-2">
+            <button class="w-full py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg hover:-translate-y-0.5 transition-transform flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-[18px]">save</span>
+              Save All Settings
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     JAVASCRIPT — Tab Switching & Interactions
+     ═══════════════════════════════════════════════════════ -->
+<script>
+(function() {
+  // Tab switching
+  const allTabs = document.querySelectorAll('.dock-tab');
+  const views = {
+    architecture: document.getElementById('view-architecture'),
+    memory: document.getElementById('view-memory'),
+    lounge: document.getElementById('view-lounge'),
+    settings: document.getElementById('view-settings')
+  };
+
+  function switchView(viewName) {
+    // Deactivate all tabs
+    allTabs.forEach(t => t.classList.remove('active'));
+    // Activate matching tabs (both desktop and mobile)
+    allTabs.forEach(t => {
+      if (t.dataset.view === viewName) t.classList.add('active');
+    });
+    // Show/hide views
+    Object.keys(views).forEach(key => {
+      views[key].classList.toggle('active', key === viewName);
+    });
+  }
+
+  allTabs.forEach(tab => {
+    tab.addEventListener('click', () => switchView(tab.dataset.view));
+  });
+
+  // Simulated live log entries for Architecture view
+  const logMessages = [
+    { time: '14:02:50', agent: '[Socratic]', color: '#f38ba8', msg: 'Generating Socratic prompt with tug-of-war analogy.' },
+    { time: '14:02:52', agent: '[Core]', color: '#f9e2af', msg: 'Response quality check initiated. Verifying alignment with constraints.' },
+    { time: '14:02:54', agent: '[Context Synth]', color: '#89b4fa', msg: 'Injecting session context: Student prefers visual metaphors.' },
+    { time: '14:02:55', agent: '[Socratic]', color: '#f38ba8', msg: 'Draft complete. "You said electrons are shared equally — but are all friendships equal?" Submitting for review.' },
+    { time: '14:02:57', agent: '[Core]', color: '#f9e2af', msg: '✓ Approved. Delivering to student interface.' },
+    { time: '14:02:58', agent: '[Grader]', color: '#fab387', msg: 'Standing by to evaluate student\'s next response.' },
+  ];
+
+  const archLog = document.getElementById('arch-log');
+  let logIndex = 0;
+
+  function addLogEntry() {
+    if (logIndex >= logMessages.length) return;
+    const entry = logMessages[logIndex];
+    const div = document.createElement('div');
+    div.className = 'flex gap-2';
+    div.style.animation = 'viewFadeIn 0.3s ease';
+    div.innerHTML = `
+      <span class="text-[#585b70] w-14 flex-shrink-0">${entry.time}</span>
+      <div><span style="color:${entry.color}" class="font-semibold">${entry.agent}</span> <span class="text-[#cdd6f4]">${entry.msg}</span></div>
+    `;
+    // Remove typing indicator if present
+    const typingEl = archLog.querySelector('.opacity-60');
+    if (typingEl && logIndex === logMessages.length - 1) typingEl.remove();
+
+    if (typingEl) {
+      archLog.insertBefore(div, typingEl);
+    } else {
+      archLog.appendChild(div);
+    }
+    archLog.scrollTop = archLog.scrollHeight;
+    logIndex++;
+  }
+
+  // Drip-feed log entries
+  let logTimer = setInterval(() => {
+    if (logIndex >= logMessages.length) { clearInterval(logTimer); return; }
+    addLogEntry();
+  }, 4000);
+
+  // Memory canvas — basic drag support
+  const memCanvas = document.getElementById('memory-canvas');
+  if (memCanvas) {
+    let dragTarget = null;
+    let offsetX = 0, offsetY = 0;
+
+    memCanvas.addEventListener('mousedown', (e) => {
+      const node = e.target.closest('.memory-node');
+      if (!node) return;
+      dragTarget = node;
+      const rect = node.getBoundingClientRect();
+      offsetX = e.clientX - rect.left;
+      offsetY = e.clientY - rect.top;
+      node.style.cursor = 'grabbing';
+      node.style.zIndex = 50;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!dragTarget) return;
+      const canvasRect = memCanvas.getBoundingClientRect();
+      const x = e.clientX - canvasRect.left - offsetX;
+      const y = e.clientY - canvasRect.top - offsetY;
+      dragTarget.style.left = x + 'px';
+      dragTarget.style.top = y + 'px';
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (dragTarget) {
+        dragTarget.style.cursor = 'grab';
+        dragTarget.style.zIndex = 5;
+        dragTarget = null;
+      }
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
