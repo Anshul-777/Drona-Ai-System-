@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import { v4 as uuidv4 } from "uuid";
 import { storageAdapter, USE_LOCAL_STORAGE } from "@/lib/storageAdapter";
 
-export type NotificationType = "system" | "agent" | "alert" | "achievement" | "default";
+export type NotificationType = "system" | "agent" | "alert" | "achievement" | "recommended" | "default";
 
 export interface Notification {
   id: string;

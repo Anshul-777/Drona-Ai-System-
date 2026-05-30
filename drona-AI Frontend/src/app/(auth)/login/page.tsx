@@ -76,6 +76,10 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (error) { setPwErr(error.message); return; }
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      localStorage.setItem("drona_current_user_id", user.id);
+    }
     setStep("success");
     setTimeout(() => router.push("/success"), 2000);
   };
@@ -99,6 +103,10 @@ export default function LoginPage() {
     const { error } = await supabase.auth.verifyOtp({ email, token: code, type: "email" });
     setLoading(false);
     if (error) { setOtpErr(error.message); return; }
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      localStorage.setItem("drona_current_user_id", user.id);
+    }
     setStep("success");
     setTimeout(() => router.push("/success"), 2000);
   };

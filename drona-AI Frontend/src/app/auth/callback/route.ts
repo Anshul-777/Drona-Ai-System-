@@ -19,12 +19,18 @@ export async function GET(request: Request) {
     const supabase = await createClient();
     const { data: { user }, error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error && user) {
-      // Determine if it's a brand new user (created within the last 10 seconds)
-      const isNewUser = new Date(user.last_sign_in_at!).getTime() - new Date(user.created_at).getTime() < 10000;
+      // Determine if the user needs to complete the assessment
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('assessment_completed')
+        .eq('id', user.id)
+        .single();
+        
+      const needsAssessment = !profile || profile.assessment_completed !== true;
 
       // If the URL provided a specific 'next' param, use it.
-      // Otherwise, auto-route new users to /begin and returning users to /success
-      const defaultRoute = isNewUser ? "/begin" : "/success";
+      // Otherwise, auto-route new/unassessed users to /begin and returning users to /success
+      const defaultRoute = needsAssessment ? "/begin" : "/success";
       const finalNext = searchParams.get("next") || defaultRoute;
 
       return NextResponse.redirect(`${origin}${finalNext}`);

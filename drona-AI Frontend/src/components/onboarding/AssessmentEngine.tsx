@@ -3,6 +3,8 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { storageAdapter } from "@/lib/storageAdapter";
+import { v4 as uuidv4 } from "uuid";
 
 /* ─────────────────────────────────────────────────────────────
    7 BASELINE PSYCHOLOGICAL + SCIENTIFIC ASSESSMENT QUESTIONS
@@ -294,7 +296,18 @@ export default function AssessmentEngine() {
 
   /* ─── Final question direct action handlers ─── */
   const handleBeginTest = () => { router.push("/test"); };
-  const handleSkipTest = () => { startCinematic(); };
+  const handleSkipTest = async () => {
+    await storageAdapter.insertNotification({
+      id: uuidv4(),
+      title: "Assessment Skipped",
+      message: "Take your assessment later to personalize your AI agents for better results.",
+      type: "recommended",
+      href: "/onboarding",
+      isRead: false,
+      timestamp: Date.now()
+    });
+    startCinematic();
+  };
 
   /* ─── Enter dashboard with welcome transition ─── */
   const handleEnterDashboard = () => {

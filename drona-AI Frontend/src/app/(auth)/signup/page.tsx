@@ -137,6 +137,10 @@ export default function SignupPage() {
     const { error } = await supabase.auth.verifyOtp({ email, token: code, type: "email" });
     setLoading(false);
     if (error) { setOtpErr(error.message); return; }
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      localStorage.setItem("drona_current_user_id", user.id);
+    }
     setStep("success");
     setTimeout(() => router.push("/begin"), 2500);
   };

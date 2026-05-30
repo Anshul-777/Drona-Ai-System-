@@ -1,14 +1,10 @@
 import google.generativeai as genai
-
-# Add all your backup API keys here
-FALLBACK_KEYS = [
-    "AIzaSyDSt5e7ENHTTKmo7EgOpUyfAzmnYypLgyA",
-    "AIzaSyDEzVH7ycbABizWSJeQN1biV802UYnk1R0",
-    "AIzaSyDChPUut1xISsoYo7jbyF98f_briIS1ifw",
-]
+import os
 
 def get_fallback_chat_response(system_instruction, history, message, original_key):
     """Tries the original key, then cycles through fallback keys if quota is exceeded."""
+    fallback_env = os.environ.get("GEMINI_FALLBACK_KEYS", "")
+    FALLBACK_KEYS = [k.strip() for k in fallback_env.split(",")] if fallback_env else []
     keys_to_try = [original_key] + FALLBACK_KEYS
     
     for current_key in keys_to_try:
@@ -27,8 +23,8 @@ def get_fallback_chat_response(system_instruction, history, message, original_ke
             
         except Exception as e:
             error_str = str(e).lower()
-            if "429" in error_str or "quota" in error_str or "exhausted" in error_str:
-                print(f"[API Fallback] Key starting with {current_key[:10]}... failed (429). Trying next...")
+            if "429" in error_str or "quota" in error_str or "exhausted" in error_str or "403" in error_str or "leaked" in error_str or "invalid" in error_str:
+                print(f"[API Fallback] Key starting with {current_key[:10]}... failed ({error_str[:30]}). Trying next...")
                 continue # Try next key
             else:
                 genai.configure(api_key=original_key)
@@ -40,6 +36,8 @@ def get_fallback_chat_response(system_instruction, history, message, original_ke
 
 def get_fallback_title(prompt, original_key):
     """Same as above, but for generating chat titles."""
+    fallback_env = os.environ.get("GEMINI_FALLBACK_KEYS", "")
+    FALLBACK_KEYS = [k.strip() for k in fallback_env.split(",")] if fallback_env else []
     keys_to_try = [original_key] + FALLBACK_KEYS
     
     for current_key in keys_to_try:
@@ -52,7 +50,7 @@ def get_fallback_title(prompt, original_key):
             
         except Exception as e:
             error_str = str(e).lower()
-            if "429" in error_str or "quota" in error_str or "exhausted" in error_str:
+            if "429" in error_str or "quota" in error_str or "exhausted" in error_str or "403" in error_str or "leaked" in error_str or "invalid" in error_str:
                 continue
             else:
                 genai.configure(api_key=original_key)
@@ -62,6 +60,8 @@ def get_fallback_title(prompt, original_key):
 
 def get_fallback_chat_response_with_file(system_instruction, history, message, original_key, file_path, mime_type):
     """Uploads a file to Gemini and generates a response."""
+    fallback_env = os.environ.get("GEMINI_FALLBACK_KEYS", "")
+    FALLBACK_KEYS = [k.strip() for k in fallback_env.split(",")] if fallback_env else []
     keys_to_try = [original_key] + FALLBACK_KEYS
     
     for current_key in keys_to_try:
@@ -91,7 +91,7 @@ def get_fallback_chat_response_with_file(system_instruction, history, message, o
             
         except Exception as e:
             error_str = str(e).lower()
-            if "429" in error_str or "quota" in error_str or "exhausted" in error_str:
+            if "429" in error_str or "quota" in error_str or "exhausted" in error_str or "403" in error_str or "leaked" in error_str or "invalid" in error_str:
                 continue
             else:
                 genai.configure(api_key=original_key)

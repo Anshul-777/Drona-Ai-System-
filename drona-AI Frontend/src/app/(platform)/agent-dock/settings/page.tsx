@@ -202,9 +202,9 @@ export default function AgentDockSettings() {
                       <p className="text-sm text-gray-900 font-bold mb-1">Memory Decay Rate</p>
                       <p className="text-xs text-gray-500 leading-relaxed">Determines how quickly less important details are pruned from the vector database to save space.</p>
                     </div>
-                    <select className="bg-gray-50 border border-gray-300 text-gray-900 text-xs font-medium px-4 py-2 rounded-lg outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+                    <select defaultValue="Normal (Optimal)" className="bg-gray-50 border border-gray-300 text-gray-900 text-xs font-medium px-4 py-2 rounded-lg outline-none focus:border-primary focus:ring-1 focus:ring-primary">
                       <option>Slow (Retain Everything)</option>
-                      <option selected>Normal (Optimal)</option>
+                      <option>Normal (Optimal)</option>
                       <option>Aggressive (Save Space)</option>
                     </select>
                   </div>

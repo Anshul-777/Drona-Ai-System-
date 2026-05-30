@@ -7,6 +7,9 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
+import { getDronaKey, storageAdapter } from "@/lib/storageAdapter";
+import { achievements } from "@/lib/data/achievements";
+import { useNotifications } from "@/context/NotificationContext";
 
 interface Message {
   id: string;
@@ -127,6 +130,7 @@ const TypewriterText = ({ text, onComplete }: { text: string, onComplete: () => 
 
 export default function DronaChat() {
   const router = useRouter();
+  const { addNotification } = useNotifications();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isThinking, setIsThinking] = useState(false);
@@ -170,9 +174,8 @@ export default function DronaChat() {
 
   const fetchSessions = async (status = sidebarTab) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/sessions?status=${status}`);
-      const data = await res.json();
-      setSessions(data.sessions || []);
+      const data = await storageAdapter.getChatSessions(status);
+      setSessions(data || []);
     } catch (err) {
       console.error(err);
     }
@@ -184,21 +187,20 @@ export default function DronaChat() {
 
   const handleRename = async (id: string, newTitle: string) => {
     if (!newTitle.trim()) { setEditingSessionId(null); return; }
-    await fetch(`http://localhost:8000/api/sessions/${id}/rename`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: newTitle })
-    });
+    await storageAdapter.updateChatSession(id, { title: newTitle });
     setEditingSessionId(null);
     fetchSessions();
   };
 
   const handleStatusUpdate = async (id: string, status: string) => {
-    await fetch(`http://localhost:8000/api/sessions/${id}/status`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status })
-    });
+    if (status === 'archived') {
+      await storageAdapter.updateChatSession(id, { is_archived: true, is_trashed: false });
+    } else if (status === 'trashed') {
+      await storageAdapter.updateChatSession(id, { is_trashed: true, is_archived: false });
+    } else {
+      await storageAdapter.updateChatSession(id, { is_trashed: false, is_archived: false });
+    }
+    
     if (currentSessionId === id) {
        setMessages([]);
        setCurrentSessionId(null);
@@ -222,15 +224,7 @@ export default function DronaChat() {
     setMessages([]);
     setIsThinking(true);
     try {
-      const res = await fetch(`http://localhost:8000/api/sessions/${id}`);
-      const data = await res.json();
-      const loadedMessages = data.messages.map((m: any) => ({
-        id: m.id,
-        role: m.role,
-        content: m.content,
-        time: m.time,
-        isNew: false
-      }));
+      const loadedMessages = await storageAdapter.getChatMessages(id);
       setMessages(loadedMessages);
     } catch (err) {
       console.error(err);
@@ -248,7 +242,7 @@ export default function DronaChat() {
   const handleDeleteSession = async (id: string) => {
     if (sidebarTab === 'trashed') {
       try {
-        await fetch(`http://localhost:8000/api/sessions/${id}`, { method: 'DELETE' });
+        await storageAdapter.deleteChatSession(id);
         if (currentSessionId === id) {
           setMessages([]);
           setCurrentSessionId(null);
@@ -316,11 +310,28 @@ export default function DronaChat() {
     setActiveCommand(cmd);
 
     try {
+      let activeSessionId = currentSessionId;
+      const isNewSession = !activeSessionId;
+      
+      if (!activeSessionId) {
+        activeSessionId = crypto.randomUUID();
+        setCurrentSessionId(activeSessionId);
+        await storageAdapter.createChatSession(activeSessionId, "New Chat");
+      }
+      
+      // Save User Message
+      const userMsgToSave = { id: crypto.randomUUID(), role: 'user', content: finalMessage };
+      await storageAdapter.saveChatMessage(activeSessionId, userMsgToSave);
+
+      // Fetch history for Gemini
+      const history = await storageAdapter.getChatMessages(activeSessionId);
+      
       let response;
       if (fileData) {
         const formData = new FormData();
         formData.append("message", finalMessage || "Please analyze this attached file.");
-        if (currentSessionId) formData.append("session_id", currentSessionId);
+        formData.append("session_id", activeSessionId);
+        formData.append("history", JSON.stringify(history));
         formData.append("file", fileData);
 
         response = await fetch("http://localhost:8000/api/chat/file", {
@@ -333,7 +344,8 @@ export default function DronaChat() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             message: finalMessage,
-            session_id: currentSessionId
+            session_id: activeSessionId,
+            history: history
           })
         });
       }
@@ -342,25 +354,34 @@ export default function DronaChat() {
       
       if (data.success) {
         const dronaMsg: Message = {
-          id: data.message_id || (Date.now() + 1).toString(),
+          id: data.message_id || crypto.randomUUID(),
           role: 'drona',
           content: data.response,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           isNew: true
         };
-        setMessages(prev => [...prev, dronaMsg]);
+        
+        // Let Typewriter animation play by keeping isNew in local state
+        setMessages(prev => {
+          // Remove the temporary user message from handleSend and use adapter state
+          const withDrona = [...prev, dronaMsg];
+          return withDrona;
+        });
 
-        if (!currentSessionId) {
-          setCurrentSessionId(data.session_id);
-          fetchSessions();
+        // Save to adapter but as not new so history is correct
+        await storageAdapter.saveChatMessage(activeSessionId, { ...dronaMsg, isNew: false });
+
+        if (isNewSession && data.title) {
+          await storageAdapter.updateChatSession(activeSessionId, { title: data.title });
         }
+        fetchSessions();
       } else {
         throw new Error(data.detail || "API Error");
       }
     } catch (err) {
       console.error(err);
       const errorMsg: Message = {
-        id: (Date.now() + 1).toString(),
+        id: crypto.randomUUID(),
         role: 'drona',
         content: "I'm having trouble connecting to my cognitive core right now. Please ensure the Python backend is running on port 8000.",
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -390,6 +411,37 @@ export default function DronaChat() {
     const promptToSend = input;
     const fileToSend = selectedFile;
     
+    // --- Badge Logic ---
+    const checkBadges = async () => {
+      let unlockedBadgeIds: string[] = [];
+      const msgCountStr = localStorage.getItem(getDronaKey("message_count")) || "0";
+      const newCount = parseInt(msgCountStr, 10) + 1;
+      localStorage.setItem(getDronaKey("message_count"), newCount.toString());
+
+      if (newCount === 1) unlockedBadgeIds.push("first-message");
+      if (newCount === 1000) unlockedBadgeIds.push("thousand-messages");
+      
+      if (promptToSend.trim().startsWith("/deep-search")) unlockedBadgeIds.push("deep-search");
+      if (promptToSend.trim().startsWith("/image ") || isImageMode) unlockedBadgeIds.push("image-gen");
+      
+      for (const bId of unlockedBadgeIds) {
+        const unlocked = await storageAdapter.unlockAchievement(bId);
+        if (unlocked) {
+          const badge = achievements.find((a) => a.id === bId);
+          if (badge) {
+            addNotification({
+              title: "Achievement Unlocked!",
+              message: badge.name,
+              type: "achievement",
+              achievementId: bId,
+            });
+          }
+        }
+      }
+    };
+    checkBadges();
+    // -------------------
+
     setInput("");
     setSelectedFile(null);
     executeAIRequest(promptToSend, fileToSend);

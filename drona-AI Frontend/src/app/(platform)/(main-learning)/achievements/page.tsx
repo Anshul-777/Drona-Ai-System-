@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { achievements, Achievement } from "@/lib/data/achievements";
 import { useNotifications } from "@/context/NotificationContext";
-import { storageAdapter, USE_LOCAL_STORAGE } from "@/lib/storageAdapter";
+import { storageAdapter, USE_LOCAL_STORAGE, getDronaKey } from "@/lib/storageAdapter";
 import { getAchievementIcon } from "@/components/ui/AchievementIcons";
 
 export default function AchievementsPage() {
@@ -17,12 +17,12 @@ export default function AchievementsPage() {
   useEffect(() => {
     const fetchUserData = async () => {
       const data = await storageAdapter.getUserAchievements();
-      
+
       // Auto-unlock the test badge if it's not already unlocked
       if (!data.unlocked.includes("test-infinite-claim")) {
         data.unlocked.push("test-infinite-claim");
         if (USE_LOCAL_STORAGE) {
-           localStorage.setItem("drona_unlocked_achievements", JSON.stringify(data.unlocked));
+          localStorage.setItem(getDronaKey("unlocked_achievements"), JSON.stringify(data.unlocked));
         }
       }
 
@@ -36,13 +36,13 @@ export default function AchievementsPage() {
   const handleClaim = async (achievement: Achievement) => {
     const isTestBadge = achievement.id === "test-infinite-claim";
     if (claimedIds.includes(achievement.id) && !isTestBadge) return;
-    
+
     // Optimistic Update
     if (!claimedIds.includes(achievement.id)) {
       setClaimedIds(prev => [...prev, achievement.id]);
     }
     setTotalXP(prev => prev + achievement.xpReward);
-    
+
     addNotification({
       title: achievement.name,
       message: "Trophy Claimed!",
@@ -63,8 +63,8 @@ export default function AchievementsPage() {
   };
 
   const rarities = ["All", "Claimed", "Novice", "Adept", "Rare", "Epic", "Legendary"];
-  const filtered = filterRarity === "All" 
-    ? achievements 
+  const filtered = filterRarity === "All"
+    ? achievements
     : filterRarity === "Claimed"
       ? achievements.filter(a => claimedIds.includes(a.id))
       : achievements.filter(a => a.rarity === filterRarity);
@@ -112,8 +112,8 @@ export default function AchievementsPage() {
         ))}
       </div>
 
-      {/* Badge Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-4 pb-20">
+      {/* Badge List - Using flex wrap to allow items to smoothly push each other on expand */}
+      <div className="flex flex-wrap gap-6 pb-20">
         {filtered.map((achievement) => {
           const isUnlocked = unlockedIds.includes(achievement.id);
           const isClaimed = claimedIds.includes(achievement.id);
@@ -121,21 +121,27 @@ export default function AchievementsPage() {
           const isActive = isClaimed || isUnlocked;
 
           return (
-            <div key={achievement.id} className="relative" style={{ zIndex: isSelected ? 50 : 1 }}>
+            <div
+              key={achievement.id}
+              className={`relative transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${isSelected ? 'z-50' : 'z-10'}`}
+              onMouseLeave={() => { if (isSelected) setSelectedId(null); }}
+              onMouseEnter={() => setSelectedId(achievement.id)}
+              style={{
+                width: isSelected ? '346px' : '128px',
+                height: '154px',
+              }}
+            >
               {/* The wrapper holds both badge + expansion so hover/click persists */}
-              <div
-                className="flex items-stretch"
-                onMouseLeave={() => { if (isSelected) setSelectedId(null); }}
-              >
+              <div className="flex items-start h-full relative">
                 {/* ─── Shield Badge Card ─── */}
                 <div
                   onClick={() => setSelectedId(isSelected ? null : achievement.id)}
-                  className={`relative cursor-pointer transition-all duration-300 w-32 shrink-0 ${isSelected ? 'z-50 scale-105' : 'hover:scale-105'}`}
+                  className={`relative cursor-pointer transition-transform duration-300 shrink-0 z-20 h-full w-[128px] ${isSelected ? '' : 'hover:scale-105'}`}
                 >
                   {isClaimed && (
                     <div className="absolute inset-0 bg-white/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                   )}
-                  <svg viewBox="-20 -10 200 240" className="w-full h-auto drop-shadow-2xl" style={{ filter: isActive ? `drop-shadow(0 0 12px ${achievement.badgeColor}aa)` : 'drop-shadow(0 0 8px rgba(255,255,255,0.15))' }}>
+                  <svg viewBox="-20 -10 200 240" className="w-full h-full drop-shadow-2xl absolute top-0 left-0" style={{ filter: isActive ? `drop-shadow(0 0 12px ${achievement.badgeColor}aa)` : 'drop-shadow(0 0 8px rgba(255,255,255,0.15))' }}>
                     <defs>
                       <clipPath id={`shield-${achievement.id}`}>
                         <path d="M10,30 L150,30 L150,170 L80,190 L10,170 Z" />
@@ -155,7 +161,7 @@ export default function AchievementsPage() {
                       fill={`url(#grad-${achievement.id})`}
                       stroke={isActive ? `${achievement.badgeColor}80` : '#44444450'}
                       strokeWidth={isSelected ? "3" : "1.5"} />
-                    
+
                     {/* Background Pattern */}
                     <path d="M10,30 L150,30 L150,170 L80,190 L10,170 Z"
                       fill={`url(#pattern-${achievement.id})`} />
@@ -195,13 +201,13 @@ export default function AchievementsPage() {
                     <rect x="30" y="165" width={isUnlocked ? 100 : 0} height="4" fill={isActive ? achievement.badgeColor : 'transparent'} rx="2" />
 
                     {/* Ribbon / Flag for Name on TOP SIDE */}
-                    <path d="M-10,35 L170,35 L160,55 L170,75 L-10,75 L0,55 Z" 
-                          fill={isActive ? '#1a1a1e' : '#111'} 
-                          stroke={isActive ? achievement.badgeColor : '#333'} 
-                          strokeWidth="1.5" />
+                    <path d="M-10,35 L170,35 L160,55 L170,75 L-10,75 L0,55 Z"
+                      fill={isActive ? '#1a1a1e' : '#111'}
+                      stroke={isActive ? achievement.badgeColor : '#333'}
+                      strokeWidth="1.5" />
                     {/* Ribbon Folds */}
-                    <path d="M-10,35 L0,25 L0,35 Z" fill={isActive ? achievement.badgeColor : '#333'} opacity="0.6"/>
-                    <path d="M170,35 L160,25 L160,35 Z" fill={isActive ? achievement.badgeColor : '#333'} opacity="0.6"/>
+                    <path d="M-10,35 L0,25 L0,35 Z" fill={isActive ? achievement.badgeColor : '#333'} opacity="0.6" />
+                    <path d="M170,35 L160,25 L160,35 Z" fill={isActive ? achievement.badgeColor : '#333'} opacity="0.6" />
 
                     {/* Name text on Ribbon */}
                     <text x="80" y="59" textAnchor="middle"
@@ -214,102 +220,79 @@ export default function AchievementsPage() {
                   {/* SVG Icon from AchievementIcons.tsx */}
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ top: '15%' }}>
                     {getAchievementIcon(
-                      achievement.id, 
-                      isActive ? achievement.badgeColor : '#666', 
+                      achievement.id,
+                      isActive ? achievement.badgeColor : '#666',
                       `w-14 h-14 transition-all duration-300 ${isClaimed ? 'drop-shadow-[0_0_12px_currentColor]' : ''}`
                     )}
                   </div>
                 </div>
 
-                {/* ─── Expansion Panel (connected, no gap) ─── */}
-                {isSelected && (
+                {/* ─── Expansion Panel (connected, inline, pushing others) ─── */}
+                <div
+                  className={`overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex items-start z-10 ${isSelected ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+                  style={{
+                    width: isSelected ? '240px' : '0px',
+                    marginLeft: isSelected ? '-22px' : '0px',
+                    marginTop: '26px',
+                  }}
+                >
                   <div
-                    className="absolute top-0 left-[calc(100%)] w-64 rounded-r-2xl overflow-hidden shadow-2xl animate-fadeIn"
+                    className={`w-[240px] shrink-0 rounded-r-2xl py-2.5 pr-4 flex flex-col relative shadow-2xl h-[102px] pl-[26px]`}
                     style={{
                       background: achievement.badgeBg,
-                      borderTop: `2px solid ${achievement.badgeColor}40`,
-                      borderRight: `2px solid ${achievement.badgeColor}40`,
-                      borderBottom: `2px solid ${achievement.badgeColor}40`,
-                      boxShadow: `8px 4px 32px rgba(0,0,0,0.5), 0 0 0 1px ${achievement.badgeColor}10`,
-                      minHeight: '100%',
+                      borderTop: `1px solid ${achievement.badgeColor}40`,
+                      borderRight: `1px solid ${achievement.badgeColor}40`,
+                      borderBottom: `1px solid ${achievement.badgeColor}40`,
                     }}
-                    onMouseLeave={() => setSelectedId(null)}
-                    onMouseEnter={() => setSelectedId(achievement.id)}
                   >
                     {/* Connector bar */}
-                    <div className="absolute left-0 top-[30%] w-[2px] h-[40%]"
-                      style={{ background: `${achievement.badgeColor}40` }} />
+                    <div className="absolute left-[12px] top-[20%] w-[2px] h-[60%] rounded-full shadow-[0_0_8px_currentColor]"
+                      style={{ background: `${achievement.badgeColor}`, color: achievement.badgeColor }} />
 
-                    <div className="p-5 flex flex-col h-full">
-                      {/* Title */}
-                      <h4 className="font-display font-bold text-base text-white leading-tight mb-1">{achievement.name}</h4>
-                      <span className="text-[9px] font-black uppercase tracking-widest mb-3"
-                        style={{ color: achievement.badgeColor }}>{achievement.rarity}</span>
-
-                      <div className="w-full h-px mb-3" style={{ background: `${achievement.badgeColor}25` }} />
-
-                      <p className="text-[11px] text-white/60 font-medium leading-relaxed mb-3">
-                        {achievement.description}
-                      </p>
-
-                      {/* Rule */}
-                      <div className="flex items-start gap-2 mb-4 rounded-lg p-2.5" style={{ background: `${achievement.badgeColor}08` }}>
-                        <span className="material-symbols-outlined text-[13px] mt-0.5 shrink-0" style={{ color: `${achievement.badgeColor}80` }}>target</span>
-                        <span className="text-[10px] font-medium leading-relaxed" style={{ color: `${achievement.badgeColor}aa` }}>
-                          {achievement.rule}
-                        </span>
-                      </div>
-
-                      {/* XP */}
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-[10px] font-bold text-white/30 uppercase tracking-wider">Reward</span>
-                        <div className="flex items-center gap-1 px-3 py-1 rounded-full"
-                          style={{ background: `${achievement.badgeColor}15`, border: `1px solid ${achievement.badgeColor}25` }}>
-                          <span className="material-symbols-outlined text-[13px]" style={{ color: achievement.badgeColor }}>stars</span>
-                          <span className="font-black text-xs" style={{ color: achievement.badgeColor }}>+{achievement.xpReward} XP</span>
+                    <div className="flex flex-col h-full justify-between">
+                      {/* Header */}
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <h4 className="font-display font-bold text-[13px] text-white leading-tight truncate pr-2">{achievement.name}</h4>
+                          <span className="text-[8px] font-black uppercase tracking-widest shrink-0"
+                            style={{ color: achievement.badgeColor }}>{achievement.rarity}</span>
                         </div>
+                        <p className="text-[10px] text-white/60 font-medium leading-snug line-clamp-2">
+                          {achievement.description}
+                        </p>
                       </div>
 
                       {/* Action */}
-                      <div className="mt-auto">
+                      <div className="mt-auto flex justify-start">
                         {isClaimed ? (
-                          <div className="flex flex-col gap-2">
-                            <div className="w-full py-2.5 rounded-xl text-center text-[11px] font-bold uppercase tracking-wider text-white/30 border border-white/10">
+                          achievement.id === "test-infinite-claim" ? (
+                            <button
+                              onClick={(e) => { e.stopPropagation(); handleClaim(achievement); }}
+                              className="px-4 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider transition-all hover:brightness-110 active:scale-[0.97]"
+                              style={{ background: achievement.badgeColor, color: '#000', boxShadow: `0 2px 10px ${achievement.badgeColor}40` }}>
+                              Claim Again
+                            </button>
+                          ) : (
+                            <div className="px-4 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider text-white/30 border border-white/10">
                               ✓ Claimed
                             </div>
-                            {achievement.id === "test-infinite-claim" && (
-                              <button
-                                onClick={(e) => { e.stopPropagation(); handleClaim(achievement); }}
-                                className="w-full py-2.5 rounded-xl text-sm font-bold uppercase tracking-wider transition-all hover:brightness-110 active:scale-[0.97]"
-                                style={{
-                                  background: achievement.badgeColor,
-                                  color: '#000',
-                                  boxShadow: `0 4px 20px ${achievement.badgeColor}50`,
-                                }}>
-                                Claim Again
-                              </button>
-                            )}
-                          </div>
+                          )
                         ) : isUnlocked ? (
                           <button
                             onClick={(e) => { e.stopPropagation(); handleClaim(achievement); }}
-                            className="w-full py-2.5 rounded-xl text-sm font-bold uppercase tracking-wider transition-all hover:brightness-110 active:scale-[0.97]"
-                            style={{
-                              background: achievement.badgeColor,
-                              color: '#000',
-                              boxShadow: `0 4px 20px ${achievement.badgeColor}50`,
-                            }}>
-                            Claim Trophy
+                            className="px-4 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider transition-all hover:brightness-110 active:scale-[0.97]"
+                            style={{ background: achievement.badgeColor, color: '#000', boxShadow: `0 2px 10px ${achievement.badgeColor}40` }}>
+                            Claim
                           </button>
                         ) : (
-                          <div className="w-full py-2.5 rounded-xl text-center text-[11px] font-bold uppercase tracking-wider text-white/25 border border-white/10">
-                            🔒 Locked
+                          <div className="px-4 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider text-white/25 border border-white/10 flex justify-center items-center gap-1">
+                            <span className="material-symbols-outlined text-[10px]">lock</span> Locked
                           </div>
                         )}
                       </div>
                     </div>
                   </div>
-                )}
+                </div>
               </div>
             </div>
           );

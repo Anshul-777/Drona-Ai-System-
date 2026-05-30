@@ -3,14 +3,18 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import Image from "next/image";
 import Logo from "@/components/ui/Logo";
 import { createClient } from "@/lib/supabase/client";
 import { useNotifications } from "@/context/NotificationContext";
+import { getDronaKey, storageAdapter } from "@/lib/storageAdapter";
+import { achievements } from "@/lib/data/achievements";
 
 export default function PlatformShell({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userName, setUserName] = useState("Scholar");
+  const [profile, setProfile] = useState<any>(null);
   const pathname = usePathname();
   const router = useRouter();
   const { addNotification, unreadCount } = useNotifications();
@@ -49,11 +53,11 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
   // Login Notification Logic
   useEffect(() => {
     if (mounted && userName) {
-      const hasLoggedIn = localStorage.getItem("drona_has_logged_in_before");
+      const hasLoggedIn = localStorage.getItem(getDronaKey("has_logged_in_before"));
       
       if (!hasLoggedIn) {
         // First Registration
-        localStorage.setItem("drona_has_logged_in_before", "true");
+        localStorage.setItem(getDronaKey("has_logged_in_before"), "true");
         setTimeout(() => {
           addNotification({
             title: `Welcome to Drona, ${userName}!`,
@@ -75,10 +79,10 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
         setTimeout(() => {
           // Silently unlock the achievement in localStorage so the achievements page can see it
           try {
-            const existing = JSON.parse(localStorage.getItem("drona_unlocked_achievements") || "[]");
+            const existing = JSON.parse(localStorage.getItem(getDronaKey("unlocked_achievements")) || "[]");
             if (!existing.includes("welcome-to-drona")) {
               existing.push("welcome-to-drona");
-              localStorage.setItem("drona_unlocked_achievements", JSON.stringify(existing));
+              localStorage.setItem(getDronaKey("unlocked_achievements"), JSON.stringify(existing));
             }
           } catch {}
 
@@ -110,6 +114,7 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
   const handleLogout = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
+    localStorage.removeItem("drona_current_user_id");
     // Force a hard reload to completely flush the Next.js client-side router cache
     window.location.href = '/';
   };
@@ -123,7 +128,9 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
     { id: 'career', name: 'Career', path: '/career', hex: '#1a1a24', rgb: '26, 26, 36' }
   ];
 
-  const activeTab = envTabs.find(t => pathname.startsWith(t.path)) || envTabs[0];
+  const activeTab = pathname.startsWith('/shop') 
+    ? envTabs.find(t => t.id === 'game')! 
+    : (envTabs.find(t => pathname.startsWith(t.path)) || envTabs[0]);
 
   const [displayEnv, setDisplayEnv] = useState(activeTab.id);
   const [isFading, setIsFading] = useState(false);
@@ -132,14 +139,15 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
     setMounted(true);
     const fetchUser = async () => {
       try {
-        const supabase = createClient();
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user?.user_metadata?.full_name) {
-          setUserName(user.user_metadata.full_name.split(" ")[0]);
-        }
+        const data = await storageAdapter.getProfileDashboardData();
+        setProfile(data.profile);
+        setUserName(data.profile.ign);
       } catch { /* fallback */ }
     };
     fetchUser();
+
+    window.addEventListener("drona_profile_updated", fetchUser);
+    return () => window.removeEventListener("drona_profile_updated", fetchUser);
   }, []);
 
   useEffect(() => {
@@ -153,6 +161,34 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
     }
   }, [activeTab.id, displayEnv]);
 
+  // Unlock Environment Badge
+  useEffect(() => {
+    if (!mounted) return;
+    const badgeMap: Record<string, string> = {
+      learning: "env-main-learning",
+      test: "env-test",
+      game: "env-game",
+      workspace: "env-workspace",
+      resources: "env-resources",
+    };
+    const badgeId = badgeMap[activeTab.id];
+    if (badgeId) {
+      storageAdapter.unlockAchievement(badgeId).then((unlocked) => {
+        if (unlocked) {
+          const badge = achievements.find((a) => a.id === badgeId);
+          if (badge) {
+            addNotification({
+              title: "Achievement Unlocked!",
+              message: badge.name,
+              type: "achievement",
+              achievementId: badgeId,
+            });
+          }
+        }
+      });
+    }
+  }, [activeTab.id, mounted]);
+
   if (!mounted) return <div className="min-h-screen bg-surface-container-lowest" />;
 
   const environmentSidebars: Record<string, any> = {
@@ -165,7 +201,7 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
         { label: "Syllabus & Planner", icon: "edit_calendar", path: "/planner" },
         { label: "Progress", icon: "leaderboard", path: "/progress" },
         { label: "Knowledge Base", icon: "psychology", path: "/kb" },
-        { label: "Achievements", icon: "emoji_events", path: "/achievements" },
+        { label: "Assignment (Under Dev)", icon: "assignment", path: "/assignments" },
       ],
       agentsTitle: "AI Agents",
       agents: [
@@ -208,7 +244,7 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
       agents: [
         { label: "Badges", emoji: "🎖️", path: "/game/badges" },
         { label: "Weekly Tournaments", emoji: "🏆", path: "/game/tournaments" },
-        { label: "Reward Marketplace", emoji: "🎁", path: "/game/marketplace" },
+        { label: "Reward Marketplace", emoji: "🎁", path: "/shop" },
       ]
     },
     workspace: {
@@ -296,7 +332,7 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
         {/* Center: Environment Tabs */}
         <div className="hidden lg:flex items-center gap-10 h-full">
           {envTabs.map((tab, i) => {
-            const isActive = pathname === tab.path;
+            const isActive = activeTab.id === tab.id;
             return (
               <Link key={tab.name} href={tab.path}
                 className={`h-full flex items-center relative text-[15px] font-bold transition-all duration-300 group px-2 animate-fadeSlideUp`}
@@ -410,7 +446,11 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
                 className="w-full h-full rounded-full bg-surface-container-high border-[2px] flex items-center justify-center overflow-hidden transition-all duration-500 relative z-10 group-hover:scale-[1.05] shadow-md bg-white"
                 style={{ borderColor: 'var(--env-hex)' }}
               >
-                <span className="material-symbols-outlined text-[32px] text-on-surface-variant transition-colors duration-500 group-hover:text-[var(--env-hex)]">person</span>
+                {profile?.avatarUrl ? (
+                  <Image src={profile.avatarUrl} alt="Avatar" fill className="object-cover" />
+                ) : (
+                  <span className="material-symbols-outlined text-[32px] text-on-surface-variant transition-colors duration-500 group-hover:text-[var(--env-hex)]">person</span>
+                )}
               </div>
 
               {/* Premium Environment-colored Shield Level Badge */}
@@ -426,7 +466,7 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
                   LVL
                 </div>
                 <div className="text-white text-[12px] font-black leading-none mt-[1px]">
-                  0
+                  {profile?.level || 1}
                 </div>
               </div>
             </div>
@@ -441,22 +481,26 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
               {/* Decreased Rank Size */}
               <div className="flex items-center gap-1.5 my-[2px]">
                 <span className="material-symbols-outlined text-[9px] transition-colors duration-500" style={{ color: 'var(--env-hex)' }}>star_half</span>
-                <span className="text-[7px] font-bold text-outline-variant uppercase tracking-[0.25em]">Recruit</span>
+                <span className="text-[7px] font-bold text-outline-variant uppercase tracking-[0.25em]">{profile?.title || 'Recruit'}</span>
               </div>
 
-              {/* Extended XP Bar with starting stats (0 / 100) */}
+              {/* Extended XP Bar with dynamic stats */}
               <div className="flex items-center gap-2 w-full mt-[2px]">
                 <span className="text-[7px] font-black uppercase tracking-widest shrink-0 transition-colors duration-500" style={{ color: 'var(--env-hex)' }}>XP</span>
                 <div className="flex-1 h-[5px] bg-surface-variant/40 rounded-full overflow-hidden relative shadow-inner">
                   <div
-                    className="w-0 h-full rounded-full relative overflow-hidden transition-all duration-500"
-                    style={{ background: 'var(--env-hex)', boxShadow: '0 0 10px rgba(var(--env-rgb), 0.8)' }}
+                    className="h-full rounded-full relative overflow-hidden transition-all duration-500"
+                    style={{ 
+                      width: `${((profile?.xp || 0) / (profile?.xpMax || 1)) * 100}%`,
+                      background: 'var(--env-hex)', 
+                      boxShadow: '0 0 10px rgba(var(--env-rgb), 0.8)' 
+                    }}
                   >
                     <div className="absolute inset-0 bg-white/40 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
                   </div>
                 </div>
                 <span className="text-[7.5px] font-mono font-medium text-outline-variant shrink-0 tracking-tight">
-                  <span style={{ color: 'var(--env-hex)' }} className="font-bold transition-colors duration-500">0</span> / 100
+                  <span style={{ color: 'var(--env-hex)' }} className="font-bold transition-colors duration-500">{(profile?.xp || 0).toLocaleString()}</span> / {(profile?.xpMax || 1000).toLocaleString()}
                 </span>
               </div>
             </div>

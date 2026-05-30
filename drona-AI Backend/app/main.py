@@ -12,7 +12,7 @@ from datetime import datetime
 import requests
 
 # Load environment variables
-load_dotenv()
+load_dotenv(override=True)
 
 app = FastAPI(title="Drona Assessment Agent API")
 
@@ -36,14 +36,14 @@ api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
     frontend_env_path = os.path.join(os.path.dirname(__file__), "..", "..", "drona-AI Frontend", ".env.local")
     if os.path.exists(frontend_env_path):
-        load_dotenv(frontend_env_path)
+        load_dotenv(frontend_env_path, override=True)
         api_key = os.environ.get("GEMINI_API_KEY")
 
 if api_key:
     genai.configure(api_key=api_key)
 
 # Groq API key
-groq_api_key = os.environ.get("GROQ_API_KEY", "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")
+groq_api_key = os.environ.get("GROQ_API_KEY")
 groq_endpoint = "https://api.groq.com/openai/v1/chat/completions"
 
 # Gemini models to try in order
@@ -506,11 +506,54 @@ Generate your next question based on their pattern of answers.
 
 If you have asked 10+ questions and feel you have a complete profile, set profile_complete to true."""
         
-        response = session.chat.send_message(prompt)
-        data = parse_gemini_json(response.text)
+        data = None
         
-        if not validate_json_response(data):
-            print(f"⚠️  Invalid response structure. Using fallback.")
+        # 1. Try Gemini if session.chat exists
+        if session.chat:
+            try:
+                response = session.chat.send_message(prompt)
+                data = parse_gemini_json(response.text)
+                if not validate_json_response(data):
+                    print(f"⚠️  Invalid Gemini response structure in next_question.")
+                    data = None
+            except Exception as e:
+                print(f"⚠️  Gemini next_question failed: {e}")
+                data = None
+                
+        # 2. Try Groq fallback if Gemini failed or session.chat is None
+        if not data:
+            try:
+                groq_prompt = f"""You are the DRONA Assessment Agent.
+The user just answered: {json.dumps(req.current_answer)}
+
+You have asked {session.dynamic_questions_asked} question(s) so far. 
+Continue probing to complete their psychological and academic profile.
+Generate your next question based on their pattern of answers.
+
+If you have asked 10+ questions and feel you have a complete profile, set profile_complete to true.
+
+Respond ONLY with valid JSON (no text before/after):
+{{
+  "thought_process": "...",
+  "questions_asked_so_far": {session.dynamic_questions_asked + 1},
+  "profile_complete": false,
+  "question": "...",
+  "type": "text-only",
+  "options": []
+}}"""
+                messages = [{"role": "user", "content": groq_prompt}]
+                response_text = call_groq_api(messages)
+                data = parse_gemini_json(response_text)
+                if not validate_json_response(data):
+                    print(f"⚠️  Invalid Groq response structure in next_question.")
+                    data = None
+            except Exception as e:
+                print(f"⚠️  Groq next_question failed: {e}")
+                data = None
+                
+        # 3. Static fallback
+        if not data:
+            print(f"🔄 Using static fallback questions instead")
             if session.dynamic_questions_asked >= 10:
                 data = {
                     "thought_process": "Sufficient data collected",
@@ -520,14 +563,7 @@ If you have asked 10+ questions and feel you have a complete profile, set profil
                     "options": []
                 }
             else:
-                data = {
-                    "thought_process": "Continuing assessment",
-                    "questions_asked_so_far": session.dynamic_questions_asked + 1,
-                    "profile_complete": False,
-                    "question": "Based on your learning patterns, how would you describe your ideal study environment?",
-                    "type": "text-only",
-                    "options": []
-                }
+                data = get_static_fallback_question(session.dynamic_questions_asked + 1)
         
         # Update session if profile complete
         if data.get("profile_complete"):

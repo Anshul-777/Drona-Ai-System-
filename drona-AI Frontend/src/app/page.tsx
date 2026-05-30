@@ -184,12 +184,12 @@ export default function LandingPage() {
                   </h1>
                   <p className="hero-sub">DRONA AI is a world-class teaching experience for Indian competitive exams—six connected learning environments, built to help students remember more, panic less, and progress faster.</p>
                   <div className="hero-cta">
-                    <a className="btn btn-dark animate-pulse" onClick={() => navigateTo("env-main")}>
+                    <Link href="/signup" className="btn btn-dark animate-pulse">
                       Start the Experience
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M5 12h14M13 5l7 7-7 7" />
                       </svg>
-                    </a>
+                    </Link>
                     <a className="btn btn-ghost" href="#features">Explore the Proof</a>
                   </div>
                   <div className="hero-meta">

@@ -28,6 +28,7 @@ export default function NotificationsPage() {
       case "agent": return { icon: "psychology", color: "text-violet-500", bg: "bg-violet-50", border: "border-violet-200" };
       case "alert": return { icon: "warning", color: "text-amber-500", bg: "bg-amber-50", border: "border-amber-200" };
       case "achievement": return { icon: "emoji_events", color: "text-emerald-500", bg: "bg-emerald-50", border: "border-emerald-200" };
+      case "recommended": return { icon: "star", color: "text-orange-500", bg: "bg-orange-50", border: "border-orange-200" };
       default: return { icon: "notifications", color: "text-primary", bg: "bg-blue-50", border: "border-blue-200" };
     }
   };
@@ -87,6 +88,7 @@ export default function NotificationsPage() {
             { id: "unread", label: "Unread" },
             { id: "agent", label: "Agent" },
             { id: "system", label: "System" },
+            { id: "recommended", label: "Recommended" },
             { id: "alert", label: "Alert" }
           ].map(f => (
             <button

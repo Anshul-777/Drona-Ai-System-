@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { storageAdapter } from "@/lib/storageAdapter";
+import { v4 as uuidv4 } from "uuid";
 
 // ── Faster, punchier script ──────────────────────────────────────────────────
 const LINES = [
@@ -63,6 +65,19 @@ export default function BeginPage() {
     setTimeout(() => router.push(path), 650);
   };
 
+  const handleSkip = async () => {
+    await storageAdapter.insertNotification({
+      id: uuidv4(),
+      title: "Assessment Skipped",
+      message: "Take your assessment later to personalize your AI agents for better results.",
+      type: "recommended",
+      href: "/onboarding",
+      isRead: false,
+      timestamp: Date.now()
+    });
+    go("/platform");
+  };
+
   return (
     <div className="relative min-h-screen w-full flex flex-col overflow-hidden"
       style={{
@@ -111,7 +126,7 @@ export default function BeginPage() {
           </div>
           <span className="font-black text-sm tracking-tight" style={{ color: "#6b7280" }}>DRONA.AI</span>
         </div>
-        <button id="early-skip-btn" onClick={() => go("/platform")}
+        <button id="early-skip-btn" onClick={handleSkip}
           className={`text-xs font-mono tracking-widest uppercase flex items-center gap-1.5 cursor-pointer transition-all duration-700 ${skipVis ? "opacity-100" : "opacity-0"}`}
           style={{ color: "#9ca3af" }}
           onMouseEnter={e => e.currentTarget.style.color = "#4b5563"}
@@ -182,7 +197,7 @@ export default function BeginPage() {
                 </button>
 
                 {/* Skip */}
-                <button id="skip-assessment-btn" onClick={() => go("/platform")}
+                <button id="skip-assessment-btn" onClick={handleSkip}
                   className="flex items-center gap-2 px-6 py-4 rounded-2xl font-medium text-sm cursor-pointer transition-all duration-200"
                   style={{ border: "1.5px solid #e5e5e0", color: "#9ca3af" }}
                   onMouseEnter={e => { e.currentTarget.style.borderColor = "#d1d5db"; e.currentTarget.style.color = "#4b5563"; }}

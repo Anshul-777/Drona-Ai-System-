@@ -36,6 +36,10 @@ export default function NotificationPopup() {
           icon = "emoji_events";
           color = "text-emerald-500";
           bg = "bg-emerald-500/10";
+        } else if (toast.type === "recommended") {
+          icon = "star";
+          color = "text-orange-500";
+          bg = "bg-orange-500/10";
         }
 
         return (
