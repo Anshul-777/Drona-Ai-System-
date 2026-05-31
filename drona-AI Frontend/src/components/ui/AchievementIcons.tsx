@@ -444,6 +444,20 @@ export const getAchievementIcon = (id: string, color: string, className?: string
     case "shop-visitor": return <IconCoinStore {...props} />;
     case "thirty-streak": return <IconInferno {...props} />;
     case "explorer": return <IconCompass {...props} />;
+    case "quest": return <IconQuestEmblem {...props} />;
     default: return <IconSpark {...props} />;
   }
 };
+
+// 32. Ornate Quest Emblem / Diamond Shield
+export const IconQuestEmblem = ({ color = "currentColor", ...props }: IconProps) => (
+  <svg viewBox="0 0 100 100" fill="none" stroke={color} {...props}>
+    <OrnateBackground color={color} />
+    {/* Ornate Star-Shield Emblem */}
+    <path d="M50 15 L80 30 L80 60 C80 75, 50 85, 50 85 C50 85, 20 75, 20 60 L20 30 Z" strokeWidth="2.5" fill={color} fillOpacity="0.15" />
+    <path d="M50 25 L70 35 L70 56 C70 66, 50 74, 50 74 C50 74, 30 66, 30 56 L30 35 Z" strokeWidth="1" opacity="0.5" />
+    {/* 4-Pointed Star in center */}
+    <path d="M50 32 L54 46 L68 50 L54 54 L50 68 L46 54 L32 50 L46 46 Z" fill={color} strokeWidth="1" />
+    <circle cx="50" cy="50" r="3" fill="#fff" />
+  </svg>
+);

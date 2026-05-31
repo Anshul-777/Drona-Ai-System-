@@ -1,11 +1,7 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
 import katex from "katex";
 import "katex/dist/katex.min.css";
 import mermaid from "mermaid";
@@ -405,8 +401,6 @@ export default function BossBattlesPage() {
 
       // If still empty, query local client fallbacks
       if (fetchedList.length === 0) {
-        // Mock fallback questions from client database
-        const localList = selectedBoss ? basicBosses.find(b => b.id === boss.id) : null;
         // In this workspace, get_static_fallback_boss_questions inside backend app/api/drona.py handles it
         // We can just hit a local mock or query standard questions
         fetchedList = [];

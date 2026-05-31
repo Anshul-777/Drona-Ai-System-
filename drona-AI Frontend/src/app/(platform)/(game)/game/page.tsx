@@ -1,228 +1,1111 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { storageAdapter } from "@/lib/storageAdapter";
+
+// ── Radar Math ──────────────────────────────────────────────────────
+const getRadarPoint = (
+  index: number,
+  value: number,
+  total: number,
+  cx: number,
+  cy: number,
+  maxR: number
+) => {
+  const angle = (Math.PI * 2 * index) / total - Math.PI / 2;
+  const r = (Math.min(Math.max(value, 0), 100) / 100) * maxR;
+  return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
+};
+
+const getGridPoint = (
+  index: number,
+  total: number,
+  cx: number,
+  cy: number,
+  r: number
+) => {
+  const angle = (Math.PI * 2 * index) / total - Math.PI / 2;
+  return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
+};
+
+// ── Helpers ──────────────────────────────────────────────────────────
+const formatClock = (d: Date) =>
+  d.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  });
+
+const formatDate = (d: Date) =>
+  d.toLocaleDateString("en-US", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+// ── Constants ─────────────────────────────────────────────────────────
+const THEME_HEX = "#c9a84c";
+const THEME_RGB = "201, 168, 76";
+const N_AXES = 6;
+const CX = 50;
+const CY = 50;
+const MAX_R = 37;
+const RINGS = [0.25, 0.5, 0.75, 1];
+
+const DIFF_COLORS: Record<string, string> = {
+  Novice: "#22c55e",
+  Medium: "#3b82f6",
+  Advanced: "#c9a84c",
+  Expert: "#f97316",
+  Legendary: "#a855f7",
+};
+
+// ═══════════════════════════════════════════════════════════════════
+//  GAME LOBBY PAGE
+// ═══════════════════════════════════════════════════════════════════
 
 export default function GameDashboard() {
   const [mounted, setMounted] = useState(false);
   const [profile, setProfile] = useState<any>(null);
+  const [cognitive, setCognitive] = useState<any[]>([]);
+  const [missions, setMissions] = useState<any[]>([]);
+  const [topAchievements, setTopAchievements] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [now, setNow] = useState(new Date());
 
-  const themeHex = "#c9a84c"; // Gold for Game Env
-  const themeRgb = "201, 168, 76";
+  // Live clock
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const fetchData = useCallback(async () => {
+    try {
+      const data = await storageAdapter.getProfileDashboardData();
+      setProfile(data.profile);
+      setCognitive(data.cognitive || []);
+      setTopAchievements(data.topAchievements || []);
+
+      const rawMissions = await storageAdapter.getMissions();
+      setMissions(rawMissions);
+    } catch {
+      /* silent */
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     setMounted(true);
-    const fetchUser = async () => {
-      try {
-        const data = await storageAdapter.getProfileDashboardData();
-        setProfile(data.profile);
-      } catch { /* fallback */ }
-    };
-    fetchUser();
-  }, []);
+    fetchData();
 
-  if (!mounted) return <div className="min-h-screen bg-[#faf9f6]" />;
+    window.addEventListener("drona_profile_updated", fetchData);
+    return () => window.removeEventListener("drona_profile_updated", fetchData);
+  }, [fetchData]);
 
+  if (!mounted) return <div className="min-h-screen bg-[#0c0c15]" />;
+
+  // ── Derived values ───────────────────────────────────────────────
   const currentXp = profile?.xp || 0;
   const xpMax = profile?.xpMax || 1000;
-  const progressPercent = Math.min(100, Math.max(0, (currentXp / xpMax) * 100));
+  const progressPct = Math.min(100, (currentXp / xpMax) * 100);
+  const totalXp = ((profile?.level || 1) - 1) * 1000 + currentXp;
+  const coinStr = profile?.kc || "0 KC";
+  const coinNum = parseInt(coinStr.replace(/[^\d]/g, ""), 10) || 0;
+
+  const activeMissions = missions
+    .filter((m) => m.status === "active" || m.status === "claimable")
+    .slice(0, 3);
+  const completedCount = missions.filter((m) => m.status === "claimed").length;
+  const claimableCount = missions.filter(
+    (m) => m.status === "claimable"
+  ).length;
+
+  // ── Cognitive radar ──────────────────────────────────────────────
+  const cogValues =
+    cognitive.length > 0 ? cognitive.map((c) => c.value) : new Array(N_AXES).fill(0);
+  const cogLabels =
+    cognitive.length > 0
+      ? cognitive.map((c) => c.name)
+      : ["Logic", "Recall", "Speed", "Discipline", "Creativity", "Focus"];
+
+  const dataPoints = cogValues.map((v, i) =>
+    getRadarPoint(i, v, N_AXES, CX, CY, MAX_R)
+  );
+  const dataStr = dataPoints.map((p) => `${p.x},${p.y}`).join(" ");
+
+  const maxRingPoints = RINGS[RINGS.length - 1]
+    ? Array.from({ length: N_AXES }, (_, i) =>
+        getGridPoint(i, N_AXES, CX, CY, MAX_R)
+      )
+    : [];
+
+  // Label positions (beyond the outer ring)
+  const labelPoints = Array.from({ length: N_AXES }, (_, i) =>
+    getGridPoint(i, N_AXES, CX, CY, MAX_R + 12)
+  );
+
+  const statCards = [
+    {
+      label: "Total XP Earned",
+      value: totalXp.toLocaleString(),
+      icon: "emoji_events",
+      color: THEME_HEX,
+      sub: `Level ${profile?.level || 1}`,
+    },
+    {
+      label: "KC Coins",
+      value: coinNum.toLocaleString(),
+      icon: "toll",
+      color: "#00c896",
+      sub: "Spendable balance",
+    },
+    {
+      label: "Missions Done",
+      value: completedCount,
+      icon: "task_alt",
+      color: "#3b82f6",
+      sub: `${claimableCount} claimable`,
+    },
+    {
+      label: "Current Rank",
+      value: profile?.airRank > 0 ? `#${profile.airRank}` : "—",
+      icon: "social_leaderboard",
+      color: "#a855f7",
+      sub: profile?.percentile || "Unranked",
+    },
+  ];
+
+  const quickLinks = [
+    { label: "Leaderboard", icon: "social_leaderboard", path: "/game/leaderboard", color: THEME_HEX },
+    { label: "Boss Battle", icon: "swords", path: "/game/boss", color: "#ef4444" },
+    { label: "All Missions", icon: "tour", path: "/game/missions", color: "#3b82f6" },
+    { label: "Badges", icon: "military_tech", path: "/game/badges", color: "#a855f7" },
+  ];
 
   return (
-    <main className="w-full min-h-screen bg-[#faf9f6] relative overflow-hidden flex flex-col items-center">
-      
-      {/* ─── Premium Background Graphics ─── */}
-      <div className="absolute top-0 w-full h-[600px] overflow-hidden pointer-events-none z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#c9a84c]/10 via-[#c9a84c]/5 to-transparent" />
-        <div className="absolute -top-[300px] -right-[200px] w-[800px] h-[800px] rounded-full blur-[120px] opacity-20" style={{ backgroundColor: themeHex }} />
-        <div className="absolute top-[100px] -left-[200px] w-[600px] h-[600px] rounded-full blur-[100px] opacity-10" style={{ backgroundColor: themeHex }} />
-        
-        {/* Subtle grid pattern */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(${themeHex} 1px, transparent 1px), linear-gradient(90deg, ${themeHex} 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
+    <main className="w-full min-h-screen bg-[#0c0c15] relative flex flex-col text-white overflow-x-hidden">
+
+      {/* ── Ambient Background ─────────────────────────────────────── */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden>
+        <div
+          className="absolute -top-64 left-[15%] w-[800px] h-[800px] rounded-full"
+          style={{
+            background: `radial-gradient(circle, rgba(${THEME_RGB}, 0.07) 0%, transparent 70%)`,
+          }}
+        />
+        <div
+          className="absolute top-[35%] -right-24 w-[600px] h-[600px] rounded-full"
+          style={{
+            background: "radial-gradient(circle, rgba(168,85,247,0.05) 0%, transparent 70%)",
+          }}
+        />
+        <div
+          className="absolute bottom-0 left-[5%] w-[500px] h-[500px] rounded-full"
+          style={{
+            background: "radial-gradient(circle, rgba(59,130,246,0.04) 0%, transparent 70%)",
+          }}
+        />
+        {/* Grid lines */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `linear-gradient(rgba(${THEME_RGB}, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(${THEME_RGB}, 0.03) 1px, transparent 1px)`,
+            backgroundSize: "64px 64px",
+          }}
+        />
+        {/* Diagonal scanner line */}
+        <div
+          className="absolute inset-0 opacity-[0.015]"
+          style={{
+            background: `repeating-linear-gradient(
+              -45deg,
+              transparent,
+              transparent 40px,
+              rgba(${THEME_RGB}, 1) 40px,
+              rgba(${THEME_RGB}, 1) 41px
+            )`,
+          }}
+        />
       </div>
 
-      <div className="w-full max-w-[1600px] mx-auto px-6 lg:px-8 py-12 relative z-10 animate-fadeSlideUp flex flex-col gap-8">
-        
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="flex flex-col">
-            <span className="text-[10px] uppercase font-mono tracking-[0.3em] font-bold text-on-surface-variant mb-2">The Arena</span>
-            <h1 className="font-display font-black text-4xl md:text-5xl lg:text-6xl text-on-surface tracking-tight leading-none" style={{ textShadow: `0 4px 20px rgba(${themeRgb}, 0.15)` }}>
+      {/* ── Content ───────────────────────────────────────────────── */}
+      <div className="relative z-10 w-full max-w-[1700px] mx-auto px-6 lg:px-10 py-8 flex flex-col gap-7">
+
+        {/* ── TOP HEADER BAR ──────────────────────────────────────── */}
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-5">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <div
+                className="w-1.5 h-1.5 rounded-full animate-pulse"
+                style={{ background: THEME_HEX }}
+              />
+              <span className="text-[10px] font-mono font-bold tracking-[0.35em] uppercase"
+                style={{ color: THEME_HEX }}>
+                The Arena • Gamification Environment
+              </span>
+            </div>
+            <h1 className="font-display font-black text-[2.6rem] lg:text-5xl text-white tracking-tight leading-none">
               Gamification Lobby
             </h1>
-            <p className="text-on-surface-variant font-medium mt-4 max-w-2xl text-sm md:text-base leading-relaxed">
-              Welcome to the Arena. Transform your daily studies into measurable conquests. Dominate the leaderboards, conquer Boss Battles, and forge your academic legacy.
+            <p className="text-sm text-white/35 font-medium mt-2 max-w-xl leading-relaxed">
+              Transform study hours into measurable conquests. Dominate leaderboards, conquer Boss Battles, and forge your academic legacy.
             </p>
           </div>
-          
-          <div className="flex gap-4">
-            <Link href="/game/leaderboard" className="flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-sm bg-white border border-outline-variant/30 hover:border-[#c9a84c]/50 hover:shadow-lg transition-all transform hover:-translate-y-1">
-              <span className="material-symbols-outlined text-[#c9a84c]">social_leaderboard</span>
-              Rankings
-            </Link>
-            <Link href="/game/boss" className="flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-sm text-white transition-all transform hover:-translate-y-1 hover:shadow-[0_8px_25px_rgba(201,168,76,0.3)]" style={{ background: `linear-gradient(135deg, #c9a84c, #b3923a)` }}>
-              <span className="material-symbols-outlined text-white">swords</span>
-              Enter Arena
-            </Link>
+
+          {/* Live Date/Time */}
+          <div
+            className="flex flex-col items-start sm:items-end shrink-0 self-start sm:self-auto px-5 py-4 rounded-2xl"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.08)",
+            }}
+          >
+            <span
+              className="font-mono text-3xl font-black tabular-nums leading-none tracking-tight"
+              style={{ color: THEME_HEX, textShadow: `0 0 20px rgba(${THEME_RGB}, 0.4)` }}
+            >
+              {formatClock(now)}
+            </span>
+            <span className="text-[11px] text-white/35 tracking-wider mt-1.5 font-medium">
+              {formatDate(now)}
+            </span>
+            <div className="flex items-center gap-1.5 mt-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+              <span className="text-[9px] font-bold text-green-400 uppercase tracking-widest">
+                System Online
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-4">
-          
-          {/* Left Column: Identity & Radar */}
-          <div className="lg:col-span-4 flex flex-col gap-8">
-            
-            {/* Identity Card */}
-            <div className="bg-white/80 backdrop-blur-xl border border-white/50 shadow-xl rounded-[2rem] p-8 flex flex-col items-center text-center relative overflow-hidden group hover:shadow-2xl transition-all duration-500">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#c9a84c]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
-              <div className="w-32 h-32 rounded-full border-4 shadow-2xl mb-6 relative z-10 flex items-center justify-center bg-white overflow-hidden transform group-hover:scale-105 transition-transform duration-500" style={{ borderColor: themeHex }}>
-                <div className="absolute inset-0 animate-[spin_10s_linear_infinite] opacity-20 border-[2px] border-dashed rounded-full" style={{ borderColor: themeHex }} />
-                {profile?.avatarUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={profile.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-                ) : (
-                  <span className="material-symbols-outlined text-6xl" style={{ color: `${themeHex}80` }}>local_fire_department</span>
-                )}
-              </div>
-
-              <div className="bg-surface-container-low px-4 py-1.5 rounded-full mb-3 flex items-center gap-2 border border-outline-variant/20 relative z-10">
-                <span className="material-symbols-outlined text-[14px]" style={{ color: themeHex }}>star</span>
-                <span className="text-[10px] font-black uppercase tracking-widest text-on-surface">Level {profile?.level || 1} Scholar</span>
-              </div>
-
-              <h2 className="font-display text-2xl font-black text-on-surface mb-6 relative z-10">{profile?.ign || "Recruit"}</h2>
-
-              <div className="w-full relative z-10">
-                <div className="flex justify-between text-xs font-black uppercase tracking-widest mb-3">
-                  <span className="text-on-surface-variant">XP Progress</span>
-                  <span style={{ color: themeHex }}>{currentXp.toLocaleString()} / {xpMax.toLocaleString()}</span>
+        {/* ── STAT CARDS ROW ──────────────────────────────────────── */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {statCards.map((stat, i) => (
+            <div
+              key={i}
+              className="relative rounded-2xl p-5 overflow-hidden group transition-all duration-300 hover:-translate-y-0.5"
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget.style.borderColor = `rgba(${THEME_RGB}, 0.25)`);
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+              }}
+            >
+              {/* Background glow on hover */}
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                style={{
+                  background: `radial-gradient(ellipse at top left, ${stat.color}12, transparent 70%)`,
+                }}
+              />
+              <div className="relative z-10 flex items-start justify-between mb-3">
+                <div
+                  className="w-9 h-9 rounded-xl flex items-center justify-center"
+                  style={{
+                    background: `${stat.color}18`,
+                    border: `1px solid ${stat.color}30`,
+                  }}
+                >
+                  <span
+                    className="material-symbols-outlined text-[18px]"
+                    style={{
+                      color: stat.color,
+                      fontVariationSettings: "'FILL' 1",
+                    }}
+                  >
+                    {stat.icon}
+                  </span>
                 </div>
-                <div className="w-full h-4 bg-surface-container-high rounded-full overflow-hidden shadow-inner p-0.5">
-                  <div className="h-full rounded-full relative overflow-hidden transition-all duration-1000 ease-out" style={{ width: `${progressPercent}%`, backgroundColor: themeHex, boxShadow: `0 0 15px ${themeHex}80` }}>
-                    <div className="absolute inset-0 bg-white/30 -translate-x-full animate-[shimmer_2s_infinite]" />
-                  </div>
+              </div>
+              <div className="relative z-10">
+                <div className="font-display font-black text-2xl text-white tabular-nums leading-none">
+                  {stat.value}
+                </div>
+                <div className="text-[10px] text-white/35 font-bold uppercase tracking-widest mt-1.5">
+                  {stat.label}
+                </div>
+                <div
+                  className="text-[9px] font-bold mt-0.5"
+                  style={{ color: `${stat.color}90` }}
+                >
+                  {stat.sub}
                 </div>
               </div>
             </div>
+          ))}
+        </div>
 
-            {/* Radar Stats Card */}
-            <div className="bg-[#1a1a24] border border-[#c9a84c]/30 shadow-2xl rounded-[2rem] p-8 flex flex-col items-center relative overflow-hidden text-white">
-              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 mix-blend-overlay" />
-              
-              <h3 className="font-mono text-xs font-bold tracking-[0.3em] uppercase text-[#c9a84c] mb-8 relative z-10">Cognitive Radar</h3>
-              
-              {/* Simulated Hexagonal Radar */}
-              <div className="w-full aspect-square max-w-[250px] relative z-10 mb-6 flex items-center justify-center">
-                {/* Background Web */}
-                <svg viewBox="0 0 100 100" className="w-full h-full opacity-20" style={{ filter: 'drop-shadow(0 0 10px rgba(201,168,76,0.5))' }}>
-                  <polygon points="50,5 90,25 90,75 50,95 10,75 10,25" fill="none" stroke="#c9a84c" strokeWidth="0.5" />
-                  <polygon points="50,20 76,33 76,66 50,80 24,66 24,33" fill="none" stroke="#c9a84c" strokeWidth="0.5" />
-                  <polygon points="50,35 63,42 63,58 50,65 37,58 37,42" fill="none" stroke="#c9a84c" strokeWidth="0.5" />
-                  <line x1="50" y1="5" x2="50" y2="95" stroke="#c9a84c" strokeWidth="0.5" />
-                  <line x1="10" y1="25" x2="90" y2="75" stroke="#c9a84c" strokeWidth="0.5" />
-                  <line x1="10" y1="75" x2="90" y2="25" stroke="#c9a84c" strokeWidth="0.5" />
-                  
-                  {/* Filled Data Polygon (Simulated) */}
-                  <polygon points="50,15 80,30 60,60 50,85 20,65 30,35" fill="rgba(201, 168, 76, 0.4)" stroke="#c9a84c" strokeWidth="1.5" className="animate-[pulse_4s_ease-in-out_infinite]" />
-                </svg>
-                
-                {/* Labels */}
-                <div className="absolute top-0 text-[9px] font-bold tracking-widest uppercase text-white/70">Precision</div>
-                <div className="absolute top-[25%] right-0 text-[9px] font-bold tracking-widest uppercase text-white/70">Velocity</div>
-                <div className="absolute bottom-[25%] right-0 text-[9px] font-bold tracking-widest uppercase text-white/70">Depth</div>
-                <div className="absolute bottom-0 text-[9px] font-bold tracking-widest uppercase text-white/70">Recall</div>
-                <div className="absolute bottom-[25%] left-0 text-[9px] font-bold tracking-widest uppercase text-white/70">Discipline</div>
-                <div className="absolute top-[25%] left-0 text-[9px] font-bold tracking-widest uppercase text-white/70">Explore</div>
+        {/* ── MAIN GRID (Left 4 col + Right 8 col) ────────────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+          {/* ╔══════════════════════╗
+              ║  LEFT COLUMN         ║
+              ╚══════════════════════╝ */}
+          <div className="lg:col-span-4 flex flex-col gap-6">
+
+            {/* ── IDENTITY CARD ─────────────────────────────────── */}
+            <div
+              className="relative rounded-[1.75rem] p-7 flex flex-col items-center text-center overflow-hidden group transition-all duration-500"
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = `rgba(${THEME_RGB}, 0.3)`;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+              }}
+            >
+              {/* Corner accent lines */}
+              <div
+                className="absolute top-0 left-0 w-16 h-16 pointer-events-none"
+                style={{
+                  background: `linear-gradient(135deg, rgba(${THEME_RGB}, 0.15), transparent)`,
+                  borderRadius: "1.75rem 0 0 0",
+                }}
+              />
+              <div
+                className="absolute bottom-0 right-0 w-16 h-16 pointer-events-none"
+                style={{
+                  background: `linear-gradient(315deg, rgba(${THEME_RGB}, 0.08), transparent)`,
+                  borderRadius: "0 0 1.75rem 0",
+                }}
+              />
+
+              {/* Avatar */}
+              <div className="relative mb-5 z-10">
+                {/* Outer dashed ring */}
+                <div
+                  className="absolute -inset-3 rounded-full border-dashed animate-[spin_12s_linear_infinite] opacity-30"
+                  style={{ borderColor: THEME_HEX, borderWidth: "1.5px" }}
+                />
+                {/* Inner solid ring */}
+                <div
+                  className="w-[112px] h-[112px] rounded-full flex items-center justify-center overflow-hidden relative"
+                  style={{
+                    border: `3px solid ${THEME_HEX}`,
+                    boxShadow: `0 0 40px rgba(${THEME_RGB}, 0.25), 0 0 0 6px rgba(${THEME_RGB}, 0.08)`,
+                    background: "rgba(10,10,20,0.9)",
+                  }}
+                >
+                  {profile?.avatarUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={profile.avatarUrl}
+                      alt="Avatar"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span
+                      className="material-symbols-outlined text-5xl"
+                      style={{ color: `${THEME_HEX}80` }}
+                    >
+                      person
+                    </span>
+                  )}
+                </div>
+
+                {/* Level badge */}
+                <div
+                  className="absolute -bottom-1 -right-1 min-w-[36px] h-9 flex flex-col items-center justify-center px-2 rounded-full border-2 shadow-xl"
+                  style={{
+                    background: `linear-gradient(135deg, ${THEME_HEX}, #a07035)`,
+                    borderColor: "#0c0c15",
+                    boxShadow: `0 4px 14px rgba(${THEME_RGB}, 0.4)`,
+                  }}
+                >
+                  <span className="text-[8px] font-black text-white/70 uppercase tracking-widest leading-none">
+                    LVL
+                  </span>
+                  <span className="font-black text-sm text-white leading-none">
+                    {profile?.level || 1}
+                  </span>
+                </div>
               </div>
-              
-              <Link href="/stats" className="text-xs font-bold text-[#c9a84c] hover:text-white transition-colors relative z-10 flex items-center gap-1">
-                View Deep Analytics <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+
+              {/* Name */}
+              <h2
+                className="font-display font-black text-2xl text-white tracking-wider uppercase mb-1 z-10 relative"
+                style={{ textShadow: `0 2px 10px rgba(${THEME_RGB}, 0.2)` }}
+              >
+                {profile?.ign || "Scholar"}
+              </h2>
+
+              {/* Title badge */}
+              <div className="flex items-center gap-2 mb-5 z-10 relative flex-wrap justify-center">
+                <span
+                  className="text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-full"
+                  style={{
+                    color: THEME_HEX,
+                    background: `rgba(${THEME_RGB}, 0.12)`,
+                    border: `1px solid rgba(${THEME_RGB}, 0.3)`,
+                  }}
+                >
+                  {profile?.title || "NOVICE"}
+                </span>
+                <span className="text-[10px] font-bold uppercase text-white/25 tracking-widest">
+                  {profile?.playerClass || "INITIATE"}
+                </span>
+              </div>
+
+              {/* XP Progress */}
+              <div className="w-full z-10 relative mb-5">
+                <div className="flex justify-between text-[10px] font-black uppercase tracking-widest mb-2">
+                  <span className="text-white/35">XP Progress</span>
+                  <span style={{ color: THEME_HEX }}>
+                    {currentXp.toLocaleString()} / {xpMax.toLocaleString()}
+                  </span>
+                </div>
+                <div
+                  className="w-full h-2.5 rounded-full overflow-hidden"
+                  style={{ background: "rgba(255,255,255,0.08)" }}
+                >
+                  <div
+                    className="h-full rounded-full relative overflow-hidden transition-all duration-1000"
+                    style={{
+                      width: `${progressPct}%`,
+                      background: `linear-gradient(90deg, rgba(${THEME_RGB}, 0.6), ${THEME_HEX})`,
+                      boxShadow: `0 0 14px rgba(${THEME_RGB}, 0.5)`,
+                    }}
+                  >
+                    <div className="absolute inset-0 bg-white/20 -translate-x-full animate-[shimmer_2.5s_infinite]" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-3 w-full gap-3 z-10 relative">
+                {[
+                  { label: "KC", value: coinNum > 0 ? `${coinNum.toLocaleString()}` : "0", icon: "toll" },
+                  { label: "Member Since", value: profile?.creationDate?.split(" ")?.[1] || "2026", icon: "calendar_today" },
+                  { label: "Missions", value: completedCount.toString(), icon: "task_alt" },
+                ].map((item, i) => (
+                  <div
+                    key={i}
+                    className="flex flex-col items-center py-3.5 px-2 rounded-2xl"
+                    style={{
+                      background: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(255,255,255,0.07)",
+                    }}
+                  >
+                    <span
+                      className="material-symbols-outlined text-[15px] mb-1.5"
+                      style={{ color: "rgba(255,255,255,0.3)" }}
+                    >
+                      {item.icon}
+                    </span>
+                    <span className="font-black text-sm text-white leading-none">
+                      {item.value}
+                    </span>
+                    <span className="text-[8px] uppercase tracking-widest text-white/25 mt-1 font-bold text-center leading-tight">
+                      {item.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Profile link */}
+              <Link
+                href="/profile"
+                className="mt-4 z-10 relative flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest transition-colors"
+                style={{ color: "rgba(255,255,255,0.25)" }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = THEME_HEX)}
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "rgba(255,255,255,0.25)")
+                }
+              >
+                <span className="material-symbols-outlined text-[13px]">
+                  manage_accounts
+                </span>
+                Edit Profile
               </Link>
+            </div>
+
+            {/* ── COGNITIVE RADAR ───────────────────────────────── */}
+            <div
+              className="rounded-[1.75rem] p-7 flex flex-col relative overflow-hidden"
+              style={{
+                background: "rgba(8, 8, 20, 0.95)",
+                border: `1px solid rgba(${THEME_RGB}, 0.18)`,
+                boxShadow: `0 0 60px rgba(${THEME_RGB}, 0.04) inset`,
+              }}
+            >
+              {/* Top glow */}
+              <div
+                className="absolute -top-16 left-1/2 -translate-x-1/2 w-64 h-32 pointer-events-none rounded-full opacity-30"
+                style={{
+                  background: `radial-gradient(ellipse, rgba(${THEME_RGB}, 0.2), transparent)`,
+                }}
+              />
+
+              <div className="flex items-center justify-between mb-5 relative z-10">
+                <div>
+                  <h3
+                    className="font-mono text-xs font-bold tracking-[0.35em] uppercase"
+                    style={{ color: THEME_HEX }}
+                  >
+                    Cognitive Radar
+                  </h3>
+                  <p className="text-[10px] text-white/30 mt-0.5 font-medium">
+                    Real-time telemetry profile
+                  </p>
+                </div>
+                <Link
+                  href="/stats"
+                  className="flex items-center gap-0.5 text-[9px] font-black uppercase tracking-widest transition-colors"
+                  style={{ color: "rgba(255,255,255,0.25)" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = THEME_HEX)}
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = "rgba(255,255,255,0.25)")
+                  }
+                >
+                  Deep Stats
+                  <span className="material-symbols-outlined text-[12px]">
+                    arrow_forward
+                  </span>
+                </Link>
+              </div>
+
+              {/* SVG Radar Chart */}
+              <div className="w-full max-w-[230px] mx-auto aspect-square relative z-10">
+                <svg viewBox="0 0 100 100" className="w-full h-full">
+                  {/* Grid rings */}
+                  {RINGS.map((ring, ri) => {
+                    const pts = Array.from({ length: N_AXES }, (_, i) =>
+                      getGridPoint(i, N_AXES, CX, CY, MAX_R * ring)
+                    );
+                    return (
+                      <polygon
+                        key={ri}
+                        points={pts.map((p) => `${p.x},${p.y}`).join(" ")}
+                        fill="none"
+                        stroke={`rgba(${THEME_RGB}, ${0.08 + ri * 0.04})`}
+                        strokeWidth="0.5"
+                      />
+                    );
+                  })}
+
+                  {/* Spokes */}
+                  {maxRingPoints.map((pt, i) => (
+                    <line
+                      key={i}
+                      x1={CX}
+                      y1={CY}
+                      x2={pt.x}
+                      y2={pt.y}
+                      stroke={`rgba(${THEME_RGB}, 0.15)`}
+                      strokeWidth="0.5"
+                    />
+                  ))}
+
+                  {/* Data polygon */}
+                  <polygon
+                    points={dataStr}
+                    fill={`rgba(${THEME_RGB}, 0.12)`}
+                    stroke={`rgba(${THEME_RGB}, 0.85)`}
+                    strokeWidth="1.5"
+                    strokeLinejoin="round"
+                    className="transition-all duration-1000"
+                    style={{
+                      filter: `drop-shadow(0 0 6px rgba(${THEME_RGB}, 0.5))`,
+                    }}
+                  />
+
+                  {/* Data dots */}
+                  {dataPoints.map((pt, i) => (
+                    <circle
+                      key={i}
+                      cx={pt.x}
+                      cy={pt.y}
+                      r="2"
+                      fill={THEME_HEX}
+                      style={{
+                        filter: `drop-shadow(0 0 4px ${THEME_HEX})`,
+                      }}
+                    />
+                  ))}
+
+                  {/* Center dot */}
+                  <circle
+                    cx={CX}
+                    cy={CY}
+                    r="1.2"
+                    fill={`rgba(${THEME_RGB}, 0.4)`}
+                  />
+                </svg>
+
+                {/* Axis Labels — positioned using SVG coord mapping */}
+                {labelPoints.map((pt, i) => (
+                  <div
+                    key={i}
+                    className="absolute text-[8px] font-black uppercase tracking-widest pointer-events-none"
+                    style={{
+                      left: `${pt.x}%`,
+                      top: `${pt.y}%`,
+                      transform: "translate(-50%, -50%)",
+                      color: "rgba(255,255,255,0.45)",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {cogLabels[i]}
+                  </div>
+                ))}
+              </div>
+
+              {/* Metric bars */}
+              <div className="flex flex-col gap-2.5 mt-6 relative z-10">
+                {cognitive.map((c, i) => (
+                  <div key={i} className="flex items-center gap-2.5">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-white/30 w-16 shrink-0">
+                      {c.name}
+                    </span>
+                    <div
+                      className="flex-1 h-1 rounded-full overflow-hidden"
+                      style={{ background: "rgba(255,255,255,0.08)" }}
+                    >
+                      <div
+                        className="h-full rounded-full transition-all duration-1000"
+                        style={{
+                          width: `${c.value}%`,
+                          background: THEME_HEX,
+                          boxShadow: c.value > 0
+                            ? `0 0 8px rgba(${THEME_RGB}, 0.4)`
+                            : "none",
+                        }}
+                      />
+                    </div>
+                    <span
+                      className="text-[9px] font-black tabular-nums w-6 text-right"
+                      style={{ color: c.value > 0 ? THEME_HEX : "rgba(255,255,255,0.2)" }}
+                    >
+                      {c.value}
+                    </span>
+                    {c.trend && c.trend !== "0%" && (
+                      <span className={`text-[8px] font-bold shrink-0 ${c.trendColor || "text-white/30"}`}>
+                        {c.trend}
+                      </span>
+                    )}
+                  </div>
+                ))}
+                {cognitive.length === 0 && (
+                  <p className="text-[10px] text-white/20 text-center py-2 italic">
+                    Complete assessments to build your profile.
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Right Column: Missions & Boss Battles */}
-          <div className="lg:col-span-8 flex flex-col gap-8">
-            
-            {/* Active Quests */}
-            <div className="bg-white/80 backdrop-blur-xl border border-white/50 shadow-xl rounded-[2rem] p-8 relative overflow-hidden">
-              <div className="flex justify-between items-end mb-8 border-b border-outline-variant/20 pb-4">
-                <div>
-                  <h3 className="font-display text-2xl font-black text-on-surface flex items-center gap-3">
-                    <span className="material-symbols-outlined text-[28px]" style={{ color: themeHex }}>flag</span>
-                    Daily Quests
-                  </h3>
-                  <p className="text-sm font-medium text-on-surface-variant mt-1">Complete objectives to earn massive XP and unlock badges.</p>
-                </div>
-                <Link href="/game/missions" className="text-xs font-bold text-on-surface-variant hover:text-[#c9a84c] transition-colors flex items-center gap-1 uppercase tracking-widest">
-                  All Missions <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+          {/* ╔══════════════════════╗
+              ║  RIGHT COLUMN        ║
+              ╚══════════════════════╝ */}
+          <div className="lg:col-span-8 flex flex-col gap-6">
+
+            {/* ── QUICK NAV LINKS ───────────────────────────────── */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {quickLinks.map((item, i) => (
+                <Link
+                  key={i}
+                  href={item.path}
+                  className="flex items-center gap-2.5 p-4 rounded-2xl transition-all duration-300 group hover:-translate-y-0.5"
+                  style={{
+                    background: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget.style.background = "rgba(255,255,255,0.07)");
+                    (e.currentTarget.style.borderColor = `${item.color}35`);
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                  }}
+                >
+                  <div
+                    className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+                    style={{
+                      background: `${item.color}18`,
+                      border: `1px solid ${item.color}30`,
+                    }}
+                  >
+                    <span
+                      className="material-symbols-outlined text-[16px]"
+                      style={{
+                        color: item.color,
+                        fontVariationSettings: "'FILL' 1",
+                      }}
+                    >
+                      {item.icon}
+                    </span>
+                  </div>
+                  <span className="font-bold text-sm text-white/60 group-hover:text-white transition-colors truncate">
+                    {item.label}
+                  </span>
+                  <span
+                    className="material-symbols-outlined text-[13px] text-white/20 group-hover:text-white/40 ml-auto shrink-0 transition-colors"
+                  >
+                    chevron_right
+                  </span>
                 </Link>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Quest Card 1 */}
-                <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-5 hover:border-[#c9a84c]/50 hover:shadow-lg transition-all duration-300 group cursor-pointer">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-600">
-                      <span className="material-symbols-outlined">psychology</span>
-                    </div>
-                    <span className="bg-[#c9a84c]/10 text-[#c9a84c] px-3 py-1 rounded-full text-xs font-black tracking-widest border border-[#c9a84c]/20">+150 XP</span>
-                  </div>
-                  <h4 className="font-bold text-on-surface mb-2">Master Physics Kinematics</h4>
-                  <p className="text-xs text-on-surface-variant mb-4 line-clamp-2">Complete 3 sub-topics in the Kinematics chapter and score &gt;80% on the mock drill.</p>
-                  <div className="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
-                    <div className="h-full bg-blue-500 w-[33%] rounded-full" />
-                  </div>
-                  <div className="mt-2 text-right text-[10px] font-bold text-outline">1 / 3 Completed</div>
-                </div>
-
-                {/* Quest Card 2 */}
-                <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-5 hover:border-[#c9a84c]/50 hover:shadow-lg transition-all duration-300 group cursor-pointer relative overflow-hidden">
-                  <div className="absolute inset-0 bg-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="flex justify-between items-start mb-4 relative z-10">
-                    <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-600">
-                      <span className="material-symbols-outlined">quiz</span>
-                    </div>
-                    <span className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-black tracking-widest shadow-sm">CLAIM</span>
-                  </div>
-                  <h4 className="font-bold text-on-surface mb-2 relative z-10 line-through opacity-70">Daily Diagnostic</h4>
-                  <p className="text-xs text-on-surface-variant mb-4 line-clamp-2 relative z-10 opacity-70">Finish your first mock test of the day.</p>
-                  <div className="w-full h-2 bg-green-500/20 rounded-full overflow-hidden relative z-10">
-                    <div className="h-full bg-green-500 w-[100%] rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
-                  </div>
-                  <div className="mt-2 text-right text-[10px] font-bold text-green-600 relative z-10">DONE!</div>
-                </div>
-              </div>
+              ))}
             </div>
 
-            {/* Boss Battles Banner */}
-            <div className="rounded-[2rem] p-8 relative overflow-hidden text-white flex flex-col justify-center min-h-[220px] group cursor-pointer shadow-2xl border border-[#c9a84c]/20" style={{ background: `radial-gradient(circle at right top, #2a2a35, #12121a)` }}>
-              {/* Animated Background */}
-              <div className="absolute right-0 top-0 bottom-0 w-[50%] bg-gradient-to-l from-[#c9a84c]/20 to-transparent opacity-50 group-hover:w-[60%] transition-all duration-700 ease-out" />
-              <div className="absolute -right-[10%] -top-[20%] w-[300px] h-[300px] bg-[#c9a84c]/10 rounded-full blur-[60px] group-hover:bg-[#c9a84c]/20 transition-all duration-700" />
-              
-              <div className="relative z-10 max-w-[60%]">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="material-symbols-outlined text-[#c9a84c] animate-pulse">crisis_alert</span>
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#c9a84c]">Live Event</span>
+            {/* ── ACTIVE MISSIONS ───────────────────────────────── */}
+            <div
+              className="rounded-[1.75rem] p-7 relative overflow-hidden"
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+              <div className="flex justify-between items-start mb-6">
+                <div>
+                  <h3 className="font-display font-black text-xl text-white flex items-center gap-2.5">
+                    <span
+                      className="material-symbols-outlined text-[22px]"
+                      style={{
+                        color: THEME_HEX,
+                        fontVariationSettings: "'FILL' 1",
+                      }}
+                    >
+                      flag
+                    </span>
+                    Active Missions
+                  </h3>
+                  <p className="text-[11px] text-white/30 mt-1 font-medium">
+                    {claimableCount > 0 ? (
+                      <span className="text-green-400 font-bold">
+                        ⚡ {claimableCount} mission{claimableCount > 1 ? "s" : ""} ready to claim!
+                      </span>
+                    ) : (
+                      "Complete objectives to earn XP and KC rewards."
+                    )}
+                  </p>
                 </div>
-                <h3 className="font-display text-3xl font-black mb-2">Organic Chemistry Crucible</h3>
-                <p className="text-white/70 text-sm mb-6 leading-relaxed">24 scholars are waiting in the lobby. The battle begins in 5 minutes. High stakes, immense XP rewards.</p>
-                <Link href="/game/boss" className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs bg-white/10 hover:bg-white/20 border border-white/20 transition-all backdrop-blur-md">
-                  Join Lobby <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                <Link
+                  href="/game/missions"
+                  className="flex items-center gap-0.5 text-[10px] font-black uppercase tracking-widest transition-colors mt-1"
+                  style={{ color: "rgba(255,255,255,0.25)" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = THEME_HEX)}
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = "rgba(255,255,255,0.25)")
+                  }
+                >
+                  All Missions
+                  <span className="material-symbols-outlined text-[14px]">
+                    chevron_right
+                  </span>
                 </Link>
               </div>
-              
-              <span className="material-symbols-outlined absolute right-8 top-1/2 -translate-y-1/2 text-[140px] text-white/5 -rotate-12 group-hover:rotate-0 group-hover:scale-110 transition-all duration-700 drop-shadow-2xl">
+
+              {loading ? (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {[0, 1, 2].map((i) => (
+                    <div
+                      key={i}
+                      className="h-36 rounded-2xl animate-pulse"
+                      style={{ background: "rgba(255,255,255,0.05)" }}
+                    />
+                  ))}
+                </div>
+              ) : activeMissions.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {activeMissions.map((mission) => {
+                    const isClaimable = mission.status === "claimable";
+                    const pct = mission.progress_pct || 0;
+                    const diffColor =
+                      DIFF_COLORS[mission.difficulty] || THEME_HEX;
+
+                    return (
+                      <Link
+                        key={mission.id}
+                        href="/game/missions"
+                        className="flex flex-col p-5 rounded-2xl transition-all duration-300 hover:-translate-y-0.5 relative overflow-hidden group"
+                        style={{
+                          background: isClaimable
+                            ? "rgba(34,197,94,0.06)"
+                            : "rgba(255,255,255,0.03)",
+                          border: isClaimable
+                            ? "1px solid rgba(34,197,94,0.3)"
+                            : "1px solid rgba(255,255,255,0.07)",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.borderColor = isClaimable
+                            ? "rgba(34,197,94,0.5)"
+                            : `rgba(${THEME_RGB}, 0.25)`;
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.borderColor = isClaimable
+                            ? "rgba(34,197,94,0.3)"
+                            : "rgba(255,255,255,0.07)";
+                        }}
+                      >
+                        <div className="flex justify-between items-start mb-3">
+                          {/* XP badge / Claim badge */}
+                          <span
+                            className="text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full"
+                            style={
+                              isClaimable
+                                ? {
+                                    color: "#22c55e",
+                                    background: "rgba(34,197,94,0.15)",
+                                    border: "1px solid rgba(34,197,94,0.3)",
+                                  }
+                                : {
+                                    color: THEME_HEX,
+                                    background: `rgba(${THEME_RGB}, 0.1)`,
+                                    border: `1px solid rgba(${THEME_RGB}, 0.2)`,
+                                  }
+                            }
+                          >
+                            {isClaimable
+                              ? "✓ Ready"
+                              : `+${mission.xp_reward} XP`}
+                          </span>
+                          {/* Difficulty */}
+                          <span
+                            className="text-[8px] font-black uppercase tracking-widest"
+                            style={{ color: `${diffColor}80` }}
+                          >
+                            {mission.difficulty}
+                          </span>
+                        </div>
+
+                        <h4 className="font-bold text-sm text-white mb-1 line-clamp-2 leading-snug">
+                          {mission.title}
+                        </h4>
+                        <p className="text-[10px] text-white/35 mb-auto line-clamp-1">
+                          {mission.subject} · {mission.mission_type}
+                        </p>
+
+                        {/* Progress bar */}
+                        <div
+                          className="w-full h-1 rounded-full overflow-hidden mt-4"
+                          style={{ background: "rgba(255,255,255,0.08)" }}
+                        >
+                          <div
+                            className="h-full rounded-full transition-all duration-1000"
+                            style={{
+                              width: `${pct}%`,
+                              background: isClaimable
+                                ? "#22c55e"
+                                : THEME_HEX,
+                              boxShadow: isClaimable
+                                ? "0 0 8px rgba(34,197,94,0.5)"
+                                : `0 0 8px rgba(${THEME_RGB}, 0.4)`,
+                            }}
+                          />
+                        </div>
+                        <div className="flex justify-between text-[9px] font-bold mt-1.5"
+                          style={{ color: "rgba(255,255,255,0.25)" }}>
+                          <span>
+                            {mission.progress_value}/{mission.target_value}
+                          </span>
+                          <span>{pct}%</span>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div
+                  className="text-center py-10 rounded-2xl"
+                  style={{
+                    background: "rgba(255,255,255,0.02)",
+                    border: "1px dashed rgba(255,255,255,0.08)",
+                  }}
+                >
+                  <span
+                    className="material-symbols-outlined text-[40px] block mb-2"
+                    style={{ color: "rgba(255,255,255,0.15)" }}
+                  >
+                    tour
+                  </span>
+                  <p className="text-sm text-white/25 font-medium">
+                    No active missions found.
+                  </p>
+                  <Link
+                    href="/game/missions"
+                    className="inline-block mt-3 text-[10px] font-black uppercase tracking-widest transition-colors"
+                    style={{ color: THEME_HEX }}
+                  >
+                    Browse Missions →
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* ── BOSS BATTLE BANNER ────────────────────────────── */}
+            <div
+              className="rounded-[1.75rem] p-8 relative overflow-hidden group cursor-pointer min-h-[210px] flex items-center"
+              style={{
+                background:
+                  "radial-gradient(ellipse at 65% 50%, #1c1215, #0c0c15)",
+                border: `1px solid rgba(${THEME_RGB}, 0.15)`,
+              }}
+            >
+              {/* Animated right glow */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background:
+                    "linear-gradient(to left, rgba(201,168,76,0.12) 0%, transparent 55%)",
+                  transition: "opacity 0.6s",
+                }}
+              />
+              <div
+                className="absolute -right-8 top-1/2 -translate-y-1/2 w-80 h-80 rounded-full pointer-events-none opacity-10"
+                style={{
+                  background: `radial-gradient(circle, ${THEME_HEX}, transparent)`,
+                }}
+              />
+
+              {/* Content */}
+              <div className="relative z-10 max-w-[58%]">
+                <div className="flex items-center gap-2 mb-3">
+                  <span
+                    className="material-symbols-outlined animate-pulse"
+                    style={{
+                      color: THEME_HEX,
+                      fontVariationSettings: "'FILL' 1",
+                    }}
+                  >
+                    crisis_alert
+                  </span>
+                  <span
+                    className="text-[10px] font-black uppercase tracking-[0.3em]"
+                    style={{ color: THEME_HEX }}
+                  >
+                    Live Event
+                  </span>
+                </div>
+                <h3 className="font-display text-[2rem] font-black mb-2 leading-tight text-white">
+                  Organic Chemistry
+                  <br />
+                  Crucible
+                </h3>
+                <p className="text-white/40 text-sm mb-6 leading-relaxed max-w-[340px]">
+                  High-stakes intellectual combat. Massive XP rewards and legendary artifacts await those who conquer the Boss.
+                </p>
+                <Link
+                  href="/game/boss"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs transition-all duration-300"
+                  style={{
+                    border: `1px solid rgba(${THEME_RGB}, 0.35)`,
+                    color: THEME_HEX,
+                    background: "rgba(201,168,76,0.06)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = THEME_HEX;
+                    e.currentTarget.style.color = "#0c0c15";
+                    e.currentTarget.style.boxShadow = `0 8px 24px rgba(${THEME_RGB}, 0.3)`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(201,168,76,0.06)";
+                    e.currentTarget.style.color = THEME_HEX;
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                >
+                  Enter Arena
+                  <span className="material-symbols-outlined text-[16px]">
+                    arrow_forward
+                  </span>
+                </Link>
+              </div>
+
+              {/* Giant swords watermark */}
+              <span
+                className="material-symbols-outlined absolute right-6 top-1/2 -translate-y-1/2 transition-all duration-700 pointer-events-none"
+                style={{
+                  fontSize: "150px",
+                  color: "rgba(255,255,255,0.04)",
+                  transform:
+                    "translateY(-50%) rotate(-12deg)",
+                  fontVariationSettings: "'FILL' 1",
+                }}
+              >
                 swords
               </span>
             </div>
 
+            {/* ── BOTTOM ROW: More Links ─────────────────────────── */}
+            <div className="grid grid-cols-3 gap-4">
+              {[
+                {
+                  label: "XP & Streaks",
+                  icon: "local_fire_department",
+                  path: "/game/xp",
+                  desc: "Track your momentum",
+                  color: "#f97316",
+                },
+                {
+                  label: "Tournaments",
+                  icon: "emoji_events",
+                  path: "/game/tournaments",
+                  desc: "Weekly competitions",
+                  color: THEME_HEX,
+                },
+                {
+                  label: "Reward Shop",
+                  icon: "storefront",
+                  path: "/shop",
+                  desc: `${coinNum.toLocaleString()} KC available`,
+                  color: "#00c896",
+                },
+              ].map((item, i) => (
+                <Link
+                  key={i}
+                  href={item.path}
+                  className="p-5 rounded-2xl flex flex-col transition-all duration-300 group hover:-translate-y-0.5"
+                  style={{
+                    background: "rgba(255,255,255,0.03)",
+                    border: "1px solid rgba(255,255,255,0.07)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "rgba(255,255,255,0.06)";
+                    e.currentTarget.style.borderColor = `${item.color}30`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(255,255,255,0.03)";
+                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)";
+                  }}
+                >
+                  <span
+                    className="material-symbols-outlined text-[22px] mb-3"
+                    style={{
+                      color: item.color,
+                      fontVariationSettings: "'FILL' 1",
+                    }}
+                  >
+                    {item.icon}
+                  </span>
+                  <span className="font-bold text-sm text-white/70 group-hover:text-white transition-colors">
+                    {item.label}
+                  </span>
+                  <span className="text-[10px] text-white/25 mt-1">
+                    {item.desc}
+                  </span>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </div>
+
+      <style jsx global>{`
+        @keyframes shimmer {
+          100% { transform: translateX(200%); }
+        }
+      `}</style>
     </main>
   );
 }

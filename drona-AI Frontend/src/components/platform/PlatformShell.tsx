@@ -9,6 +9,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useNotifications } from "@/context/NotificationContext";
 import { getDronaKey, storageAdapter } from "@/lib/storageAdapter";
 import { achievements } from "@/lib/data/achievements";
+import DronaQuickChat from "@/components/platform/DronaQuickChat";
 
 export default function PlatformShell({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
@@ -21,7 +22,7 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
 
   useEffect(() => {
     setMounted(true);
-    
+
     const checkAuth = async () => {
       const supabase = createClient();
       const { data: { session } } = await supabase.auth.getSession();
@@ -36,7 +37,7 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
     const handlePageShow = (e: PageTransitionEvent) => {
       if (e.persisted) checkAuth();
     };
-    
+
     const handleVisibility = () => {
       if (document.visibilityState === 'visible') checkAuth();
     };
@@ -54,7 +55,7 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
   useEffect(() => {
     if (mounted && userName) {
       const hasLoggedIn = localStorage.getItem(getDronaKey("has_logged_in_before"));
-      
+
       if (!hasLoggedIn) {
         // First Registration
         localStorage.setItem(getDronaKey("has_logged_in_before"), "true");
@@ -66,7 +67,7 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
             href: "/platform"
           });
         }, 1000);
-        
+
         setTimeout(() => {
           addNotification({
             title: "Drona AI Protocol Active",
@@ -84,7 +85,7 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
               existing.push("welcome-to-drona");
               localStorage.setItem(getDronaKey("unlocked_achievements"), JSON.stringify(existing));
             }
-          } catch {}
+          } catch { }
 
           addNotification({
             title: "Welcome to Drona",
@@ -128,8 +129,8 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
     { id: 'career', name: 'Career', path: '/career', hex: '#1a1a24', rgb: '26, 26, 36' }
   ];
 
-  const activeTab = pathname.startsWith('/shop') 
-    ? envTabs.find(t => t.id === 'game')! 
+  const activeTab = pathname.startsWith('/shop')
+    ? envTabs.find(t => t.id === 'game')!
     : (envTabs.find(t => pathname.startsWith(t.path)) || envTabs[0]);
 
   const [displayEnv, setDisplayEnv] = useState(activeTab.id);
@@ -305,7 +306,7 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
     { icon: 'notifications', path: '/notifications' },
     { icon: 'shopping_cart', path: '/shop' },
     { icon: 'emoji_events', path: '/achievements' },
-    { icon: 'radar', path: '/stats' },
+    { icon: 'explore', path: '/game/missions' },
   ];
 
   return (
@@ -490,10 +491,10 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
                 <div className="flex-1 h-[5px] bg-surface-variant/40 rounded-full overflow-hidden relative shadow-inner">
                   <div
                     className="h-full rounded-full relative overflow-hidden transition-all duration-500"
-                    style={{ 
+                    style={{
                       width: `${((profile?.xp || 0) / (profile?.xpMax || 1)) * 100}%`,
-                      background: 'var(--env-hex)', 
-                      boxShadow: '0 0 10px rgba(var(--env-rgb), 0.8)' 
+                      background: 'var(--env-hex)',
+                      boxShadow: '0 0 10px rgba(var(--env-rgb), 0.8)'
                     }}
                   >
                     <div className="absolute inset-0 bg-white/40 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
@@ -529,68 +530,68 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
               const isActive = pathname === item.path || (pathname.startsWith(item.path) && item.path !== activeTab.path);
               return (
                 <Link key={item.label} href={item.path} onClick={() => setSidebarOpen(false)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all cursor-pointer group ${sidebarOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"} ${isActive ? "" : "text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface hover:translate-x-1"}`}
-                style={{
-                  backgroundColor: isActive ? activeTab.hex : undefined,
-                  color: isActive ? '#ffffff' : undefined,
-                  boxShadow: isActive ? `0 4px 14px rgba(${activeTab.rgb}, 0.25)` : undefined,
-                  transitionDuration: '500ms',
-                  transitionDelay: sidebarOpen ? `${150 + i * 50}ms` : '0ms'
-                }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all cursor-pointer group ${sidebarOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"} ${isActive ? "" : "text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface hover:translate-x-1"}`}
+                  style={{
+                    backgroundColor: isActive ? activeTab.hex : undefined,
+                    color: isActive ? '#ffffff' : undefined,
+                    boxShadow: isActive ? `0 4px 14px rgba(${activeTab.rgb}, 0.25)` : undefined,
+                    transitionDuration: '500ms',
+                    transitionDelay: sidebarOpen ? `${150 + i * 50}ms` : '0ms'
+                  }}
+                >
+                  <span className="material-symbols-outlined text-[20px]" style={isActive ? { fontVariationSettings: "'FILL' 1" } : {}}>{item.icon}</span>
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className={`px-6 mt-8 mb-4 transition-all duration-500 ${sidebarOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: sidebarOpen ? '400ms' : '0ms' }}>
+            <p className="text-[10px] uppercase font-mono tracking-wider text-outline font-bold">{currentSidebar.agentsTitle}</p>
+          </div>
+
+          <nav className="px-3 space-y-1 mb-8">
+            {currentSidebar.agents.map((agent: any, i: number) => (
+              <Link key={agent.label} href={agent.path || '#'} onClick={() => setSidebarOpen(false)}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer group ${sidebarOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"} text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface hover:translate-x-1`}
+                style={{ transitionDuration: '500ms', transitionDelay: sidebarOpen ? `${450 + i * 50}ms` : '0ms' }}
               >
-                <span className="material-symbols-outlined text-[20px]" style={isActive ? { fontVariationSettings: "'FILL' 1" } : {}}>{item.icon}</span>
-                {item.label}
+                <span className="text-lg">{agent.emoji}</span>
+                {agent.label}
               </Link>
-            );
-          })}
-        </nav>
+            ))}
+          </nav>
 
-        <div className={`px-6 mt-8 mb-4 transition-all duration-500 ${sidebarOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: sidebarOpen ? '400ms' : '0ms' }}>
-          <p className="text-[10px] uppercase font-mono tracking-wider text-outline font-bold">{currentSidebar.agentsTitle}</p>
-        </div>
-
-        <nav className="px-3 space-y-1 mb-8">
-          {currentSidebar.agents.map((agent: any, i: number) => (
-            <Link key={agent.label} href={agent.path || '#'} onClick={() => setSidebarOpen(false)}
-              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer group ${sidebarOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"} text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface hover:translate-x-1`}
-              style={{ transitionDuration: '500ms', transitionDelay: sidebarOpen ? `${450 + i * 50}ms` : '0ms' }}
+          <div className="px-6 mt-auto space-y-4">
+            <Link href="/agent-dock/architecture"
+              className={`w-full flex justify-center text-white font-bold text-sm py-3 rounded-xl hover:-translate-y-0.5 hover:shadow-lg transition-all cursor-pointer ${sidebarOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+              style={{
+                backgroundColor: activeTab.hex,
+                boxShadow: `0 4px 14px rgba(${activeTab.rgb}, 0.25)`,
+                transitionDuration: '500ms',
+                transitionDelay: sidebarOpen ? '650ms' : '0ms'
+              }}
+              onClick={() => setSidebarOpen(false)}
             >
-              <span className="text-lg">{agent.emoji}</span>
-              {agent.label}
+              Open Agent Dock
             </Link>
-          ))}
-        </nav>
-
-        <div className="px-6 mt-auto space-y-4">
-          <Link href="/agent-dock/architecture"
-            className={`w-full flex justify-center text-white font-bold text-sm py-3 rounded-xl hover:-translate-y-0.5 hover:shadow-lg transition-all cursor-pointer ${sidebarOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
-            style={{
-              backgroundColor: activeTab.hex,
-              boxShadow: `0 4px 14px rgba(${activeTab.rgb}, 0.25)`,
-              transitionDuration: '500ms',
-              transitionDelay: sidebarOpen ? '650ms' : '0ms'
-            }}
-            onClick={() => setSidebarOpen(false)}
-          >
-            Open Agent Dock
-          </Link>
-          <Link href="/settings"
-            className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer group ${sidebarOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"} text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface`}
-            style={{ transitionDuration: '500ms', transitionDelay: sidebarOpen ? '700ms' : '0ms' }}
-            onClick={() => setSidebarOpen(false)}
-          >
-            <span className="material-symbols-outlined text-[20px] transition-transform group-hover:rotate-90">settings</span>
-            Settings
-          </Link>
-          <button 
-            onClick={handleLogout}
-            className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer group ${sidebarOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"} text-on-surface-variant hover:bg-red-500/10 hover:text-red-500`}
-            style={{ transitionDuration: '500ms', transitionDelay: sidebarOpen ? '750ms' : '0ms' }}
-          >
-            <span className="material-symbols-outlined text-[20px] transition-transform group-hover:-translate-x-1">logout</span>
-            Log Out
-          </button>
-        </div>
+            <Link href="/settings"
+              className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer group ${sidebarOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"} text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface`}
+              style={{ transitionDuration: '500ms', transitionDelay: sidebarOpen ? '700ms' : '0ms' }}
+              onClick={() => setSidebarOpen(false)}
+            >
+              <span className="material-symbols-outlined text-[20px] transition-transform group-hover:rotate-90">settings</span>
+              Settings
+            </Link>
+            <button
+              onClick={handleLogout}
+              className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer group ${sidebarOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"} text-on-surface-variant hover:bg-red-500/10 hover:text-red-500`}
+              style={{ transitionDuration: '500ms', transitionDelay: sidebarOpen ? '750ms' : '0ms' }}
+            >
+              <span className="material-symbols-outlined text-[20px] transition-transform group-hover:-translate-x-1">logout</span>
+              Log Out
+            </button>
+          </div>
         </div>
       </aside>
 
@@ -600,6 +601,11 @@ export default function PlatformShell({ children }: { children: React.ReactNode 
       <div className="flex-1 flex flex-col pt-[76px]">
         {children}
       </div>
+
+      {/* ═══════════════════════════════════════════════════════════
+          DRONA AI — Persistent Quick Chat (All Environments)
+          ═══════════════════════════════════════════════════════════ */}
+      <DronaQuickChat />
 
       <style jsx global>{`
         @keyframes shimmer {

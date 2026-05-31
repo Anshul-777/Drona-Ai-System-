@@ -15,6 +15,8 @@ export interface Notification {
   href?: string;
   timestamp: number;
   achievementId?: string;
+  xpReward?: number;
+  coinsReward?: number;
 }
 
 export interface ToastNotification extends Notification {

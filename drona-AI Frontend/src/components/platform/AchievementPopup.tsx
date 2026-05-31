@@ -25,16 +25,17 @@ function AchievementToastItem({ toast, removeToast }: { toast: ToastNotification
     };
   }, [toast.id, removeToast]);
 
-  const achievementDetails = toast.achievementId 
+  const isQuest = toast.achievementId === "quest" || toast.message?.toLowerCase().includes("quest");
+  const achievementDetails = toast.achievementId && toast.achievementId !== "quest"
     ? getAchievementById(toast.achievementId)
     : null;
 
-  const badgeColor = achievementDetails?.badgeColor || "#c9a84c";
-  const badgeBg = achievementDetails?.badgeBg || "#1a1a1a";
+  const badgeColor = isQuest ? "#c9a84c" : (achievementDetails?.badgeColor || "#c9a84c");
+  const badgeBg = isQuest ? "#18181c" : (achievementDetails?.badgeBg || "#1a1a1a");
   const title = toast.title;
   // "claimed" vs "unlocked" determined by message content
   const isClaimed = toast.message?.toLowerCase().includes("claimed");
-  const headerText = isClaimed ? "Trophy Claimed" : "New Trophy";
+  const headerText = isQuest ? "Quest Cleared" : (isClaimed ? "Trophy Claimed" : "New Trophy");
 
   return (
     <div 
@@ -131,10 +132,17 @@ function AchievementToastItem({ toast, removeToast }: { toast: ToastNotification
         <h3 className="font-display font-bold text-lg text-[#3d3321] leading-tight pr-4">
           &ldquo;{title}&rdquo;
         </h3>
+        {isQuest && (toast.xpReward !== undefined || toast.coinsReward !== undefined) && (
+          <div className="flex items-center gap-2 mt-0.5 text-[11px] font-black text-[#5c4f36]/70 uppercase tracking-wider">
+            <span>+{toast.xpReward || 0} XP</span>
+            <span>•</span>
+            <span>+{toast.coinsReward || 0} KC</span>
+          </div>
+        )}
       </div>
 
       {/* Floating XP Animation */}
-      {achievementDetails && (
+      {((achievementDetails && achievementDetails.xpReward) || (isQuest && toast.xpReward)) && (
         <div 
           className="absolute font-display font-black text-2xl z-50 pointer-events-none whitespace-nowrap drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
           style={{ 
@@ -144,7 +152,7 @@ function AchievementToastItem({ toast, removeToast }: { toast: ToastNotification
             animation: 'floatUpXP 1.2s cubic-bezier(0.1, 0.8, 0.2, 1) forwards' 
           }}
         >
-          +{achievementDetails.xpReward} XP
+          +{toast.xpReward || (achievementDetails && achievementDetails.xpReward)} XP
         </div>
       )}
     </div>

@@ -1,16 +1,45 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useNotifications } from "@/context/NotificationContext";
-import { shopProducts, ShopProduct } from "@/lib/data/shop";
+import { shopProducts } from "@/lib/data/shop";
+import { storageAdapter } from "@/lib/storageAdapter";
 
 export default function ShopPage() {
   const { addNotification } = useNotifications();
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [userCoins, setUserCoins] = useState(0);
+  const [userLevel, setUserLevel] = useState(1);
+  const [xpProgressPct, setXpProgressPct] = useState(0);
+
+  const fetchBalance = async () => {
+    try {
+      const data = await storageAdapter.getProfileDashboardData();
+      if (data && data.profile) {
+        setUserLevel(data.profile.level);
+        
+        const kcString = data.profile.kc || "0 KC";
+        const numericCoins = parseInt(kcString.replace(/[^\d]/g, ""), 10) || 0;
+        setUserCoins(numericCoins);
+
+        const xpCurrent = data.profile.xp || 0;
+        const xpMax = data.profile.xpMax || 1000;
+        setXpProgressPct(Math.min(100, Math.floor((xpCurrent / xpMax) * 100)));
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchBalance();
+    window.addEventListener("drona_profile_updated", fetchBalance);
+    return () => window.removeEventListener("drona_profile_updated", fetchBalance);
+  }, []);
 
   const categories = ["All", "Featured", "Technology", "Essential Gear", "Boosters"];
 
@@ -53,21 +82,21 @@ export default function ShopPage() {
 
         {/* Right: Minimal Balance Widget */}
         <div className="flex items-center gap-6 bg-surface-container-lowest border border-outline-variant/30 rounded-2xl px-5 py-3 shadow-sm">
-          <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-outline-variant uppercase tracking-wider mb-0.5">Balance</span>
+          <div className="flex flex-col text-left">
+            <span className="text-[10px] font-bold text-[#c9a84c] uppercase tracking-wider mb-0.5">Balance</span>
             <div className="flex items-baseline gap-1">
-              <span className="font-display font-black text-2xl text-on-surface leading-none tracking-tighter">0</span>
+              <span className="font-display font-black text-2xl text-on-surface leading-none tracking-tighter">{userCoins.toLocaleString()}</span>
               <span className="font-bold text-[#c9a84c] text-sm leading-none">KC</span>
             </div>
           </div>
           <div className="w-px h-8 bg-outline-variant/30" />
-          <div className="flex flex-col items-start min-w-[120px]">
+          <div className="flex flex-col items-start min-w-[120px] text-left">
              <div className="flex justify-between w-full text-[10px] font-bold uppercase tracking-wider mb-1.5">
-                <span className="text-outline-variant">Elite Rank</span>
-                <span className="text-[#c9a84c]">0%</span>
+                <span className="text-outline-variant">Elite Rank (Lvl {userLevel})</span>
+                <span className="text-[#c9a84c]">{xpProgressPct}%</span>
              </div>
              <div className="w-full h-1.5 bg-surface-variant/50 rounded-full overflow-hidden">
-                <div className="h-full bg-[#c9a84c] rounded-full w-0" />
+                <div className="h-full bg-[#c9a84c] rounded-full transition-all duration-500" style={{ width: `${xpProgressPct}%` }} />
              </div>
           </div>
         </div>
